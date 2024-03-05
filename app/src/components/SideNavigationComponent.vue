@@ -7,29 +7,22 @@ const rail = ref(true);
 
 <template>
   <v-card>
+
     <v-layout>
+
       <v-navigation-drawer
         v-model="drawer"
         :rail="rail"
         permanent
         @click="rail = false"
       >
-        <v-list-item
-          prepend-avatar="https://randomuser.me/api/portraits/men/85.jpg"
-          title="Lacos TN ou quoi le boss"
-          nav
-        >
-          <template v-slot:append>
-            <v-btn
-              icon="mdi-chevron-left"
-              variant="text"
-              @click.stop="rail = !rail"
-            ></v-btn>
-          </template>
-        </v-list-item>
 
         <v-divider></v-divider>
 
+        <v-img
+          src="../assets/logo.png"
+          class="ma-2 w-50 mb-4"
+        ></v-img>
         <v-list density="compact" nav>
           <v-list-item
             link
@@ -74,8 +67,29 @@ const rail = ref(true);
             value="account"
           ></v-list-item>
         </v-list>
+
+        <template v-slot:append>
+          <div class="pa-2">
+            <v-list-item
+              prepend-avatar="https://randomuser.me/api/portraits/men/85.jpg"
+              title="Lacos TN ou quoi le boss"
+              nav
+            >
+              <template v-slot:append>
+                <v-btn
+                  icon="mdi-chevron-left"
+                  variant="text"
+                  @click.stop="rail = !rail"
+                ></v-btn>
+              </template>
+            </v-list-item>
+          </div>
+        </template>
       </v-navigation-drawer>
       <v-main style="height: 100vh"></v-main>
+
     </v-layout>
+
   </v-card>
+
 </template>
