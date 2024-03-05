@@ -1,8 +1,10 @@
 <script setup lang="ts">
 import { ref } from "vue";
+import WebService from "@/services/WebService";
 
 const drawer = ref(true);
-const rail = ref(true);
+const rail = ref(false);
+
 </script>
 
 <template>
@@ -14,36 +16,24 @@ const rail = ref(true);
         permanent
         @click="rail = false"
       >
-        <v-list-item
-          prepend-avatar="https://randomuser.me/api/portraits/men/85.jpg"
-          title="Lacos TN ou quoi le boss"
-          nav
-        >
-          <template v-slot:append>
-            <v-btn
-              icon="mdi-chevron-left"
-              variant="text"
-              @click.stop="rail = !rail"
-            ></v-btn>
-          </template>
-        </v-list-item>
-
         <v-divider></v-divider>
 
+        <v-img v-if="!rail" src="../assets/logo.png" class="ma-2 w-50 mb-4"></v-img>
+        <v-img v-if="rail" src="../assets/small-logo.png" class="w-50 mx-auto ma-2"></v-img>
         <v-list density="compact" nav>
           <v-list-item
             link
             to="/"
             prepend-icon="mdi-home"
-            title="Dashboard"
-            value="dashboard"
+            title="Organisms"
+            value="organisms"
           ></v-list-item>
           <v-list-item
             link
-            to="/organisms"
-            prepend-icon="mdi-account-group"
-            title="Organisms"
-            value="organisms"
+            to="/lessons"
+            prepend-icon="mdi-school"
+            title="Lessons"
+            value="lessons"
           ></v-list-item>
           <v-list-item
             link
@@ -74,6 +64,24 @@ const rail = ref(true);
             value="account"
           ></v-list-item>
         </v-list>
+
+        <template v-slot:append>
+          <div class="pa-2">
+            <v-list-item
+              prepend-avatar="https://randomuser.me/api/portraits/men/85.jpg"
+              title="Lacos TN ou quoi le boss"
+              nav
+            >
+              <template v-slot:append>
+                <v-btn
+                  icon="mdi-chevron-left"
+                  variant="text"
+                  @click.stop="rail = !rail"
+                ></v-btn>
+              </template>
+            </v-list-item>
+          </div>
+        </template>
       </v-navigation-drawer>
       <v-main style="height: 100vh"></v-main>
     </v-layout>

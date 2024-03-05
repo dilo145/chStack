@@ -34,4 +34,3 @@ const color = ref('white')
   </div>
 
 </template>
-
