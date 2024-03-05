@@ -10,7 +10,9 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
+#[Route('/api/users')]
 class UserController extends AbstractController
 {
 
@@ -29,28 +31,36 @@ class UserController extends AbstractController
         return $this->json($users);
     }
 
-    #[Route('api/new', name: 'api_user_new', methods: ['POST'])]
-    public function newUser(Request $request): JsonResponse
-    {
-        // $data = json_decode($request->getContent(), true);
+    #[Route('/new', name: 'api_user_new', methods: ['POST'])]
+    public function newUser(
+        Request $request,
+        UserPasswordHasherInterface $userPasswordHasher,
+    ): JsonResponse {
+        $data = json_decode($request->getContent(), true);
 
-        // if (!isset($data['firstName']) || !isset($data['lastName']) || !isset($data['email']) || !isset($data['photo'])) {
-        //     return new JsonResponse(['error' => 'Missing required fields'], Response::HTTP_BAD_REQUEST);
-        // }
+        if (!isset($data['firstName']) || !isset($data['lastName']) || !isset($data['email']) || !isset($data['photo'])) {
+            return new JsonResponse(['error' => 'Missing required fields'], Response::HTTP_BAD_REQUEST);
+        }
 
-        // if (!preg_match("/^\S+@\S+\.\S+$/", $data['email'])) {
-        //     return new JsonResponse(['error' => 'Invalid email format'], Response::HTTP_BAD_REQUEST);
-        // }
+        if (!preg_match("/^\S+@\S+\.\S+$/", $data['email'])) {
+            return new JsonResponse(['error' => 'Invalid email format'], Response::HTTP_BAD_REQUEST);
+        }
 
-        // if ($this->entityManager->getRepository(User::class)->findOneBy(['email' => $data['email']])) {
-        //     return new JsonResponse(['error' => 'Email already exists'], Response::HTTP_CONFLICT);
-        // }
+        if ($this->entityManager->getRepository(User::class)->findOneBy(['email' => $data['email']])) {
+            return new JsonResponse(['error' => 'Email already exists'], Response::HTTP_CONFLICT);
+        }
 
         $user = new User();
-        $user->setFirstName("name1");
-        $user->setLastName("name2");
-        $user->setEmail("email@gmail.com");
-        $user->setPhoto("photo.jpg");
+        $user->setFirstName($data['firstName']);
+        $user->setLastName($data['lastName']);
+        $user->setEmail($data['email']);
+        $user->setPhoto($data['photo']);
+        $user->setPassword(
+            $userPasswordHasher->hashPassword(
+                $user,
+                $data['password']
+            )
+        );
         $user->setCreatedAt();
 
         try {
@@ -116,7 +126,7 @@ class UserController extends AbstractController
         $user->setDeletedAt(new \DateTime());
 
         try {
-            $entityManager->flush();
+            $this->entityManager->flush();
         } catch (\Exception $e) {
             return new JsonResponse(['error' => 'Failed to delete user'], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
