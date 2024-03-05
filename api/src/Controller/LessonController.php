@@ -74,19 +74,19 @@ class LessonController extends AbstractController
         return $this->json($Lesson);
     }
 
-    #[Route('/api/delete-lesson', name: 'lesson_delete', methods: ['DELETE'])]
+    #[Route('/api/delete-lesson/{id}', name: 'lesson_delete', methods: ['DELETE'])]
     public function delete(LessonRepository $LessonRepository, int $id): Response
     {
-        $Lesson = $LessonRepository->find($id);
+        if ($id === null) {
+            throw $this->createNotFoundException('Id is required');
+        }
+
+        $Lesson = $LessonRepository->delete($id);
 
         if (!$Lesson) {
             throw $this->createNotFoundException('Lesson not found');
         }
 
-        $em = $this->getDoctrine()->getManager();
-        $em->remove($Lesson);
-        $em->flush();
-
-        return $this->json(['message' => 'Lesson deleted']);
+        return $this->json($Lesson);
     }
 }

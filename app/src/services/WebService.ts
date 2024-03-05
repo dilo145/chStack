@@ -21,6 +21,31 @@ class WebService {
       throw error;
     }
   }
+
+  async create<JSON>(path: string, body: any): Promise<JSON> {
+    try {
+      const response: AxiosResponse<JSON> = await this.api.post<JSON>(
+        path,
+        JSON.stringify(body)
+      );
+      return response.data;
+    } catch (error) {
+      console.error("Error creating item:", error);
+      throw error;
+    }
+  }
+
+  async delete<JSON>(path: string, id: number): Promise<JSON> {
+    try {
+      const response: AxiosResponse<JSON> = await this.api.delete<JSON>(
+        `${path}/${id}`
+      );
+      return response.data;
+    } catch (error) {
+      console.error("Error deleting item:", error);
+      throw error;
+    }
+  }
 }
 
 export default new WebService();
