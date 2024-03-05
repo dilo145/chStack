@@ -7,22 +7,16 @@ const rail = ref(true);
 
 <template>
   <v-card>
-
     <v-layout>
-
       <v-navigation-drawer
         v-model="drawer"
         :rail="rail"
         permanent
         @click="rail = false"
       >
-
         <v-divider></v-divider>
 
-        <v-img
-          src="../assets/logo.png"
-          class="ma-2 w-50 mb-4"
-        ></v-img>
+        <v-img src="../assets/logo.png" class="ma-2 w-50 mb-4"></v-img>
         <v-list density="compact" nav>
           <v-list-item
             link
@@ -37,6 +31,13 @@ const rail = ref(true);
             prepend-icon="mdi-account-group"
             title="Organisms"
             value="organisms"
+          ></v-list-item>
+          <v-list-item
+            link
+            to="/lessons"
+            prepend-icon="mdi-school"
+            title="Lessons"
+            value="lessons"
           ></v-list-item>
           <v-list-item
             link
@@ -87,9 +88,6 @@ const rail = ref(true);
         </template>
       </v-navigation-drawer>
       <v-main style="height: 100vh"></v-main>
-
     </v-layout>
-
   </v-card>
-
 </template>
