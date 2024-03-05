@@ -41,48 +41,51 @@ class LessonRepository extends ServiceEntityRepository
 
     public function create($data)
     {
-        $Lesson = new Lesson();
-        $Lesson->setTitle($data['title']);
-        $Lesson->setDescription($data['description']);
+        $lesson = new Lesson();
+        $lesson->setTitle($data['title']);
+        $lesson->setDescription($data['description']);
+        $lesson->setPlace($data['place']);
+        $lesson->setGoal($data['goal']['name']);
+
 
         $em = $this->getEntityManager();
-        $em->persist($Lesson);
+        $em->persist($lesson);
         $em->flush();
 
-        return $Lesson;
+        return $lesson;
     }
 
     public function update($data, int $id)
     {
-        $Lesson = $this->find($id);
+        $lesson = $this->find($id);
 
-        if (!$Lesson) {
+        if (!$lesson) {
             return null;
         }
 
-        $Lesson->setTitle($data['title']);
-        $Lesson->setDescription($data['description']);
+        $lesson->setTitle($data['title']);
+        $lesson->setDescription($data['description']);
 
         $em = $this->getEntityManager();
-        $em->persist($Lesson);
+        $em->persist($lesson);
         $em->flush();
 
-        return $Lesson;
+        return $lesson;
     }
 
     public function delete(int $id)
     {
-        $Lesson = $this->find($id);
+        $lesson = $this->find($id);
 
-        if (!$Lesson) {
+        if (!$lesson) {
             return null;
         }
 
         $em = $this->getEntityManager();
-        $em->remove($Lesson);
+        $em->remove($lesson);
         $em->flush();
 
-        return $Lesson;
+        return $lesson;
     }
 
 

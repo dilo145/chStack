@@ -39,14 +39,8 @@ class LessonController extends AbstractController
     public function create(Request $request,  LessonRepository $LessonRepository,): Response
     {
         $data = json_decode($request->getContent(), true);
-
-        $lesson = new Lesson();
-        $lesson->setTitle($data['title']);
-        $lesson->setDescription($data['description']);
-        $lesson->setPlace($data['place']);
-        $lesson->setGoal($data['goal']);
         
-        $response = $LessonRepository->create($lesson);
+        $response = $LessonRepository->create($data);
 
         if (!$response) {
             throw $this->createNotFoundException('Error while creating lesson');

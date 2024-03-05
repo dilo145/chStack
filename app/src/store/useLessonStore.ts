@@ -27,7 +27,6 @@ export const useLessonStore = defineStore("lesson", () => {
     place: "",
     time: "",
     goal: {
-      id: 0,
       name: "",
       description: "",
     },
