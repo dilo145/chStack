@@ -23,13 +23,6 @@ const rail = ref(false);
             link
             to="/"
             prepend-icon="mdi-home"
-            title="Dashboard"
-            value="dashboard"
-          ></v-list-item>
-          <v-list-item
-            link
-            to="/organisms"
-            prepend-icon="mdi-account-group"
             title="Organisms"
             value="organisms"
           ></v-list-item>
