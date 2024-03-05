@@ -1,11 +1,26 @@
 <script setup lang="ts">
 import { ref } from "vue";
+import WebService from "@/services/WebService";
 
 const drawer = ref(true);
 const rail = ref(true);
+
+// Function to fetch JSON data from the API
+const fetchData = async () => {
+  try {
+    const response = await WebService.get<any>("users"); // Await the response directly
+    let jsonData = response; // Extract the JSON data from the response
+    console.log(jsonData.firstName);
+  } catch (error) {
+    console.error("Error fetching data:", error);
+    // Handle errors here
+  }
+};
 </script>
 
 <template>
+  <v-btn @click="fetchData">Fetch JSON Data</v-btn>
+  <!-- Conditional rendering of JSON data -->
   <v-card>
     <v-layout>
       <v-navigation-drawer
