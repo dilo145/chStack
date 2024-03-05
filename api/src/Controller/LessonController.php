@@ -36,20 +36,23 @@ class LessonController extends AbstractController
     }
 
     #[Route('/api/create-lesson', name: 'lesson_create', methods: ['POST'])]
-    public function create(Request $request): Response
+    public function create(Request $request,  LessonRepository $LessonRepository,): Response
     {
         $data = json_decode($request->getContent(), true);
 
-        $Lesson = new Lesson();
-        $Lesson->setTitle($data['title']);
-        $Lesson->setDescription($data['description']);
-        $Lesson->setVideoUrl($data['videoUrl']);
+        $lesson = new Lesson();
+        $lesson->setTitle($data['title']);
+        $lesson->setDescription($data['description']);
+        $lesson->setPlace($data['place']);
+        $lesson->setGoal($data['goal']);
+        
+        $response = $LessonRepository->create($lesson);
 
-        $em = $this->getDoctrine()->getManager();
-        $em->persist($Lesson);
-        $em->flush();
+        if (!$response) {
+            throw $this->createNotFoundException('Error while creating lesson');
+        }
 
-        return $this->json($Lesson);
+        return $this->json($response);
     }
 
     #[Route('/api/update-lesson/{id}', name: 'lesson_update', methods: ['PUT'])]

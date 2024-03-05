@@ -44,9 +44,9 @@ export const useLessonStore = defineStore("lesson", () => {
       });
   }
 
-  function onLessonSubmit() {
+  function createLesson() {
     api
-      .create<Lesson>("craete-lesson", newLesson)
+      .create<Lesson>("create-lesson", newLesson)
       .then((response) => {
         console.log(response);
         router.push(`lessons/${response.id}`);
@@ -76,7 +76,7 @@ export const useLessonStore = defineStore("lesson", () => {
     headers,
     newLesson,
     getLessons,
-    onLessonSubmit,
+    createLesson,
     deleteLesson,
   };
 });

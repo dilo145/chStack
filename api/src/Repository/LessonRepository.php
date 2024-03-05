@@ -24,7 +24,7 @@ class LessonRepository extends ServiceEntityRepository
     public function getAll()
     {
         return $this->createQueryBuilder('l')
-            ->select('l.id', 'l.title', 'l.description', 'l.videoUrl', 'l.createdAt')
+            ->select('l.id', 'l.title', 'l.description', 'l.place', 'l.time')
             ->getQuery()
             ->getResult();
     }
