@@ -1,5 +1,8 @@
-<script lang="ts" setup></script>
+<script setup lang="ts">
+import CardOragnismeComponent from "@/./components/CardOrganismeComponent.vue";
+</script>
 
 <template>
-  <h1>home page</h1>
+  <h1>Organisms page</h1>
+  <CardOragnismeComponent />
 </template>
