@@ -1,7 +1,5 @@
-<template>
-  <h1>Home Page</h1>
-</template>
+<script lang="ts" setup></script>
 
-<script lang="ts" setup>
-//
-</script>
+<template>
+  <h1>home page</h1>
+</template>

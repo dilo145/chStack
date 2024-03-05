@@ -1,11 +1,10 @@
+<script lang="ts" setup>
+import SideNavigationComponent from "@/components/SideNavigationComponent.vue";
+</script>
+
 <template>
   <v-app>
-    <v-main>
-      <router-view />
-    </v-main>
+    <SideNavigationComponent />
+    <router-view />
   </v-app>
 </template>
-
-<script lang="ts" setup>
-  //
-</script>
