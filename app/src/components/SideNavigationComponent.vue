@@ -1,8 +1,21 @@
 <script setup lang="ts">
 import { ref } from "vue";
+import WebService from "@/services/WebService";
 
 const drawer = ref(true);
-const rail = ref(true);
+const rail = ref(false);
+
+// Function to fetch JSON data from the API
+const fetchData = async () => {
+  try {
+    const response = await WebService.get<any>("users"); // Await the response directly
+    let jsonData = response; // Extract the JSON data from the response
+    console.log(jsonData.firstName);
+  } catch (error) {
+    console.error("Error fetching data:", error);
+    // Handle errors here
+  }
+};
 </script>
 
 <template>
@@ -16,20 +29,21 @@ const rail = ref(true);
       >
         <v-divider></v-divider>
 
-        <v-img src="../assets/logo.png" class="ma-2 w-50 mb-4"></v-img>
+        <v-img v-if="!rail" src="../assets/logo.png" class="ma-2 w-50 mb-4"></v-img>
+        <v-img v-if="rail" src="../assets/small-logo.png" class="w-50 mx-auto ma-2"></v-img>
         <v-list density="compact" nav>
           <v-list-item
             link
             to="/"
             prepend-icon="mdi-home"
-            title="Organisms"
+            title="Ecoles"
             value="organisms"
           ></v-list-item>
           <v-list-item
             link
             to="/lessons"
             prepend-icon="mdi-school"
-            title="Lessons"
+            title="Cours"
             value="lessons"
           ></v-list-item>
           <v-list-item
@@ -43,21 +57,21 @@ const rail = ref(true);
             link
             to="/grades"
             prepend-icon="mdi-book-open-variant"
-            title="Grades"
+            title="Notes / Examen"
             value="grades"
           ></v-list-item>
           <v-list-item
             link
             to="/students"
             prepend-icon="mdi-account-group-outline"
-            title="Students"
+            title="Etudiants"
             value="students"
           ></v-list-item>
           <v-list-item
             link
             to="/profile"
             prepend-icon="mdi-account"
-            title="My Account"
+            title="Mon Compte"
             value="account"
           ></v-list-item>
         </v-list>
