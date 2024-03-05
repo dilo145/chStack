@@ -7,6 +7,7 @@ import { useRouter } from "vue-router";
 export const useLessonStore = defineStore("lesson", () => {
   const lessons = ref<Lesson[]>();
   const router = useRouter();
+  const isEditing = ref(false);
   const headers = ref<any[]>([
     {
       title: "Title",
@@ -31,6 +32,29 @@ export const useLessonStore = defineStore("lesson", () => {
       description: "",
     },
   });
+
+  const editLesson = ref<Lesson>({
+    id: 0,
+    title: "",
+    description: "",
+    place: "",
+    time: "",
+    goal: {
+      name: "",
+      description: "",
+    },
+  });
+
+  function getLesson(id: string) {
+    api
+      .get<Lesson>(`get-lesson/${id}`)
+      .then((data) => {
+        editLesson.value = data;
+      })
+      .catch((err) => {
+        console.error("Error fetching lesson:", err);
+      });
+  }
 
   function getLessons() {
     api
@@ -74,8 +98,11 @@ export const useLessonStore = defineStore("lesson", () => {
     lessons,
     headers,
     newLesson,
+    editLesson,
+    isEditing,
     getLessons,
     createLesson,
     deleteLesson,
+    getLesson,
   };
 });

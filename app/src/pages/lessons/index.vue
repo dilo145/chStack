@@ -29,8 +29,21 @@ function onDeleteValidate(id: number) {
       <v-icon
         class="me-2"
         size="small"
+        @click="
+          router.push(`/lessons/${item.id}`);
+          lessonStore.isEditing = false;
+        "
+      >
+        mdi-eye
+      </v-icon>
+      <v-icon
+        class="me-2"
+        size="small"
         color="secondary"
-        @click="router.push(`/lessons/${item.id}`)"
+        @click="
+          router.push(`/lessons/${item.id}`);
+          lessonStore.isEditing = true;
+        "
       >
         mdi-pencil
       </v-icon>
@@ -44,6 +57,12 @@ function onDeleteValidate(id: number) {
       >
         mdi-delete
       </v-icon>
+    </template>
+
+    <template v-slot:no-data>
+      <v-alert color="error" icon="mdi-alert">
+        No lessons found. Please add a new lesson.
+      </v-alert>
     </template>
   </v-data-table>
 
