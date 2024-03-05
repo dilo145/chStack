@@ -11,7 +11,6 @@ use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Doctrine\ORM\EntityManagerInterface;
 
-#[Route('/api/users')]
 class UserController extends AbstractController
 {
 
@@ -30,28 +29,28 @@ class UserController extends AbstractController
         return $this->json($users);
     }
 
-    #[Route('/new', name: 'api_user_new', methods: ['POST'])]
+    #[Route('api/new', name: 'api_user_new', methods: ['POST'])]
     public function newUser(Request $request): JsonResponse
     {
-        $data = json_decode($request->getContent(), true);
+        // $data = json_decode($request->getContent(), true);
 
-        if (!isset($data['firstName']) || !isset($data['lastName']) || !isset($data['email']) || !isset($data['photo'])) {
-            return new JsonResponse(['error' => 'Missing required fields'], Response::HTTP_BAD_REQUEST);
-        }
+        // if (!isset($data['firstName']) || !isset($data['lastName']) || !isset($data['email']) || !isset($data['photo'])) {
+        //     return new JsonResponse(['error' => 'Missing required fields'], Response::HTTP_BAD_REQUEST);
+        // }
 
-        if (!preg_match("/^\S+@\S+\.\S+$/", $data['email'])) {
-            return new JsonResponse(['error' => 'Invalid email format'], Response::HTTP_BAD_REQUEST);
-        }
+        // if (!preg_match("/^\S+@\S+\.\S+$/", $data['email'])) {
+        //     return new JsonResponse(['error' => 'Invalid email format'], Response::HTTP_BAD_REQUEST);
+        // }
 
-        if ($this->entityManager->getRepository(User::class)->findOneBy(['email' => $data['email']])) {
-            return new JsonResponse(['error' => 'Email already exists'], Response::HTTP_CONFLICT);
-        }
+        // if ($this->entityManager->getRepository(User::class)->findOneBy(['email' => $data['email']])) {
+        //     return new JsonResponse(['error' => 'Email already exists'], Response::HTTP_CONFLICT);
+        // }
 
         $user = new User();
-        $user->setFirstName($data['firstName']);
-        $user->setLastName($data['lastName']);
-        $user->setEmail($data['email']);
-        $user->setPhoto($data['photo']);
+        $user->setFirstName("name1");
+        $user->setLastName("name2");
+        $user->setEmail("email@gmail.com");
+        $user->setPhoto("photo.jpg");
         $user->setCreatedAt();
 
         try {
@@ -69,7 +68,7 @@ class UserController extends AbstractController
     {
         return new JsonResponse(['User' => $user]);
     }
-    
+
     #[Route('/{id}/edit', name: 'app_user_edit', methods: ['POST'])]
     public function edit(Request $request, User $user): JsonResponse
     {
