@@ -5,6 +5,17 @@ import WebService from "@/services/WebService";
 const drawer = ref(true);
 const rail = ref(false);
 
+// Function to fetch JSON data from the API
+const fetchData = async () => {
+  try {
+    const response = await WebService.get<any>("users"); // Await the response directly
+    let jsonData = response; // Extract the JSON data from the response
+    console.log(jsonData.firstName);
+  } catch (error) {
+    console.error("Error fetching data:", error);
+    // Handle errors here
+  }
+};
 </script>
 
 <template>
