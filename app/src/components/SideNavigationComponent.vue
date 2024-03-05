@@ -25,14 +25,14 @@ const rail = ref(false);
             link
             to="/"
             prepend-icon="mdi-home"
-            title="Organisms"
+            title="Ecoles"
             value="organisms"
           ></v-list-item>
           <v-list-item
             link
             to="/lessons"
             prepend-icon="mdi-school"
-            title="Lessons"
+            title="Cours"
             value="lessons"
           ></v-list-item>
           <v-list-item
@@ -46,21 +46,21 @@ const rail = ref(false);
             link
             to="/grades"
             prepend-icon="mdi-book-open-variant"
-            title="Grades"
+            title="Notes / Examen"
             value="grades"
           ></v-list-item>
           <v-list-item
             link
             to="/students"
             prepend-icon="mdi-account-group-outline"
-            title="Students"
+            title="Etudiants"
             value="students"
           ></v-list-item>
           <v-list-item
             link
             to="/profile"
             prepend-icon="mdi-account"
-            title="My Account"
+            title="Mon Compte"
             value="account"
           ></v-list-item>
         </v-list>
