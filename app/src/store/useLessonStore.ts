@@ -29,8 +29,21 @@ export const useLessonStore = defineStore("lesson", () => {
       place: "Online",
     },
   ]);
+  const headers = ref([
+    {
+      text: "Title",
+      align: "start",
+      sortable: false,
+      value: "title",
+    },
+    { text: "Description", value: "description" },
+    { text: "Goal", value: "goal" },
+    { text: "Time", value: "time" },
+    { text: "Place", value: "place" },
+  ]);
 
   return {
     lessons,
+    headers,
   };
 });

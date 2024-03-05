@@ -20,8 +20,8 @@ const rail = ref(true);
         <v-list density="compact" nav>
           <v-list-item
             link
-            to="/"
-            prepend-icon="mdi-home"
+            to="/organisms"
+            prepend-icon="mdi-account-group"
             title="Organisms"
             value="organisms"
           ></v-list-item>
