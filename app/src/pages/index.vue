@@ -1,0 +1,9 @@
+<script lang="ts" setup></script>
+
+<template>
+  <h1>Home Page</h1>
+</template>
+
+<script setup>
+  const variants = ['elevated', 'flat', 'tonal', 'outlined']
+</script>
