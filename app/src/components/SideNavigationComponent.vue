@@ -2,7 +2,7 @@
 import { ref } from "vue";
 
 const drawer = ref(true);
-const rail = ref(true);
+const rail = ref(false);
 </script>
 
 <template>
@@ -16,7 +16,8 @@ const rail = ref(true);
       >
         <v-divider></v-divider>
 
-        <v-img src="../assets/logo.png" class="ma-2 w-50 mb-4"></v-img>
+        <v-img v-if="!rail" src="../assets/logo.png" class="ma-2 w-50 mb-4"></v-img>
+        <v-img v-if="rail" src="../assets/small-logo.png" class="w-50 mx-auto ma-2"></v-img>
         <v-list density="compact" nav>
           <v-list-item
             link

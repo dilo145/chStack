@@ -4,11 +4,17 @@ import SideNavigationComponent from "@/components/SideNavigationComponent.vue";
 
 <template>
   <v-app>
-    <div class="d-flex">
+    <div class="d-flex content">
       <SideNavigationComponent />
-      <v-container>
+      <v-container  >
         <router-view />
       </v-container>
     </div>
   </v-app>
 </template>
+
+<style>
+.content {
+  background-color: #f3efff;
+}
+</style>
