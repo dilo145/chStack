@@ -21,28 +21,69 @@ class LessonRepository extends ServiceEntityRepository
         parent::__construct($registry, Lesson::class);
     }
 
-//    /**
-//     * @return Lesson[] Returns an array of Lesson objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('l')
-//            ->andWhere('l.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('l.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
+    public function getAll()
+    {
+        return $this->createQueryBuilder('l')
+            ->select('l.id', 'l.title', 'l.description', 'l.videoUrl', 'l.createdAt')
+            ->getQuery()
+            ->getResult();
+    }
 
-//    public function findOneBySomeField($value): ?Lesson
-//    {
-//        return $this->createQueryBuilder('l')
-//            ->andWhere('l.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+    public function getOne(int $id)
+    {
+        return $this->createQueryBuilder('l')
+            ->select('l.id', 'l.title', 'l.description', 'l.videoUrl', 'l.createdAt')
+            ->where('l.id = :id')
+            ->setParameter('id', $id)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
+    public function create($data)
+    {
+        $Lesson = new Lesson();
+        $Lesson->setTitle($data['title']);
+        $Lesson->setDescription($data['description']);
+
+        $em = $this->getEntityManager();
+        $em->persist($Lesson);
+        $em->flush();
+
+        return $Lesson;
+    }
+
+    public function update($data, int $id)
+    {
+        $Lesson = $this->find($id);
+
+        if (!$Lesson) {
+            return null;
+        }
+
+        $Lesson->setTitle($data['title']);
+        $Lesson->setDescription($data['description']);
+
+        $em = $this->getEntityManager();
+        $em->persist($Lesson);
+        $em->flush();
+
+        return $Lesson;
+    }
+
+    public function delete(int $id)
+    {
+        $Lesson = $this->find($id);
+
+        if (!$Lesson) {
+            return null;
+        }
+
+        $em = $this->getEntityManager();
+        $em->remove($Lesson);
+        $em->flush();
+
+        return $Lesson;
+    }
+
+
 }
