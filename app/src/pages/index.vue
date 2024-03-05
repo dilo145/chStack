@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import CardOragnismeComponent from "@/./components/CardOrganismeComponent.vue";
+const variants = ['elevated', 'flat', 'tonal', 'outlined']
 </script>
 
 <template>
@@ -7,6 +8,3 @@ import CardOragnismeComponent from "@/./components/CardOrganismeComponent.vue";
   <CardOragnismeComponent />
 </template>
 
-<script setup>
-  const variants = ['elevated', 'flat', 'tonal', 'outlined']
-</script>
