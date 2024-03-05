@@ -8,7 +8,7 @@ const rail = ref(true);
 // Function to fetch JSON data from the API
 const fetchData = async () => {
   try {
-    const response = await WebService.get<any>("users"); // Await the response directly
+    const response = await WebService.get<any>("register"); // Await the response directly
     let jsonData = response; // Extract the JSON data from the response
     console.log(jsonData.firstName);
   } catch (error) {
