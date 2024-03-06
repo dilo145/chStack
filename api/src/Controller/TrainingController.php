@@ -2,26 +2,54 @@
 
 namespace App\Controller;
 
-use App\Entity\User;
+use App\Entity\Training;
+use App\Entity\Organism;
+use App\Entity\Former;
 use App\Repository\TrainingRepository;
-use App\Repository\UserRepository;
+use App\Repository\OrganismRepository;
+use App\Repository\FormerRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Doctrine\ORM\EntityManagerInterface;
 
-
+#[Route('/api/trainings')]
 class TrainingController extends AbstractController
 {
-    #[Route('/api/training', name: 'training_show', methods: ['GET'])]
-    public function show(TrainingRepository $trainingRepository): Response
+
+    private $entityManager;
+
+    public function __construct(EntityManagerInterface $entityManager)
     {
-        $training = $trainingRepository->findOneBy([], ['id' => 'DESC']);
+        $this->entityManager = $entityManager;
+    }
 
-        if (!$training) {
-            throw $this->createNotFoundException('User not found');
-        }
+    #[Route('/new', name: 'api_training_new', methods: ['POST'])]
+    public function newTraining(Request $request)
+    {
+        $organism = $this->entityManager->getRepository(Organism::class)->findOneBy(['id' => 1]);
+        $former = $this->entityManager->getRepository(Former::class)->findOneBy(['id' => 1]);
 
+        $training = new Training();
+        $training->setName("ang");
+        $training->setGoalTraining("var");
+        $training->setOrganism($organism);
+        $training->addFormer($former);
+
+            $this->entityManager->persist($training);
+            $this->entityManager->flush();
         return $this->json($training);
     }
+
+    #[Route('/', name: 'app_training_index', methods: ['GET'])]
+    public function index()
+    {
+        $trainings = $this->entityManager->getRepository(Training::class)->findAll();
+        // dd($trainings);
+        return $this->json($trainings);
+        // return $this->json(null);
+    }
+
 }

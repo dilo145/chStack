@@ -21,7 +21,7 @@ class Training
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $goalTraining = null;
 
-    #[ORM\ManyToOne(inversedBy: 'training')]
+    #[ORM\ManyToOne(inversedBy: 'training', fetch: "EAGER")]
     private ?Organism $organism = null;
 
     #[ORM\OneToMany(targetEntity: Registration::class, mappedBy: 'training')]
@@ -30,10 +30,14 @@ class Training
     #[ORM\ManyToMany(targetEntity: Lesson::class, inversedBy: 'trainings')]
     private Collection $lesson;
 
+    #[ORM\ManyToMany(targetEntity: Former::class, mappedBy: 'trainings')]
+    private Collection $formers;
+
     public function __construct()
     {
         $this->registrations = new ArrayCollection();
         $this->lesson = new ArrayCollection();
+        $this->formers = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -65,6 +69,7 @@ class Training
         return $this;
     }
 
+    
     public function getOrganism(): ?Organism
     {
         return $this->organism;
@@ -127,6 +132,33 @@ class Training
     public function removeLesson(Lesson $lesson): static
     {
         $this->lesson->removeElement($lesson);
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Former>
+     */
+    public function getFormers(): Collection
+    {
+        return $this->formers;
+    }
+
+    public function addFormer(Former $former): static
+    {
+        if (!$this->formers->contains($former)) {
+            $this->formers->add($former);
+            $former->addTraining($this);
+        }
+
+        return $this;
+    }
+
+    public function removeFormer(Former $former): static
+    {
+        if ($this->formers->removeElement($former)) {
+            $former->removeTraining($this);
+        }
 
         return $this;
     }

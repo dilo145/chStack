@@ -11,6 +11,10 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
+#[ORM\InheritanceType("JOINED")]
+#[ORM\DiscriminatorColumn(name: "user_type", type: "string")]
+#[ORM\DiscriminatorMap(["former" => "Former", "student" => "Student"])]
+#[MappedSuperclass]
 #[UniqueEntity(fields: ['email'], message: 'There is already an account with this email')]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
@@ -53,12 +57,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\OneToMany(targetEntity: Message::class, mappedBy: 'reciver')]
     private Collection $messagesRecived;
-
-    #[ORM\OneToOne(inversedBy: 'user', cascade: ['persist', 'remove'])]
-    private ?Student $student = null;
-
-    #[ORM\OneToOne(inversedBy: 'user', cascade: ['persist', 'remove'])]
-    private ?Former $former = null;
 
     public function __construct()
     {
@@ -263,30 +261,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
                 $messagesRecived->setReciver(null);
             }
         }
-
-        return $this;
-    }
-
-    public function getStudent(): ?Student
-    {
-        return $this->student;
-    }
-
-    public function setStudent(?Student $student): static
-    {
-        $this->student = $student;
-
-        return $this;
-    }
-
-    public function getFormer(): ?Former
-    {
-        return $this->former;
-    }
-
-    public function setFormer(?Former $former): static
-    {
-        $this->former = $former;
 
         return $this;
     }
