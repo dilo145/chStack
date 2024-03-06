@@ -1,8 +1,13 @@
 <script setup lang="ts">
 import { ref } from "vue"
+import { useRouter } from "vue-router";
 
 const search = ref("")
+const router = useRouter()
 
+function onAddClick(){
+  router.push("/classe_show")
+}
 
 const variants = ['Classe 1', 'Classe 2', 'Classe 3', 'Classe 4']
 </script>
@@ -51,7 +56,7 @@ const variants = ['Classe 1', 'Classe 2', 'Classe 3', 'Classe 4']
         </v-card>
       </v-col>
       <!-- la colonne d'ajout -->
-      <v-col>
+      <v-col @click="onAddClick">
         <v-card
           min-width="250"
           max-width="250"
@@ -59,9 +64,9 @@ const variants = ['Classe 1', 'Classe 2', 'Classe 3', 'Classe 4']
           class="d-flex justify-center"
 
         >
-          <v-card-actions>
+          <v-btn width="100%" height="150px">
             <v-icon icon="mdi-plus" size="x-large"></v-icon>
-          </v-card-actions>
+          </v-btn>
         </v-card>
       </v-col>
     </v-row>

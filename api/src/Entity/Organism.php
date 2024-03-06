@@ -6,6 +6,7 @@ use App\Repository\OrganismRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Ignore;
 
 #[ORM\Entity(repositoryClass: OrganismRepository::class)]
 class Organism
@@ -21,15 +22,15 @@ class Organism
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $logo = null;
 
-    #[ORM\ManyToMany(targetEntity: Former::class, inversedBy: 'organisms')]
-    private Collection $former;
-
+    #[Ignore]
     #[ORM\OneToMany(targetEntity: Training::class, mappedBy: 'organism')]
     private Collection $training;
 
+    #[ORM\Column]
+    private ?int $createdBy = null;
+
     public function __construct()
     {
-        $this->former = new ArrayCollection();
         $this->training = new ArrayCollection();
     }
 
@@ -62,33 +63,6 @@ class Organism
         return $this;
     }
 
-    /**
-     * @return Collection<int, Former>
-     */
-    public function getFormer(): Collection
-    {
-        return $this->former;
-    }
-
-    public function addFormer(Former $former): static
-    {
-        if (!$this->former->contains($former)) {
-            $this->former->add($former);
-        }
-
-        return $this;
-    }
-
-    public function removeFormer(Former $former): static
-    {
-        $this->former->removeElement($former);
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Training>
-     */
     public function getTraining(): Collection
     {
         return $this->training;
@@ -112,6 +86,18 @@ class Organism
                 $training->setOrganism(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getCreatedBy(): ?int
+    {
+        return $this->createdBy;
+    }
+
+    public function setCreatedBy(int $createdBy): static
+    {
+        $this->createdBy = $createdBy;
 
         return $this;
     }

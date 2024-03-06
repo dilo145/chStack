@@ -22,15 +22,15 @@ class WebService {
     }
   }
 
-  async create<JSON>(path: string, body: any): Promise<JSON> {
+  async post<JSON>(path: string, data: JSON): Promise<JSON> {
     try {
       const response: AxiosResponse<JSON> = await this.api.post<JSON>(
         path,
-        JSON.stringify(body)
+        data
       );
       return response.data;
     } catch (error) {
-      console.error("Error creating item:", error);
+      console.error("Error posting data:", error);
       throw error;
     }
   }
