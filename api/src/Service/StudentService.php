@@ -86,10 +86,10 @@ class StudentService
         $student->setFirstName($data['firstName']);
         $student->setLastName($data['lastName']);
         $student->setEmail($data['email']);
-        $student->setPhoto($data['photo']);
+        $student->setPhoto($data['photo'] ?? null);
         $student->setCreatedAt();
         $student->setInvidual($data['invidual']);
-        $student->setPassword('password');
+        $student->setPassword($data['password']);
 
         try {
             $this->entityManager->persist($student);
