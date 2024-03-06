@@ -30,7 +30,7 @@ class Lesson
     #[ORM\ManyToMany(targetEntity: Training::class, mappedBy: 'lesson')]
     private Collection $trainings;
 
-    #[ORM\OneToMany(targetEntity: Categories::class, mappedBy: 'lesson')]
+    #[ORM\OneToMany(targetEntity: Categories::class, mappedBy: 'lesson', fetch: "EAGER")]
     private Collection $category;
 
     #[ORM\ManyToOne(inversedBy: 'lessons', fetch: "EAGER")]
