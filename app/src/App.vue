@@ -6,14 +6,11 @@ const token = ref(false)
 
 <template>
   <v-app>
-    <div class="d-flex content" v-if="token">
+    <div class="d-flex content">
       <SideNavigationComponent />
       <v-container>
         <router-view />
       </v-container>
-    </div>
-    <div v-if="!token">
-      <router-view />
     </div>
   </v-app>
 </template>
