@@ -1,8 +1,24 @@
 <script setup lang="ts">
-import {ref} from "vue";
+import { useFormerStore } from "@/store/useFormerStore";
+import { onMounted, ref, toRefs } from "vue";
+import { useRouter } from "vue-router";
+
+const formerStore = useFormerStore();
+const router = useRouter();
+
+onMounted(() => {
+});
+
+const { newFormer } = toRefs(formerStore);
+
+function onFormerSubmit() {
+  formerStore.createFormer();
+}
 
 const visible = ref(false);
 const tab = ref(null);
+
+
 </script>
 
 <template>
@@ -68,6 +84,9 @@ const tab = ref(null);
                   Connexion
                 </v-btn>
               </v-window-item>
+
+              <!-- Inscription -->
+
               <v-window-item value="two">
                 <div class="text-subtitle-1 text-medium-emphasis">Nom</div>
 
@@ -75,6 +94,8 @@ const tab = ref(null);
                   density="compact"
                   placeholder="Nom"
                   variant="outlined"
+                  v-model="newFormer.lastName"
+                  required
                 ></v-text-field>
 
                 <div class="text-subtitle-1 text-medium-emphasis">Prenom</div>
@@ -83,6 +104,8 @@ const tab = ref(null);
                   density="compact"
                   placeholder="Prenom"
                   variant="outlined"
+                  v-model="newFormer.firstName"
+                  required
                 ></v-text-field>
 
 
@@ -93,6 +116,8 @@ const tab = ref(null);
                   placeholder="Email address"
                   prepend-inner-icon="mdi-email-outline"
                   variant="outlined"
+                  v-model="newFormer.email"
+                  required
                 ></v-text-field>
 
                 <div class="text-subtitle-1 text-medium-emphasis d-flex align-center justify-space-between">
@@ -103,16 +128,19 @@ const tab = ref(null);
                   :append-inner-icon="visible ? 'mdi-eye-off' : 'mdi-eye'"
                   :type="visible ? 'text' : 'password'"
                   density="compact"
-                  placeholder="Enter your password"
+                  placeholder="Indiquer mot de passe"
                   prepend-inner-icon="mdi-lock-outline"
                   variant="outlined"
                   @click:append-inner="visible = !visible"
+                  v-model="newFormer.password"
+                  required
                 ></v-text-field>
 
                 <v-card
                   class="mb-6"
                   color="surface-variant"
                   variant="tonal"
+                  required
                 >
                 </v-card>
 
@@ -121,7 +149,9 @@ const tab = ref(null);
                   color="blue"
                   size="large"
                   variant="tonal"
+
                   block
+                  @click="onFormerSubmit"
                 >
                   Inscription
                 </v-btn>

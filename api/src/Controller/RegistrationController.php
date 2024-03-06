@@ -23,7 +23,7 @@ use SymfonyCasts\Bundle\VerifyEmail\Exception\VerifyEmailExceptionInterface;
 
 class RegistrationController extends AbstractController
 {
-    #[Route('/api/register', name: 'app_register', methods: ['GET'])]
+    #[Route('/api/register', name: 'app_register', methods: ['POST'])]
     public function register(
         Request $request,
         UserPasswordHasherInterface $userPasswordHasher,
@@ -47,8 +47,6 @@ class RegistrationController extends AbstractController
 
         $entityManager->persist($user);
         $entityManager->flush();
-
-        $this->addFlash('success', 'Your account has been created.');
 
         return $this->json($user);
     }

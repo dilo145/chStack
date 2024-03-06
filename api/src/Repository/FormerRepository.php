@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\Former;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -16,33 +17,41 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class FormerRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    private EntityManagerInterface $entityManager;
+    private UserPasswordEncoderInterface $passwordEncoder;
+
+    public function __construct(EntityManagerInterface $entityManager, UserPasswordEncoderInterface $passwordEncoder)
     {
-        parent::__construct($registry, Former::class);
+        $this->entityManager = $entityManager;
+        $this->passwordEncoder = $passwordEncoder;
     }
 
-//    /**
-//     * @return Former[] Returns an array of Former objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('f')
-//            ->andWhere('f.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('f.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
+    public function create(array $data): array
+    {
+        // Create a new Former instance
+        $former = new Former();
 
-//    public function findOneBySomeField($value): ?Former
-//    {
-//        return $this->createQueryBuilder('f')
-//            ->andWhere('f.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+        // Set inherited properties from User
+        $former->setFirstName($data['firstName']);
+        $former->setLastName($data['lastName']);
+        $former->setEmail($data['email']);
+        // Set the password, make sure to encode it
+        $encodedPassword = $this->passwordEncoder->encodePassword($former, $data['password']);
+        $former->setPassword($encodedPassword);
+        // Set the properties specific to Former
+        $former->setSpeciality($data['speciality']);
+
+        // ... Set the photo, handling base64 encoded string
+
+        // Set the timestamps if necessary
+        $former->setCreatedAt(); // This will set the current timestamp
+        // $former->setUpdatedAt(); // You may not need to set this upon creation
+
+        // Persist the former object
+        $this->entityManager->persist($former);
+        $this->entityManager->flush();
+
+        // Return some kind of response data, typically the ID or the object itself
+        return ['id' => $former->getId()];
+    }
 }

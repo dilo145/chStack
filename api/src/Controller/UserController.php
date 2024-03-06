@@ -12,7 +12,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
-
+#[Route('/api/user')]
 class UserController extends AbstractController
 {
 
@@ -23,7 +23,7 @@ class UserController extends AbstractController
         $this->entityManager = $entityManager;
     }
 
-    #[Route('/api/user', name: 'app_user_index', methods: ['GET'])]
+    #[Route('/findUserById', name: 'find_user_by_id', methods: ['GET'])]
     public function index(UserRepository $userRepository): Response
     {
         $users = $userRepository->findOneBy(['id' => 1]);
