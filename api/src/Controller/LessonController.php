@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Lesson;
 use App\Repository\LessonRepository;
+use App\Repository\LevelRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -32,11 +33,17 @@ class LessonController extends AbstractController
     }
 
     #[Route('/api/create-lesson', name: 'lesson_create', methods: ['POST'])]
-    public function create(Request $request,  LessonRepository $LessonRepository,): Response
+    public function create(Request $request,  LessonRepository $LessonRepository, LevelRepository $LevelRepository): Response
     {
         $data = json_decode($request->getContent(), true);
-        
-        $response = $LessonRepository->create($data);
+
+        $level = $LevelRepository->find($data["level"]["id"]);
+
+        if ($level == null) {
+            throw $this->createNotFoundException('Error while creating lesson');
+        }
+
+        $response = $LessonRepository->create($data, $level);
 
         if (!$response) {
             throw $this->createNotFoundException('Error while creating lesson');

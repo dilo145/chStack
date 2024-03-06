@@ -3,6 +3,8 @@
 namespace App\Repository;
 
 use App\Entity\Lesson;
+use App\Entity\Categories;
+use App\Entity\Level;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -39,7 +41,7 @@ class LessonRepository extends ServiceEntityRepository
             ->getOneOrNullResult();
     }
 
-    public function create($data)
+    public function create($data, $level)
     {
         $lesson = new Lesson();
         $lesson->setTitle($data['title']);
@@ -47,6 +49,8 @@ class LessonRepository extends ServiceEntityRepository
         $lesson->setPlace($data['place']);
         $lesson->setGoal($data['goal']);
 
+        $lesson->setLevel($level);
+        // $lesson->setCategory($data['category']); TODO: implement after ig merge
 
         $em = $this->getEntityManager();
         $em->persist($lesson);

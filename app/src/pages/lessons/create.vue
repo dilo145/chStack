@@ -62,6 +62,7 @@ function onLessonSubmit() {
             label="Level"
             outlined
             required
+            return-object
           >
           </v-select>
         </v-col>
@@ -73,6 +74,7 @@ function onLessonSubmit() {
             label="Category"
             outlined
             required
+            return-object
           >
           </v-select>
         </v-col>
