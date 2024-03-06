@@ -42,7 +42,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $photo = null;
-    private ?string $user_type = null;
 
     #[ORM\Column]
     private ?\DateTimeImmutable $createdAt = null;
@@ -262,18 +261,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
                 $messagesRecived->setReciver(null);
             }
         }
-
-        return $this;
-    }
-
-    public function getUserType(): ?string
-    {
-        return $this->user_type;
-    }
-
-    public function setUserType(string $user_type): static
-    {
-        $this->user_type = $user_type;
 
         return $this;
     }

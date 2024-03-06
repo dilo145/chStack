@@ -8,14 +8,17 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class StudentService
 {
     private $entityManager;
+    private $userPasswordHasher;
 
-    public function __construct(EntityManagerInterface $entityManager)
+    public function __construct(EntityManagerInterface $entityManager, UserPasswordHasherInterface $userPasswordHasher)
     {
         $this->entityManager = $entityManager;
+        $this->userPasswordHasher = $userPasswordHasher;
     }
 
     public function getOneStudent(int $id): JsonResponse
@@ -89,7 +92,12 @@ class StudentService
         $student->setPhoto($data['photo'] ?? null);
         $student->setCreatedAt();
         $student->setInvidual($data['invidual']);
-        $student->setPassword($data['password']);
+        $student->setPassword(
+            $this->userPasswordHasher->hashPassword(
+                $student,
+                $data['password']
+            )
+        );
 
         try {
             $this->entityManager->persist($student);
@@ -133,9 +141,14 @@ class StudentService
             $student->setIndividual($data['individual']);
         }
         if (isset($data['password'])) {
-            $student->setPassword($data['password']);
+            $student->setPassword(
+                $this->userPasswordHasher->hashPassword(
+                    $student,
+                    $data['password']
+                )
+            );
         }
-        
+
         $student->setUpdatedAt();
 
         try {
@@ -148,7 +161,7 @@ class StudentService
         return new JsonResponse(['message' => 'Student edited successfully'], Response::HTTP_OK);
     }
 
-    public function deleteStudent(int $id): JsonResponse
+    public function deleteStudent(Request $request, int $id): JsonResponse
     {
         $student = $this->entityManager->getRepository(Student::class)->find($id);
 
@@ -166,5 +179,4 @@ class StudentService
 
         return new JsonResponse(['message' => 'Student deleted successfully'], Response::HTTP_OK);
     }
-
 }

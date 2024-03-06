@@ -1,6 +1,5 @@
 import api from "@/services/WebService";
 import { RetourLogin } from "@/types/retourLogin";
-import { log } from "console";
 import { defineStore } from "pinia";
 import { reactive } from "vue";
 import { useRouter } from "vue-router";
