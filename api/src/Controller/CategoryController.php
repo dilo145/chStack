@@ -9,9 +9,10 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
+#[Route('/api/categories')]
 class CategoryController extends AbstractController
 {
-    #[Route('/api/get-categories', name: 'categories_show', methods: ['GET'])]
+    #[Route('/', name: 'categories_show', methods: ['GET'])]
     public function getAll(CategoriesRepository $CategoriesRepository): Response
     {
         $categories = $CategoriesRepository->findAll();
@@ -19,7 +20,7 @@ class CategoryController extends AbstractController
         return $this->json($categories);
     }
 
-    #[Route('/api/get-category/{id}', name: 'category_shows', methods: ['GET'])]
+    #[Route('/{id}', name: 'category_shows', methods: ['GET'])]
     public function getOne(CategoriesRepository $CategoriesRepository, int $id): Response
     {
         $category = $CategoriesRepository->find($id);
@@ -31,7 +32,7 @@ class CategoryController extends AbstractController
         return $this->json($category);
     }
 
-    // #[Route('/api/create-category', name: 'category_create', methods: ['POST'])]
+    // #[Route('/create-category', name: 'category_create', methods: ['POST'])]
     // public function create(Request $request,  CategoriesRepository $CategoriesRepository,): Response
     // {
     //     $data = json_decode($request->getContent(), true);
@@ -45,7 +46,7 @@ class CategoryController extends AbstractController
     //     return $this->json($response);
     // }
 
-    // #[Route('/api/update-category/{id}', name: 'category_update', methods: ['PUT'])]
+    // #[Route('/update-category/{id}', name: 'category_update', methods: ['PUT'])]
     // public function update(Request $request, CategoriesRepository $CategoriesRepository, int $id): Response
     // {
     //     $data = json_decode($request->getContent(), true);
@@ -59,7 +60,7 @@ class CategoryController extends AbstractController
     //     return $this->json($response);
     // }
 
-    // #[Route('/api/delete-category/{id}', name: 'category_delete', methods: ['DELETE'])]
+    // #[Route('/delete-category/{id}', name: 'category_delete', methods: ['DELETE'])]
     // public function delete(CategoriesRepository $CategoriesRepository, int $id): Response
     // {
     //     if ($id === null) {

@@ -76,7 +76,36 @@ const { editLesson, isEditing } = toRefs(lessonStore);
         required
       ></v-text-field>
 
-      <!-- buttons at the end  -->
+      <v-row>
+        <v-col cols="12" md="6">
+          <v-select
+            v-model="editLesson.level"
+            :items="lessonStore.levels"
+            item-title="name"
+            label="Level"
+            :disabled="!isEditing"
+            outlined
+            required
+            return-object
+          >
+          </v-select>
+        </v-col>
+        <v-col cols="12" md="6">
+          <v-select
+            v-model="editLesson.category"
+            multiple
+            :items="lessonStore.categories"
+            item-title="name"
+            label="Category"
+            :disabled="!isEditing"
+            outlined
+            required
+            return-object
+          >
+          </v-select>
+        </v-col>
+      </v-row>
+
       <v-row class="mt-6 justify-end">
         <v-btn
           variant="text"

@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Lesson;
+use App\Repository\CategoriesRepository;
 use App\Repository\LessonRepository;
 use App\Repository\LevelRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -10,9 +11,10 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
+#[Route('/api/lessons')]
 class LessonController extends AbstractController
 {
-    #[Route('/api/get-lessons', name: 'lessons_show', methods: ['GET'])]
+    #[Route('/', name: 'lessons_show', methods: ['GET'])]
     public function getAll(LessonRepository $LessonRepository): Response
     {
         $lessons = $LessonRepository->findAll();
@@ -20,7 +22,7 @@ class LessonController extends AbstractController
         return $this->json($lessons);
     }
 
-    #[Route('/api/get-lesson/{id}', name: 'lesson_show', methods: ['GET'])]
+    #[Route('/{id}', name: 'lesson_show', methods: ['GET'])]
     public function getOne(LessonRepository $LessonRepository, int $id): Response
     {
         $Lesson = $LessonRepository->find($id);
@@ -32,18 +34,19 @@ class LessonController extends AbstractController
         return $this->json($Lesson);
     }
 
-    #[Route('/api/create-lesson', name: 'lesson_create', methods: ['POST'])]
-    public function create(Request $request,  LessonRepository $LessonRepository, LevelRepository $LevelRepository): Response
+    #[Route('/new', name: 'lesson_create', methods: ['POST'])]
+    public function create(Request $request,  LessonRepository $LessonRepository, LevelRepository $LevelRepository, CategoriesRepository $CategoriesRepository): Response
     {
         $data = json_decode($request->getContent(), true);
 
         $level = $LevelRepository->find($data["level"]["id"]);
+        $category = $CategoriesRepository->find($data["category"]["id"]);
 
-        if ($level == null) {
-            throw $this->createNotFoundException('Error while creating lesson');
+        if ($level == null || $category == null) {
+            throw $this->createNotFoundException('Error while accessing joined data');
         }
 
-        $response = $LessonRepository->create($data, $level);
+        $response = $LessonRepository->create($data, $level, $category);
 
         if (!$response) {
             throw $this->createNotFoundException('Error while creating lesson');
@@ -52,12 +55,20 @@ class LessonController extends AbstractController
         return $this->json($response);
     }
 
-    #[Route('/api/update-lesson/{id}', name: 'lesson_update', methods: ['PUT'])]
-    public function update(Request $request, LessonRepository $LessonRepository, int $id): Response
+    #[Route('/edit/{id}', name: 'lesson_update', methods: ['PUT'])]
+    public function update(Request $request, LessonRepository $LessonRepository, int $id, LevelRepository $LevelRepository, CategoriesRepository $CategoriesRepository): Response
     {
         $data = json_decode($request->getContent(), true);
+
+        $level = $LevelRepository->find($data["level"]["id"]);
+    
+        $categories = $data["category"];
+
+        if ($level == null || $categories == null) {
+            throw $this->createNotFoundException('Error while accessing joined data');
+        }
         
-        $response = $LessonRepository->update($data, $id);
+        $response = $LessonRepository->update($data, $id, $level, $categories);
 
         if (!$response) {
             throw $this->createNotFoundException('Error while updating lesson');
@@ -66,7 +77,7 @@ class LessonController extends AbstractController
         return $this->json($response);
     }
 
-    #[Route('/api/delete-lesson/{id}', name: 'lesson_delete', methods: ['DELETE'])]
+    #[Route('/delete/{id}', name: 'lesson_delete', methods: ['DELETE'])]
     public function delete(LessonRepository $LessonRepository, int $id): Response
     {
         if ($id === null) {

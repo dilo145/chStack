@@ -34,14 +34,14 @@ class LessonRepository extends ServiceEntityRepository
     public function getOne(int $id)
     {
         return $this->createQueryBuilder('l')
-            ->select('l.id', 'l.title', 'l.description', 'l.videoUrl', 'l.createdAt')
+            ->select('l.id', 'l.title', 'l.description')
             ->where('l.id = :id')
             ->setParameter('id', $id)
             ->getQuery()
             ->getOneOrNullResult();
     }
 
-    public function create($data, $level)
+    public function create($data, $level, $category)
     {
         $lesson = new Lesson();
         $lesson->setTitle($data['title']);
@@ -50,7 +50,8 @@ class LessonRepository extends ServiceEntityRepository
         $lesson->setGoal($data['goal']);
 
         $lesson->setLevel($level);
-        // $lesson->setCategory($data['category']); TODO: implement after ig merge
+        $lesson->addCategory($category);
+
 
         $em = $this->getEntityManager();
         $em->persist($lesson);
@@ -59,7 +60,7 @@ class LessonRepository extends ServiceEntityRepository
         return $lesson;
     }
 
-    public function update($data, int $id)
+    public function update($data, int $id, $level, $categories)
     {
         $lesson = $this->find($id);
 
@@ -71,6 +72,19 @@ class LessonRepository extends ServiceEntityRepository
         $lesson->setDescription($data['description']);
         $lesson->setPlace($data['place']);
         $lesson->setGoal($data['goal']);
+
+        $lesson->setLevel($level);
+        $db_categories = $lesson->getCategory();
+
+        foreach ($db_categories as $db_category) {
+            $lesson->removeCategory($db_category);
+        }
+
+        foreach ($categories as $category) {
+            $cat = $this->getEntityManager()->getRepository(Categories::class)->find($category['id']);
+
+            $lesson->addCategory($cat);
+        }
 
         $em = $this->getEntityManager();
         $em->persist($lesson);
