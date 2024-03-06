@@ -54,12 +54,12 @@ class UserController extends AbstractController
         $user->setPhoto($data['photo']);
         $user->setCreatedAt();
 
-        try {
+        // try {
             $this->entityManager->persist($user);
             $this->entityManager->flush();
-        } catch (\Exception $e) {
-            return new JsonResponse(['error' => 'Failed to save the user'], Response::HTTP_INTERNAL_SERVER_ERROR);
-        }
+        // } catch (\Exception $e) {
+        //     return new JsonResponse(['error' => 'Failed to save the user'], Response::HTTP_INTERNAL_SERVER_ERROR);
+        // }
 
         return new JsonResponse(['message' => 'User created successfully'], Response::HTTP_CREATED);
     }

@@ -8,6 +8,10 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
+#[ORM\InheritanceType("JOINED")]
+#[ORM\DiscriminatorColumn(name: "user_type", type: "string")]
+#[ORM\DiscriminatorMap(["former" => "Former", "student" => "Student"])]
+#[MappedSuperclass]
 class User
 {
     #[ORM\Id]
@@ -42,11 +46,8 @@ class User
     #[ORM\OneToMany(targetEntity: Message::class, mappedBy: 'reciver')]
     private Collection $messagesRecived;
 
-    #[ORM\OneToOne(inversedBy: 'user', cascade: ['persist', 'remove'])]
-    private ?Student $student = null;
-
-    #[ORM\OneToOne(inversedBy: 'user', cascade: ['persist', 'remove'])]
-    private ?Former $former = null;
+    #[ORM\Column(length: 255)]
+    private ?string $password = null;
 
     public function __construct()
     {
@@ -203,26 +204,14 @@ class User
         return $this;
     }
 
-    public function getStudent(): ?Student
+    public function getPassword(): ?string
     {
-        return $this->student;
+        return $this->password;
     }
 
-    public function setStudent(?Student $student): static
+    public function setPassword(string $password): static
     {
-        $this->student = $student;
-
-        return $this;
-    }
-
-    public function getFormer(): ?Former
-    {
-        return $this->former;
-    }
-
-    public function setFormer(?Former $former): static
-    {
-        $this->former = $former;
+        $this->password = $password;
 
         return $this;
     }
