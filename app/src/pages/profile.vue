@@ -8,7 +8,7 @@ const jsonData = ref(null); // Declare jsonData as a reactive variable
 // Function to fetch JSON data from the API
 async function fetchData() {
   try {
-    const response = await WebService.get<any>("users"); // Await the response directly
+    const response = await WebService.get<any>("user"); // Await the response directly
     jsonData.value = response; // Update jsonData with the response
   } catch (error) {
     console.error("Error fetching data:", error);

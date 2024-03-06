@@ -11,6 +11,7 @@ use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Doctrine\ORM\EntityManagerInterface;
 
+
 class UserController extends AbstractController
 {
 
@@ -21,11 +22,10 @@ class UserController extends AbstractController
         $this->entityManager = $entityManager;
     }
 
-    #[Route('/', name: 'app_user_index', methods: ['GET'])]
+    #[Route('/api/user', name: 'app_user_index', methods: ['GET'])]
     public function index(UserRepository $userRepository): Response
     {
-        $users = $userRepository->findAll();
-
+        $users = $userRepository->findOneBy(['id' => 1]);
         return $this->json($users);
     }
 
