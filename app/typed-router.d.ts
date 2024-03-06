@@ -41,8 +41,12 @@ declare module 'vue-router/auto/routes' {
   export interface RouteNamedMap {
     '/': RouteRecordInfo<'/', '/', Record<never, never>, Record<never, never>>,
     '/classes/': RouteRecordInfo<'/classes/', '/classes', Record<never, never>, Record<never, never>>,
+    '/classes/[id]': RouteRecordInfo<'/classes/[id]', '/classes/:id', { id: ParamValue<true> }, { id: ParamValue<false> }>,
+    '/classes/create': RouteRecordInfo<'/classes/create', '/classes/create', Record<never, never>, Record<never, never>>,
     '/grades': RouteRecordInfo<'/grades', '/grades', Record<never, never>, Record<never, never>>,
-    '/lessons': RouteRecordInfo<'/lessons', '/lessons', Record<never, never>, Record<never, never>>,
+    '/lessons/': RouteRecordInfo<'/lessons/', '/lessons', Record<never, never>, Record<never, never>>,
+    '/lessons/[id]': RouteRecordInfo<'/lessons/[id]', '/lessons/:id', { id: ParamValue<true> }, { id: ParamValue<false> }>,
+    '/lessons/create': RouteRecordInfo<'/lessons/create', '/lessons/create', Record<never, never>, Record<never, never>>,
     '/login': RouteRecordInfo<'/login', '/login', Record<never, never>, Record<never, never>>,
     '/organisms': RouteRecordInfo<'/organisms', '/organisms', Record<never, never>, Record<never, never>>,
     '/profile': RouteRecordInfo<'/profile', '/profile', Record<never, never>, Record<never, never>>,

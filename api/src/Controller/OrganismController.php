@@ -44,4 +44,12 @@ class OrganismController extends AbstractController
         return $this->json($organism);
     }
 
+    #[Route('/', name: 'app_organism_index', methods: ['GET'])]
+    public function getAll(OrganismRepository $OrganismRepository): Response
+    {
+        $organisms = $OrganismRepository->findAll();
+
+        return $this->json($organisms);
+    }
+
 }

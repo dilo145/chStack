@@ -27,29 +27,72 @@ class TrainingController extends AbstractController
     }
 
     #[Route('/new', name: 'api_training_new', methods: ['POST'])]
-    public function newTraining(Request $request)
+    public function newTraining(Request $request, TrainingRepository $TrainingRepository, OrganismRepository $OrganismRepository)
     {
-        $organism = $this->entityManager->getRepository(Organism::class)->findOneBy(['id' => 1]);
-        $former = $this->entityManager->getRepository(Former::class)->findOneBy(['id' => 1]);
+        $data = json_decode($request->getContent(), true);
 
-        $training = new Training();
-        $training->setName("ang");
-        $training->setGoalTraining("var");
-        $training->setOrganism($organism);
-        $training->addFormer($former);
+        $organism = $OrganismRepository->find($data["organism"]["id"]);
 
-            $this->entityManager->persist($training);
-            $this->entityManager->flush();
-        return $this->json($training);
+        if ($organism == null) {
+            throw $this->createNotFoundException('Error while creating training');
+        }
+
+        $response = $TrainingRepository->create($data, $organism);
+
+        if (!$response) {
+            throw $this->createNotFoundException('Error while creating training');
+        }
+
+        return $this->json($response);
     }
 
     #[Route('/', name: 'app_training_index', methods: ['GET'])]
-    public function index()
+    public function getAll(TrainingRepository $TrainingRepository): Response
     {
-        $trainings = $this->entityManager->getRepository(Training::class)->findAll();
-        // dd($trainings);
+        $trainings = $TrainingRepository->findAll();
+
         return $this->json($trainings);
-        // return $this->json(null);
     }
 
+    #[Route('/update/{id}', name: 'training_update', methods: ['PUT'])]
+    public function update(Request $request, TrainingRepository $TrainingRepository, int $id, $organism): Response
+    {
+        $data = json_decode($request->getContent(), true);
+        
+        $response = $TrainingRepository->update($data, $id, $organism);
+
+        if (!$response) {
+            throw $this->createNotFoundException('Error while updating training');
+        }
+
+        return $this->json($response);
+    }
+
+    #[Route('/api/delete-training/{id}', name: 'training_delete', methods: ['DELETE'])]
+    public function delete(TrainingRepository $TrainingRepository, int $id): Response
+    {
+        if ($id === null) {
+            throw $this->createNotFoundException('Id is required');
+        }
+
+        $Training = $TrainingRepository->delete($id);
+
+        if (!$Training) {
+            throw $this->createNotFoundException('Training not found');
+        }
+
+        return $this->json($Training);
+    }
+
+    #[Route('/getOne/{id}', name: 'training_show', methods: ['GET'])]
+    public function getOne(TrainingRepository $TrainingRepository, int $id): Response
+    {
+        $Training = $TrainingRepository->find($id);
+
+        if (!$Training) {
+            throw $this->createNotFoundException('Training not found');
+        }
+
+        return $this->json($Training);
+    }
 }

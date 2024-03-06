@@ -1,40 +1,53 @@
 import api from "@/services/WebService";
+import { Organism } from "@/types/Organism";
 import { Training } from "@/types/Training";
 import { defineStore } from "pinia";
 import { onMounted, reactive, ref } from "vue";
+import { useRouter } from "vue-router";
 
-export const useLessonStore = defineStore("lesson", () => {
+export const useTrainingStore = defineStore("training", () => {
   const trainings = ref<Training[]>();
+  const organisms = ref<Organism[]>([]);
+  const router = useRouter();
   const isEditing = ref(false);
   const headers = ref<any[]>([
     {
-      title: "Title",
+      title: "ID",
       align: "start",
       sortable: false,
-      value: "title",
+      value: "id",
     },
-    { title: "Organisme ID", value: "organism_id" },
+    { title: "Organism", value: "organism.name" },
     { title: "Nom", value: "name" },
-    { title: "Goal", value: "goal_training" }
+    { title: "Goal", value: "goalTraining" },
   ]);
 
   const newTraining = reactive<Training>({
     id: 0,
-    organism_id: 0,
+    organism: {
+      id: 0,
+      name: "",
+      logo: ""
+    },
     name: "",
     goal_training: "",
   });
 
-  const editTraining = reactive<Training>({
+  const editTraining = ref<Training>({
     id: 0,
-    organism_id: 0,
+    organism: {
+      id: 0,
+      name: "",
+      logo: ""
+    },
     name: "",
     goal_training: "",
   });
 
-  function getTraining() {
+
+  function getTrainings() {
     api
-      .get<Training[]>("get-training")
+      .get<Training[]>("trainings")
       .then((data) => {
         trainings.value = data;
       })
@@ -43,8 +56,67 @@ export const useLessonStore = defineStore("lesson", () => {
       });
   }
 
+  function getTraining(id: string) {
+    api
+      .get<Training>(`/trainings/getOne/${id}`)
+      .then((data) => {
+        editTraining.value = data;
+        console.log(editTraining.value);
+      })
+      .catch((err) => {
+        console.error("Error fetching training:", err);
+      });
+  }
+
+  function createTraining() {
+    api
+      .post<Training>("/trainings/new", newTraining)
+      .then((response) => {
+        console.log(response);
+        router.push(`classes/${response.id}`);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+
+  function updateTraining(id: string) {
+    api
+      .put<Training>("trainings/update", parseInt(id), editTraining.value)
+      .then((response) => {
+        console.log(response);
+        editTraining.value = response;
+        isEditing.value = false;
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+
+  function deleteTraining(id: number) {
+    api
+      .delete<Training>("delete-training", id)
+      .then(() => {
+        getTrainings();
+      })
+      .catch((err) => {
+        console.error("Error deleting training:", err);
+      });
+  }
+
+  function getOrganisms() {
+    api
+      .get<Organism[]>("organisms")
+      .then((data) => {
+        organisms.value = data;
+      })
+      .catch((err) => {
+        console.error("Error fetching levels:", err);
+      });
+  }
+
   onMounted(() => {
-    getTraining();
+    getTrainings();
   });
 
   return {
@@ -53,5 +125,12 @@ export const useLessonStore = defineStore("lesson", () => {
     newTraining,
     editTraining,
     isEditing,
+    organisms,
+    getTrainings,
+    getOrganisms,
+    createTraining,
+    deleteTraining,
+    getTraining,
+    updateTraining,
   };
 });

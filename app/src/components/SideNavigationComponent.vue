@@ -43,7 +43,7 @@ const rail = ref(true);
           ></v-list-item>
           <v-list-item
             link
-            to="/classes/index.vue"
+            to="/classes"
             prepend-icon="mdi-school"
             title="Classes"
             value="classes"

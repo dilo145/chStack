@@ -45,4 +45,71 @@ class TrainingRepository extends ServiceEntityRepository
 //            ->getOneOrNullResult()
 //        ;
 //    }
+
+    public function getAll()
+    {
+        return $this->createQueryBuilder('t')
+            ->select('t.id', 't.organism_id', 't.name', 't.goal_training')
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function create($data, $organism)
+    {
+        $training = new Training();
+        $training->setName($data['name']);
+        $training->setGoalTraining($data['goal_training']);
+
+        $training->setOrganism($organism);
+
+        $em = $this->getEntityManager();
+        $em->persist($training);
+        $em->flush();
+
+        return $training;
+    }
+
+    public function getOne(int $id)
+    {
+        return $this->createQueryBuilder('t')
+            ->select('t.id', 't.organism_id', 't.name', 't.goal_training')
+            ->where('t.id = :id')
+            ->setParameter('id', $id)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
+    public function update($data, int $id, $organism)
+    {
+        $training = $this->find($id);
+
+        if (!$training) {
+            return null;
+        }
+
+        $training->setName($data['name']);
+        $training->setGoalTraining($data['GoalTraining']);
+        $training->setOrganism($organism);
+
+        $em = $this->getEntityManager();
+        $em->persist($training);
+        $em->flush();
+
+        return $training;
+    }
+
+    public function delete(int $id)
+    {
+        $training = $this->find($id);
+
+        if (!$training) {
+            return null;
+        }
+
+        $em = $this->getEntityManager();
+        $em->remove($training);
+        $em->flush();
+
+        return $training;
+    }
 }
