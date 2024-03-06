@@ -29,8 +29,8 @@ class TrainingController extends AbstractController
     #[Route('/new', name: 'api_training_new', methods: ['POST'])]
     public function newTraining(Request $request)
     {
-        $organism = $this->entityManager->getRepository(Organism::class)->findOneBy(['id' => 3]);
-        $former = $this->entityManager->getRepository(Former::class)->findOneBy(['id' => 3]);
+        $organism = $this->entityManager->getRepository(Organism::class)->findOneBy(['id' => 1]);
+        $former = $this->entityManager->getRepository(Former::class)->findOneBy(['id' => 1]);
 
         $training = new Training();
         $training->setName("ang");

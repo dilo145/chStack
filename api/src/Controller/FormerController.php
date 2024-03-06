@@ -46,14 +46,15 @@ class FormerController extends AbstractController
         $former->setPhoto("/path/to/photo.jpg");
         $former->setCreatedAt();
         $former->setPassword("password");
+        $former->setRoles(["Former"]);
         // $former->addOrganism()
 
-        try {
+        // try {
             $this->entityManager->persist($former);
             $this->entityManager->flush();
-        } catch (\Exception $e) {
-            return new JsonResponse(['error' => 'Failed to save the former'], Response::HTTP_INTERNAL_SERVER_ERROR);
-        }
+        // } catch (\Exception $e) {
+        //     return new JsonResponse(['error' => 'Failed to save the former'], Response::HTTP_INTERNAL_SERVER_ERROR);
+        // }
 
         // return new JsonResponse(['message' => 'User created successfully'], Response::HTTP_CREATED);
         return $this->json($former);
