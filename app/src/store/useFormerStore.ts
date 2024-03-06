@@ -19,7 +19,7 @@ export const useFormerStore = defineStore("former", () => {
 
   function createFormer() {
     api
-      .post<Former>("former/new", newFormer)
+      .post<Former>("formers/new", newFormer)
       .then((response) => {
         console.log(response);
         location.reload();

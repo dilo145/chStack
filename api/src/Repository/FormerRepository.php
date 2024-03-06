@@ -18,12 +18,10 @@ use Doctrine\Persistence\ManagerRegistry;
 class FormerRepository extends ServiceEntityRepository
 {
     private EntityManagerInterface $entityManager;
-    private UserPasswordEncoderInterface $passwordEncoder;
 
-    public function __construct(EntityManagerInterface $entityManager, UserPasswordEncoderInterface $passwordEncoder)
+    public function __construct(EntityManagerInterface $entityManager)
     {
         $this->entityManager = $entityManager;
-        $this->passwordEncoder = $passwordEncoder;
     }
 
     public function create(array $data): array
@@ -38,10 +36,7 @@ class FormerRepository extends ServiceEntityRepository
         // Set the password, make sure to encode it
         $encodedPassword = $this->passwordEncoder->encodePassword($former, $data['password']);
         $former->setPassword($encodedPassword);
-        // Set the properties specific to Former
         $former->setSpeciality($data['speciality']);
-
-        // ... Set the photo, handling base64 encoded string
 
         // Set the timestamps if necessary
         $former->setCreatedAt(); // This will set the current timestamp
