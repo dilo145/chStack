@@ -79,7 +79,7 @@ class TrainingRepository extends ServiceEntityRepository
             ->getOneOrNullResult();
     }
 
-    public function update($data, int $id, $organism)
+    public function update($data, int $id)
     {
         $training = $this->find($id);
 
@@ -88,8 +88,8 @@ class TrainingRepository extends ServiceEntityRepository
         }
 
         $training->setName($data['name']);
-        $training->setGoalTraining($data['GoalTraining']);
-        $training->setOrganism($organism);
+        $training->setGoalTraining($data['goalTraining']);
+        //$training->setOrganism($data['organism']);
 
         $em = $this->getEntityManager();
         $em->persist($training);

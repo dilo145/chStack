@@ -11,11 +11,16 @@ const trainingStore = useTrainingStore();
 const isDeleteModalOpen = ref(false);
 const id = ref(0);
 
+function onDeleteValidate(id: number) {
+  trainingStore.deleteTraining(id);
+  isDeleteModalOpen.value = false;
+}
+
 </script>
 
 <template>
   <h1>Classes</h1>
-<DataTableActions />
+  <DataTableActions />
 
   <v-data-table
     :items="trainingStore.trainings"
@@ -56,6 +61,7 @@ const id = ref(0);
       </v-icon>
     </template>
 
+    <!-- No data message -->
     <template v-slot:no-data>
       <v-alert color="error" icon="mdi-alert">
         No training found. Please add a new training.
@@ -63,10 +69,11 @@ const id = ref(0);
     </template>
   </v-data-table>
 
+  <!-- Delete confirmation dialog -->
   <v-dialog v-model="isDeleteModalOpen" width="500">
     <v-card>
       <v-card-title class="text-center"
-        >Are you sure you want to delete this lesson?</v-card-title
+        >Are you sure you want to delete this training?</v-card-title
       >
       <v-card-actions class="justify-end">
         <v-btn @click="isDeleteModalOpen = false">Cancel</v-btn>

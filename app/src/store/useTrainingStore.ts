@@ -20,6 +20,7 @@ export const useTrainingStore = defineStore("training", () => {
     { title: "Organism", value: "organism.name" },
     { title: "Nom", value: "name" },
     { title: "Goal", value: "goalTraining" },
+    { title: "Actions", key: "actions", sortable: false },
   ]);
 
   const newTraining = reactive<Training>({
@@ -95,7 +96,7 @@ export const useTrainingStore = defineStore("training", () => {
 
   function deleteTraining(id: number) {
     api
-      .delete<Training>("delete-training", id)
+      .delete<Training>("trainings/delete", id)
       .then(() => {
         getTrainings();
       })

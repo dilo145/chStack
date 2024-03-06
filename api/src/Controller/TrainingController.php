@@ -55,11 +55,11 @@ class TrainingController extends AbstractController
     }
 
     #[Route('/update/{id}', name: 'training_update', methods: ['PUT'])]
-    public function update(Request $request, TrainingRepository $TrainingRepository, int $id, $organism): Response
+    public function update(Request $request, TrainingRepository $TrainingRepository, int $id): Response
     {
         $data = json_decode($request->getContent(), true);
         
-        $response = $TrainingRepository->update($data, $id, $organism);
+        $response = $TrainingRepository->update($data, $id);
 
         if (!$response) {
             throw $this->createNotFoundException('Error while updating training');
@@ -68,7 +68,7 @@ class TrainingController extends AbstractController
         return $this->json($response);
     }
 
-    #[Route('/api/delete-training/{id}', name: 'training_delete', methods: ['DELETE'])]
+    #[Route('/delete/{id}', name: 'training_delete', methods: ['DELETE'])]
     public function delete(TrainingRepository $TrainingRepository, int $id): Response
     {
         if ($id === null) {
