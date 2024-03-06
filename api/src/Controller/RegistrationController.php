@@ -34,14 +34,18 @@ class RegistrationController extends AbstractController
     ): JsonResponse {
         $data = json_decode($request->getContent(), true);
         if (!isset($data['email']) || !isset($data['password'])) {
-            return new JsonResponse(['error' => 'Missing required fields'], Response::HTTP_BAD_REQUEST);
+            return new JsonResponse(['error' => 'Missing required fields'], Response::HTTP_OK);
         }
-        $user = $userRepository->findByEmail($data['email']);
+        try {
+            $user = $userRepository->findByEmail($data['email']);
+        } catch (\Exception $e) {
+            return new JsonResponse(['error' => 'Invalid Email/Password'], Response::HTTP_OK);
+        }
         if (!$user) {
-            return new JsonResponse(['error' => 'Invalid Email/Password'], Response::HTTP_BAD_REQUEST);
+            return new JsonResponse(['error' => 'Invalid Email/Password'], Response::HTTP_OK);
         }
         // if (!$userPasswordHasher->isPasswordValid($user, $data['password'])) {
-        //     return new JsonResponse(['error' => 'Invalid Email/Password'], Response::HTTP_BAD_REQUEST);
+        //     return new JsonResponse(['error' => 'Invalid Email/Password'], Response::HTTP_OK);
         // }
         //TODO add TOKEN tws V2 
         $resposeData = [

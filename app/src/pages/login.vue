@@ -1,23 +1,21 @@
 <script setup lang="ts">
-import WebService from "@/services/WebService";
-import { ref } from "vue";
+import { ref, toRefs } from "vue";
+import { useLoginStore } from "@/store/useLoginStore";
+import router from "@/router";
 
 const visible = ref(false);
 const tab = ref(null);
-const loginData = ref({
-  email: "",
-  password: "",
-});
-const login = async () => {
-  try {
-    const response = await WebService.post<any>("auth/login-user ", loginData); // Await the response directly
-    let jsonData = response; // Extract the JSON data from the response
-    console.log(jsonData.firstName);
-  } catch (error) {
-    console.error("Error fetching data:", error);
-    // Handle errors here
-  }
-};
+const loginStore = useLoginStore();
+const { newLogin, show } = toRefs(loginStore);
+function onLoginSubmit() {
+  loginStore.login();
+  // router.go(-1);
+}
+
+const emailRules: any = [
+  (v: string) => !!v || "Email requiered",
+  (v: string) => /.+@.+\..+/.test(v) || "Email must be valid",
+];
 </script>
 
 <template>
@@ -35,6 +33,12 @@ const login = async () => {
 
     <v-row justify="center" class="content d-flex align-center">
       <v-col cols="12" md="8" lg="6">
+        <v-alert v-show="show.showMessage" type="success">{{
+          show.message
+        }}</v-alert>
+        <v-alert v-show="show.showError" color="red" type="error">{{
+          show.message
+        }}</v-alert>
         <!-- Ajustez selon le besoin -->
         <v-card
           class="mx-auto pa-12 pb-8"
@@ -54,47 +58,48 @@ const login = async () => {
           <v-card-text>
             <v-window v-model="tab">
               <v-window-item value="one">
-                <v-form @submit.prevent="login()">
-                  <div class="text-subtitle-1 text-medium-emphasis">Email</div>
+                <div class="text-subtitle-1 text-medium-emphasis">Email</div>
 
-                  <v-text-field
-                    density="compact"
-                    placeholder="Email address"
-                    prepend-inner-icon="mdi-email-outline"
-                    variant="outlined"
-                    value="{{ loginData.email }}"
-                  ></v-text-field>
+                <v-text-field
+                  density="compact"
+                  type="email"
+                  placeholder="Email address"
+                  prepend-inner-icon="mdi-email-outline"
+                  variant="outlined"
+                  v-model="newLogin.email"
+                  :rules="emailRules"
+                ></v-text-field>
 
-                  <div
-                    class="text-subtitle-1 text-medium-emphasis d-flex align-center justify-space-between"
-                  >
-                    Mot de passe
-                  </div>
+                <div
+                  class="text-subtitle-1 text-medium-emphasis d-flex align-center justify-space-between"
+                >
+                  Mot de passe
+                </div>
 
-                  <v-text-field
-                    :append-inner-icon="visible ? 'mdi-eye-off' : 'mdi-eye'"
-                    :type="visible ? 'text' : 'password'"
-                    density="compact"
-                    value="{{ loginData.password }}"
-                    placeholder="Enter your password"
-                    prepend-inner-icon="mdi-lock-outline"
-                    variant="outlined"
-                    @click:append-inner="visible = !visible"
-                  ></v-text-field>
+                <v-text-field
+                  :append-inner-icon="visible ? 'mdi-eye-off' : 'mdi-eye'"
+                  :type="visible ? 'text' : 'password'"
+                  density="compact"
+                  v-model="newLogin.password"
+                  placeholder="Enter your password"
+                  prepend-inner-icon="mdi-lock-outline"
+                  variant="outlined"
+                  @click:append-inner="visible = !visible"
+                ></v-text-field>
 
-                  <v-card class="mb-6" color="surface-variant" variant="tonal">
-                  </v-card>
+                <v-card class="mb-6" color="surface-variant" variant="tonal">
+                </v-card>
 
-                  <v-btn
-                    class="mb-8"
-                    color="blue"
-                    size="large"
-                    variant="tonal"
-                    block
-                  >
-                    Connexion
-                  </v-btn>
-                </v-form>
+                <v-btn
+                  class="mb-8"
+                  color="blue"
+                  size="large"
+                  variant="tonal"
+                  block
+                  @click="onLoginSubmit"
+                >
+                  Connexion
+                </v-btn>
               </v-window-item>
               <v-window-item value="two">
                 <div class="text-subtitle-1 text-medium-emphasis">Nom</div>
