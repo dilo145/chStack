@@ -21,6 +21,16 @@ class WebService {
       throw error;
     }
   }
+
+  async post<JSON>(path: string, data: JSON): Promise<JSON> {
+    try {
+      const response: AxiosResponse<JSON> = await this.api.post<JSON>(path, data);
+      return response.data;
+    } catch (error) {
+      console.error("Error posting data:", error);
+      throw error;
+    }
+  }
 }
 
 export default new WebService();
