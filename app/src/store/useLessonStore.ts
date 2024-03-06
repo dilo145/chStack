@@ -1,11 +1,15 @@
 import api from "@/services/WebService";
+import { Category } from "@/types/Category";
 import { Lesson } from "@/types/Lesson";
+import { Level } from "@/types/Level";
 import { defineStore } from "pinia";
 import { onMounted, reactive, ref } from "vue";
 import { useRouter } from "vue-router";
 
 export const useLessonStore = defineStore("lesson", () => {
   const lessons = ref<Lesson[]>();
+  const categories = ref<Category[]>([]);
+  const levels = ref<Level[]>([]);
   const router = useRouter();
   const isEditing = ref(false);
   const headers = ref<any[]>([
@@ -27,6 +31,16 @@ export const useLessonStore = defineStore("lesson", () => {
     description: "",
     place: "",
     goal: "",
+    level: {
+      id: 0,
+      name: "",
+      description: "",
+    },
+    category: {
+      id: 0,
+      name: "",
+      description: "",
+    },
   });
 
   const editLesson = ref<Lesson>({
@@ -35,6 +49,16 @@ export const useLessonStore = defineStore("lesson", () => {
     description: "",
     place: "",
     goal: "",
+    level: {
+      id: 0,
+      name: "",
+      description: "",
+    },
+    category: {
+      id: 0,
+      name: "",
+      description: "",
+    },
   });
 
   function getLesson(id: string) {
@@ -57,6 +81,28 @@ export const useLessonStore = defineStore("lesson", () => {
       })
       .catch((err) => {
         console.error("Error fetching lessons:", err);
+      });
+  }
+
+  function getCategories() {
+    api
+      .get<Category[]>("get-categories")
+      .then((data) => {
+        categories.value = data;
+      })
+      .catch((err) => {
+        console.error("Error fetching categories:", err);
+      });
+  }
+
+  function getLevels() {
+    api
+      .get<Level[]>("get-levels")
+      .then((data) => {
+        levels.value = data;
+      })
+      .catch((err) => {
+        console.error("Error fetching levels:", err);
       });
   }
 
@@ -106,7 +152,10 @@ export const useLessonStore = defineStore("lesson", () => {
     newLesson,
     editLesson,
     isEditing,
+    categories,
+    levels,
     getLessons,
+    getCategories,
     createLesson,
     deleteLesson,
     getLesson,

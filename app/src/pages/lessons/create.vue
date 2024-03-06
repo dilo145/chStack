@@ -27,16 +27,12 @@ function onLessonSubmit() {
         required
       ></v-text-field>
 
-      <v-row>
-        <v-col cols="12" md="6">
-          <v-text-field
-            v-model="newLesson.place"
-            label="Place"
-            outlined
-            required
-          ></v-text-field>
-        </v-col>
-      </v-row>
+      <v-text-field
+        v-model="newLesson.place"
+        label="Place"
+        outlined
+        required
+      ></v-text-field>
 
       <v-textarea
         v-model="newLesson.description"
@@ -51,6 +47,31 @@ function onLessonSubmit() {
         outlined
         required
       ></v-text-field>
+
+      <v-row>
+        <v-col cols="12" md="6">
+          <v-select
+            v-model="newLesson.level"
+            :items="lessonStore.levels"
+            item-title="name"
+            label="Level"
+            outlined
+            required
+          >
+          </v-select>
+        </v-col>
+        <v-col cols="12" md="6">
+          <v-select
+            v-model="newLesson.category"
+            :items="lessonStore.categories"
+            item-title="name"
+            label="Category"
+            outlined
+            required
+          >
+          </v-select>
+        </v-col>
+      </v-row>
 
       <!-- buttons at the end  -->
       <v-row class="mt-6 justify-end">
