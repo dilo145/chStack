@@ -9,9 +9,11 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
+
+#[Route('/api/levels')]
 class LevelController extends AbstractController
 {
-    #[Route('/api/get-levels', name: 'levels_show', methods: ['GET'])]
+    #[Route('/', name: 'levels_show', methods: ['GET'])]
     public function getAll(LevelRepository $LevelRepository): Response
     {
         $levels = $LevelRepository->findAll();
@@ -19,7 +21,7 @@ class LevelController extends AbstractController
         return $this->json($levels);
     }
 
-    #[Route('/api/get-level/{id}', name: 'level_shows', methods: ['GET'])]
+    #[Route('/{id}', name: 'level_shows', methods: ['GET'])]
     public function getOne(LevelRepository $LevelRepository, int $id): Response
     {
         $level = $LevelRepository->find($id);
@@ -31,7 +33,7 @@ class LevelController extends AbstractController
         return $this->json($level);
     }
 
-    // #[Route('/api/create-level', name: 'level_create', methods: ['POST'])]
+    // #[Route('/create-level', name: 'level_create', methods: ['POST'])]
     // public function create(Request $request,  LevelRepository $LevelRepository,): Response
     // {
     //     $data = json_decode($request->getContent(), true);
@@ -45,7 +47,7 @@ class LevelController extends AbstractController
     //     return $this->json($response);
     // }
 
-    // #[Route('/api/update-level/{id}', name: 'level_update', methods: ['PUT'])]
+    // #[Route('/update-level/{id}', name: 'level_update', methods: ['PUT'])]
     // public function update(Request $request, LevelRepository $LevelRepository, int $id): Response
     // {
     //     $data = json_decode($request->getContent(), true);
@@ -59,7 +61,7 @@ class LevelController extends AbstractController
     //     return $this->json($response);
     // }
 
-    // #[Route('/api/delete-level/{id}', name: 'level_delete', methods: ['DELETE'])]
+    // #[Route('/delete-level/{id}', name: 'level_delete', methods: ['DELETE'])]
     // public function delete(LevelRepository $LevelRepository, int $id): Response
     // {
     //     if ($id === null) {

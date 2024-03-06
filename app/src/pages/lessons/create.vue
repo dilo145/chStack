@@ -1,16 +1,11 @@
 <script setup lang="ts">
 import { useLessonStore } from "@/store/useLessonStore";
-import { onMounted, ref, toRefs } from "vue";
+import { ref, toRefs } from "vue";
 import { useRouter } from "vue-router";
 
 const lessonStore = useLessonStore();
 const isSnackbarOpen = ref(true);
 const router = useRouter();
-
-onMounted(() => {
-  lessonStore.getCategories();
-  lessonStore.getLevels();
-});
 
 const { newLesson } = toRefs(lessonStore);
 
@@ -80,7 +75,6 @@ function onLessonSubmit() {
         </v-col>
       </v-row>
 
-      <!-- buttons at the end  -->
       <v-row class="mt-6 justify-end">
         <v-btn variant="text" @click="router.go(-1)">Cancel</v-btn>
         <v-btn color="primary" variant="outlined" @click="onLessonSubmit"
