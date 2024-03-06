@@ -6,6 +6,7 @@ use App\Repository\LevelRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Ignore;
 
 #[ORM\Entity(repositoryClass: LevelRepository::class)]
 class Level
@@ -21,6 +22,7 @@ class Level
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $description = null;
 
+    #[Ignore]
     #[ORM\OneToMany(targetEntity: Lesson::class, mappedBy: 'level')]
     private Collection $lessons;
 

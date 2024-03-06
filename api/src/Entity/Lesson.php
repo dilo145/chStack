@@ -33,7 +33,7 @@ class Lesson
     #[ORM\OneToMany(targetEntity: Categories::class, mappedBy: 'lesson')]
     private Collection $category;
 
-    #[ORM\ManyToOne(inversedBy: 'lessons')]
+    #[ORM\ManyToOne(inversedBy: 'lessons', fetch: "EAGER")]
     private ?Level $level = null;
 
     #[ORM\OneToMany(targetEntity: Resource::class, mappedBy: 'lesson')]

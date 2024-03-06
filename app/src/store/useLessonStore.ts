@@ -110,7 +110,7 @@ export const useLessonStore = defineStore("lesson", () => {
 
   function createLesson() {
     api
-      .create<Lesson>("create-lesson", newLesson)
+      .post<Lesson>("create-lesson", newLesson)
       .then((response) => {
         console.log(response);
         router.push(`lessons/${response.id}`);
