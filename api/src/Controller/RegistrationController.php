@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Form\RegistrationFormType;
+use App\Repository\UserRepository;
 use App\Security\EmailVerifier;
 use App\Security\LoginAuthenticator;
 use Doctrine\ORM\EntityManagerInterface;
@@ -11,6 +12,7 @@ use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Address;
@@ -21,35 +23,40 @@ use Symfony\Component\Security\Http\Authentication\UserAuthenticatorInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use SymfonyCasts\Bundle\VerifyEmail\Exception\VerifyEmailExceptionInterface;
 
+#[Route('/api/auth')]
 class RegistrationController extends AbstractController
 {
-    #[Route('/api/register', name: 'app_register', methods: ['GET'])]
-    public function register(
+    #[Route('/login-user', name: 'api_user_login', methods: ['POST'])]
+    public function loginUser(
         Request $request,
         UserPasswordHasherInterface $userPasswordHasher,
-        EntityManagerInterface $entityManager,
-    ): Response {
-        $user = new User();
+        UserRepository $userRepository
+    ): JsonResponse {
+        $data = json_decode($request->getContent(), true);
+        if (!isset($data['email']) || !isset($data['password'])) {
+            return new JsonResponse(['error' => 'Missing required fields'], Response::HTTP_BAD_REQUEST);
+        }
+        $user = $userRepository->findByEmail($data['email']);
+        if (!$user) {
+            return new JsonResponse(['error' => 'Invalid Email/Password'], Response::HTTP_BAD_REQUEST);
+        }
+        // if (!$userPasswordHasher->isPasswordValid($user, $data['password'])) {
+        //     return new JsonResponse(['error' => 'Invalid Email/Password'], Response::HTTP_BAD_REQUEST);
+        // }
+        //TODO add TOKEN tws V2 
+        $resposeData = [
+            'user' => [
+                'id' => $user->getId(),
+                'email' => $user->getEmail(),
+                'firstName' => $user->getFirstName(),
+                'lastName' => $user->getLastName(),
+                'photo' => $user->getPhoto(),
+            ],
+            'message' => "User logged in successfully"
+        ];
 
-        // encode the plain password
-        $user->setPassword(
-            $userPasswordHasher->hashPassword(
-                $user,
-                "password"
-            )
-        );
-        $user->setLastName("kjhdhf");
-        $user->setFirstName("kjhdf");
-        $user->setEmail("qsjkfh@gmail.com");
-        $user->setRoles(['ROLE_USER']);
-        $user->setPhoto("photo");
-        $user->setCreatedAt(new \DateTimeImmutable());
-
-        $entityManager->persist($user);
-        $entityManager->flush();
-
-        $this->addFlash('success', 'Your account has been created.');
-
-        return $this->json($user);
+        return new JsonResponse([
+            'data' => $resposeData
+        ], Response::HTTP_OK);
     }
 }
