@@ -71,7 +71,7 @@ class FormerService
 
         $former = new Former();
 
-        if (!isset($data['firstName']) || !isset($data['lastName']) || !isset($data['email']) || !isset($data['photo'])) {
+        if (!isset($data['firstName']) || !isset($data['lastName']) || !isset($data['email'])) {
             return new JsonResponse(['error' => 'Missing required fields'], Response::HTTP_BAD_REQUEST);
         }
 
@@ -86,9 +86,9 @@ class FormerService
         $former->setFirstName($data['firstName']);
         $former->setLastName($data['lastName']);
         $former->setEmail($data['email']);
-        $former->setPhoto($data['photo']);
         $former->setCreatedAt();
-        $former->setPassword('password');
+        $former->setPhoto($data['photo'] ?? null);
+        $former->setPassword($data['password']);
 
         try {
             $this->entityManager->persist($former);
