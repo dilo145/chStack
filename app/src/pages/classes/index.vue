@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { ref } from "vue"
+import { ref } from "vue";
+import DataTableActions from "@/components/classes/DataTableActions.vue";
 import { useRouter } from "vue-router";
 import { useTrainingStore } from "@/store/useTrainingStore";
 
@@ -7,76 +8,77 @@ const search = ref()
 const router = useRouter()
 const trainingStore = useTrainingStore();
 
-function onAddClick(){
-  router.push("/classe_show")
+const isDeleteModalOpen = ref(false);
+const id = ref(0);
+
+function onDeleteValidate(id: number) {
+  trainingStore.deleteTraining(id);
+  isDeleteModalOpen.value = false;
 }
 
-const variants = ['Classe 1', 'Classe 2', 'Classe 3', 'Classe 4']
 </script>
 
 <template>
-  <v-container>
-    <h1>Liste des classes</h1>
-    
-    <v-row max-width="800px">
-        <v-text-field
-        hide-details="auto"
-        label="Recherche"
-      ></v-text-field>
-      </v-row>
+  <h1>Classes</h1>
+  <DataTableActions />
 
-    <v-data-table
+  <v-data-table
     :items="trainingStore.trainings"
     :headers="trainingStore.headers"
     class="elevation-1 mt-6"
-    >
-      
-      <v-row align-self="center" justify="start" max-width="800px">
-        <v-col
-          v-for="(variant, i) in variants"
-          :key="i"
-          cols="auto"
-          >
-          <v-card
-            class="mx-auto d-flex flex-column justify-center text-center"
-            min-width="250"
-            min-height="150"
-          >
-            <v-card-item >
-              <div>
-                <div class="text-overline mb-1">
-                  {{ variant }}
-                </div>
-                <div class="text-h6 mb-1">
-                  IW M1
-                </div>
-              </div>
-            </v-card-item>
+  >
+    <template v-slot:item.actions="{ item }">
+      <v-icon
+        class="me-2"
+        size="small"
+        @click="
+          router.push(`/classes/${item.id}`);
+          trainingStore.isEditing = false;
+        "
+      >
+        mdi-eye
+      </v-icon>
+      <v-icon
+        class="me-2"
+        size="small"
+        color="secondary"
+        @click="
+          router.push(`/classes/${item.id}`);
+          trainingStore.isEditing = true;
+        "
+      >
+        mdi-pencil
+      </v-icon>
+      <v-icon
+        size="small"
+        color="red"
+        @click="
+          isDeleteModalOpen = true;
+          id = item.id;
+        "
+      >
+        mdi-delete
+      </v-icon>
+    </template>
 
-            <v-card-actions class="justify-center">
-              <v-btn>
-                Modifier
-              </v-btn>
-            </v-card-actions>
-          </v-card>
-        </v-col>
-        <!-- la colonne d'ajout -->
-        <v-col @click="onAddClick">
-          <v-card
-            min-width="250"
-            max-width="250"
-            min-height="150"
-            class="d-flex justify-center"
+    <!-- No data message -->
+    <template v-slot:no-data>
+      <v-alert color="error" icon="mdi-alert">
+        No training found. Please add a new training.
+      </v-alert>
+    </template>
+  </v-data-table>
 
-          >
-            <v-btn width="100%" height="150px">
-              <v-icon icon="mdi-plus" size="x-large"></v-icon>
-            </v-btn>
-          </v-card>
-        </v-col>
-      </v-row>
-
-    </v-data-table>
-
-  </v-container>
+  <!-- Delete confirmation dialog -->
+  <v-dialog v-model="isDeleteModalOpen" width="500">
+    <v-card>
+      <v-card-title class="text-center"
+        >Are you sure you want to delete this training?</v-card-title
+      >
+      <v-card-actions class="justify-end">
+        <v-btn @click="isDeleteModalOpen = false">Cancel</v-btn>
+        <v-btn color="red" @click="onDeleteValidate(id)">Delete</v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
 </template>
