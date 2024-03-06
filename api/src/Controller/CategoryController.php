@@ -9,21 +9,17 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-class LessonController extends AbstractController
+class CategoryController extends AbstractController
 {
-    #[Route('/api/get-categories', name: 'lessons_show', methods: ['GET'])]
+    #[Route('/api/get-categories', name: 'categories_show', methods: ['GET'])]
     public function getAll(CategoriesRepository $CategoriesRepository): Response
     {
         $categories = $CategoriesRepository->findAll();
 
-        if (!$categories) {
-            throw $this->createNotFoundException('Categories not found');
-        }
-
         return $this->json($categories);
     }
 
-    #[Route('/api/get-category/{id}', name: 'lesson_show', methods: ['GET'])]
+    #[Route('/api/get-category/{id}', name: 'category_shows', methods: ['GET'])]
     public function getOne(CategoriesRepository $CategoriesRepository, int $id): Response
     {
         $category = $CategoriesRepository->find($id);
@@ -35,7 +31,7 @@ class LessonController extends AbstractController
         return $this->json($category);
     }
 
-    // #[Route('/api/create-category', name: 'lesson_create', methods: ['POST'])]
+    // #[Route('/api/create-category', name: 'category_create', methods: ['POST'])]
     // public function create(Request $request,  CategoriesRepository $CategoriesRepository,): Response
     // {
     //     $data = json_decode($request->getContent(), true);
@@ -49,7 +45,7 @@ class LessonController extends AbstractController
     //     return $this->json($response);
     // }
 
-    // #[Route('/api/update-category/{id}', name: 'lesson_update', methods: ['PUT'])]
+    // #[Route('/api/update-category/{id}', name: 'category_update', methods: ['PUT'])]
     // public function update(Request $request, CategoriesRepository $CategoriesRepository, int $id): Response
     // {
     //     $data = json_decode($request->getContent(), true);
@@ -63,7 +59,7 @@ class LessonController extends AbstractController
     //     return $this->json($response);
     // }
 
-    // #[Route('/api/delete-category/{id}', name: 'lesson_delete', methods: ['DELETE'])]
+    // #[Route('/api/delete-category/{id}', name: 'category_delete', methods: ['DELETE'])]
     // public function delete(CategoriesRepository $CategoriesRepository, int $id): Response
     // {
     //     if ($id === null) {

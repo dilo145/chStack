@@ -88,6 +88,8 @@ export const useLessonStore = defineStore("lesson", () => {
     api
       .get<Category[]>("get-categories")
       .then((data) => {
+        console.log(data);
+
         categories.value = data;
       })
       .catch((err) => {
@@ -155,6 +157,7 @@ export const useLessonStore = defineStore("lesson", () => {
     categories,
     levels,
     getLessons,
+    getLevels,
     getCategories,
     createLesson,
     deleteLesson,

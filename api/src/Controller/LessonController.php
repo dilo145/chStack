@@ -16,10 +16,6 @@ class LessonController extends AbstractController
     {
         $lessons = $LessonRepository->findAll();
 
-        if (!$lessons) {
-            throw $this->createNotFoundException('Lessons not found');
-        }
-
         return $this->json($lessons);
     }
 

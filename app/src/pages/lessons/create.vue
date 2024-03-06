@@ -1,11 +1,16 @@
 <script setup lang="ts">
 import { useLessonStore } from "@/store/useLessonStore";
-import { ref, toRefs } from "vue";
+import { onMounted, ref, toRefs } from "vue";
 import { useRouter } from "vue-router";
 
 const lessonStore = useLessonStore();
 const isSnackbarOpen = ref(true);
 const router = useRouter();
+
+onMounted(() => {
+  lessonStore.getCategories();
+  lessonStore.getLevels();
+});
 
 const { newLesson } = toRefs(lessonStore);
 
