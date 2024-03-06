@@ -26,11 +26,7 @@ export const useLessonStore = defineStore("lesson", () => {
     title: "",
     description: "",
     place: "",
-    time: "",
-    goal: {
-      name: "",
-      description: "",
-    },
+    goal: "",
   });
 
   const editLesson = ref<Lesson>({
@@ -38,11 +34,7 @@ export const useLessonStore = defineStore("lesson", () => {
     title: "",
     description: "",
     place: "",
-    time: "",
-    goal: {
-      name: "",
-      description: "",
-    },
+    goal: "",
   });
 
   function getLesson(id: string) {
@@ -50,6 +42,7 @@ export const useLessonStore = defineStore("lesson", () => {
       .get<Lesson>(`get-lesson/${id}`)
       .then((data) => {
         editLesson.value = data;
+        console.log(editLesson.value);
       })
       .catch((err) => {
         console.error("Error fetching lesson:", err);
@@ -73,6 +66,18 @@ export const useLessonStore = defineStore("lesson", () => {
       .then((response) => {
         console.log(response);
         router.push(`lessons/${response.id}`);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+
+  function updateLesson(id: string) {
+    api
+      .put<Lesson>("update-lesson", parseInt(id), editLesson.value)
+      .then((response) => {
+        console.log(response);
+        editLesson.value = response;
       })
       .catch((err) => {
         console.log(err);
@@ -104,5 +109,6 @@ export const useLessonStore = defineStore("lesson", () => {
     createLesson,
     deleteLesson,
     getLesson,
+    updateLesson,
   };
 });

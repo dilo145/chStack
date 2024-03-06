@@ -53,22 +53,14 @@ class LessonController extends AbstractController
     public function update(Request $request, LessonRepository $LessonRepository, int $id): Response
     {
         $data = json_decode($request->getContent(), true);
+        
+        $response = $LessonRepository->update($data, $id);
 
-        $Lesson = $LessonRepository->find($id);
-
-        if (!$Lesson) {
-            throw $this->createNotFoundException('Lesson not found');
+        if (!$response) {
+            throw $this->createNotFoundException('Error while updating lesson');
         }
 
-        $Lesson->setTitle($data['title']);
-        $Lesson->setDescription($data['description']);
-        $Lesson->setVideoUrl($data['videoUrl']);
-
-        $em = $this->getDoctrine()->getManager();
-        $em->persist($Lesson);
-        $em->flush();
-
-        return $this->json($Lesson);
+        return $this->json($response);
     }
 
     #[Route('/api/delete-lesson/{id}', name: 'lesson_delete', methods: ['DELETE'])]

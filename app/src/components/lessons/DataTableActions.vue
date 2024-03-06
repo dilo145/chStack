@@ -4,7 +4,6 @@ import { useRouter } from "vue-router";
 const router = useRouter();
 
 function onAddLesson() {
-  console.log("add lesson click");
   router.push("/lessons/create");
 }
 

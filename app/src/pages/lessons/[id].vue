@@ -1,14 +1,21 @@
 <script setup lang="ts">
 import { useLessonStore } from "@/store/useLessonStore";
-import { onMounted, ref, toRefs } from "vue";
+import { computed, onMounted, ref, toRefs } from "vue";
 import { useRouter } from "vue-router";
 
 const lessonStore = useLessonStore();
 const isEditing = ref(false);
 
+const id = computed(() => {
+  return router.currentRoute.value.params.id;
+});
+
 const router = useRouter();
 
-function onEditLesson() {}
+function onEditLesson() {
+  lessonStore.updateLesson(id.value.toString());
+  isEditing.value = false;
+}
 
 onMounted(() => {
   const id = router.currentRoute.value.params.id;
@@ -28,7 +35,9 @@ const { editLesson } = toRefs(lessonStore);
       @click="isEditing = true"
       color="primary"
       class="mb-6"
-      >Edit</v-btn
+    >
+      <v-icon icon="mdi-pencil"> </v-icon>
+      Edit</v-btn
     >
 
     <v-card class="pa-6">
@@ -41,15 +50,6 @@ const { editLesson } = toRefs(lessonStore);
       ></v-text-field>
 
       <v-row>
-        <v-col cols="12" md="6">
-          <v-text-field
-            v-model="editLesson.time"
-            :disabled="!isEditing"
-            label="Duration"
-            outlined
-            required
-          ></v-text-field>
-        </v-col>
         <v-col cols="12" md="6">
           <v-text-field
             v-model="editLesson.place"
@@ -69,29 +69,13 @@ const { editLesson } = toRefs(lessonStore);
         required
       ></v-textarea>
 
-      <v-col cols="12">
-        <h2>Goal</h2>
-      </v-col>
-
-      <v-col cols="6">
-        <v-text-field
-          v-model="editLesson.goal.name"
-          :disabled="!isEditing"
-          label="Name"
-          outlined
-          required
-        ></v-text-field>
-      </v-col>
-
-      <v-col cols="12">
-        <v-textarea
-          v-model="editLesson.goal.description"
-          :disabled="!isEditing"
-          label="Goal"
-          outlined
-          required
-        ></v-textarea>
-      </v-col>
+      <v-text-field
+        v-model="editLesson.goal"
+        :disabled="!isEditing"
+        label="Goal"
+        outlined
+        required
+      ></v-text-field>
 
       <!-- buttons at the end  -->
       <v-row class="mt-6 justify-end">

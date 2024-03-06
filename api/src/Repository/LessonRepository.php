@@ -45,7 +45,7 @@ class LessonRepository extends ServiceEntityRepository
         $lesson->setTitle($data['title']);
         $lesson->setDescription($data['description']);
         $lesson->setPlace($data['place']);
-        $lesson->setGoal($data['goal']['name']);
+        $lesson->setGoal($data['goal']);
 
 
         $em = $this->getEntityManager();
@@ -65,6 +65,8 @@ class LessonRepository extends ServiceEntityRepository
 
         $lesson->setTitle($data['title']);
         $lesson->setDescription($data['description']);
+        $lesson->setPlace($data['place']);
+        $lesson->setGoal($data['goal']);
 
         $em = $this->getEntityManager();
         $em->persist($lesson);

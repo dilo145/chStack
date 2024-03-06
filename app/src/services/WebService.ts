@@ -46,6 +46,19 @@ class WebService {
       throw error;
     }
   }
+
+  async put<JSON>(path: string, id: number, body: any): Promise<JSON> {
+    try {
+      const response: AxiosResponse<JSON> = await this.api.put<JSON>(
+        `${path}/${id}`,
+        JSON.stringify(body)
+      );
+      return response.data;
+    } catch (error) {
+      console.error("Error updating item:", error);
+      throw error;
+    }
+  }
 }
 
 export default new WebService();
