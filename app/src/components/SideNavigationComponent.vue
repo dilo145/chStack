@@ -48,7 +48,7 @@ const fetchData = async () => {
           ></v-list-item>
           <v-list-item
             link
-            to="/classes"
+            to="/classes/index.vue"
             prepend-icon="mdi-school"
             title="Classes"
             value="classes"
