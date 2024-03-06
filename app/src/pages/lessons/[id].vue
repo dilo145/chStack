@@ -1,10 +1,9 @@
 <script setup lang="ts">
 import { useLessonStore } from "@/store/useLessonStore";
-import { computed, onMounted, ref, toRefs } from "vue";
+import { computed, onMounted, toRefs } from "vue";
 import { useRouter } from "vue-router";
 
 const lessonStore = useLessonStore();
-const isEditing = ref(false);
 
 const id = computed(() => {
   return router.currentRoute.value.params.id;
@@ -23,7 +22,7 @@ onMounted(() => {
   lessonStore.getLesson(id.toString());
 });
 
-const { editLesson } = toRefs(lessonStore);
+const { editLesson, isEditing } = toRefs(lessonStore);
 </script>
 
 <template>
@@ -79,7 +78,14 @@ const { editLesson } = toRefs(lessonStore);
 
       <!-- buttons at the end  -->
       <v-row class="mt-6 justify-end">
-        <v-btn variant="text" @click="router.go(-1)">Cancel</v-btn>
+        <v-btn
+          variant="text"
+          @click="
+            router.go(-1);
+            isEditing = false;
+          "
+          >Cancel</v-btn
+        >
         <v-btn
           color="primary"
           variant="outlined"

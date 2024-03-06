@@ -78,6 +78,7 @@ export const useLessonStore = defineStore("lesson", () => {
       .then((response) => {
         console.log(response);
         editLesson.value = response;
+        isEditing.value = false;
       })
       .catch((err) => {
         console.log(err);

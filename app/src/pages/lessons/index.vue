@@ -7,7 +7,7 @@ import { useRouter } from "vue-router";
 const lessonStore = useLessonStore();
 const router = useRouter();
 const isDeleteModalOpen = ref(false);
-const id = ref<number>(0);
+const id = ref(0);
 
 function onDeleteValidate(id: number) {
   lessonStore.deleteLesson(id);

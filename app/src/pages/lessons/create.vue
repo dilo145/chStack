@@ -30,14 +30,6 @@ function onLessonSubmit() {
       <v-row>
         <v-col cols="12" md="6">
           <v-text-field
-            v-model="newLesson.time"
-            label="Duration"
-            outlined
-            required
-          ></v-text-field>
-        </v-col>
-        <v-col cols="12" md="6">
-          <v-text-field
             v-model="newLesson.place"
             label="Place"
             outlined
@@ -53,27 +45,12 @@ function onLessonSubmit() {
         required
       ></v-textarea>
 
-      <v-col cols="12">
-        <h2>Goal</h2>
-      </v-col>
-
-      <v-col cols="6">
-        <v-text-field
-          v-model="newLesson.goal.name"
-          label="Name"
-          outlined
-          required
-        ></v-text-field>
-      </v-col>
-
-      <v-col cols="12">
-        <v-textarea
-          v-model="newLesson.goal.description"
-          label="Goal"
-          outlined
-          required
-        ></v-textarea>
-      </v-col>
+      <v-text-field
+        v-model="newLesson.goal"
+        label="Goal"
+        outlined
+        required
+      ></v-text-field>
 
       <!-- buttons at the end  -->
       <v-row class="mt-6 justify-end">
