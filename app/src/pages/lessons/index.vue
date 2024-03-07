@@ -82,11 +82,11 @@ onMounted(() => {
     <!-- CATEGORIES -->
     <v-col cols="6">
       <v-row>
-        <v-col cols="8">
-          <h2 class="mt-6">Categories</h2>
+        <v-col cols="6">
+          <h2 class="mt-5">Categories</h2>
         </v-col>
 
-        <v-col cols="4">
+        <v-col cols="6" align-self="end">
           <v-btn
             color="primary"
             variant="outlined"
