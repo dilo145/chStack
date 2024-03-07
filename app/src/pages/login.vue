@@ -17,6 +17,7 @@ function onFormerSubmit() {
 
 const loginStore = useLoginStore();
 const { newLogin, show } = toRefs(loginStore);
+
 function onLoginSubmit() {
   loginStore.login();
 }
@@ -25,6 +26,7 @@ const emailRules: any = [
   (v: string) => !!v || "Email requiered",
   (v: string) => /.+@.+\..+/.test(v) || "Email must be valid",
 ];
+
 const visible = ref(false);
 const tab = ref(null);
 </script>

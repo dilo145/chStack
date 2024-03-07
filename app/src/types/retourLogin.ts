@@ -6,6 +6,7 @@ export type RetourLogin = {
       firstName: string;
       email: string;
       photo: string;
+      role: [];
     };
     message: string;
   };

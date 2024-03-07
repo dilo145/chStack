@@ -1,11 +1,13 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import {useRouter} from "vue-router";
+import {useUserStore} from "@/store/useUserStore";
 const router = useRouter();
 
 const drawer = ref(true);
 const rail = ref(true);
-const user = localStorage.getItem("user");
+const user = useUserStore().user;
+
 function disconnectUser() {
   localStorage.removeItem("user")
   location.replace('/login')
