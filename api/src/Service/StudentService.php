@@ -35,7 +35,8 @@ class StudentService
             'lastName' => $student->getLastName(),
             'email' => $student->getEmail(),
             'photo' => $student->getPhoto(),
-            'individual' => $student->isInvidual(),
+            'roles' => $student->getRoles(),
+            'invidual' => $student->isInvidual(),
             'createdAt' => $student->getCreatedAt()->format('Y-m-d H:i:s'),
             'updatedAt' => $student->getUpdatedAt() ? $student->getUpdatedAt()->format('Y-m-d H:i:s') : null,
         ];
@@ -56,7 +57,7 @@ class StudentService
                 'lastName' => $student->getLastName(),
                 'email' => $student->getEmail(),
                 'photo' => $student->getPhoto(),
-                'individual' => $student->isInvidual(),
+                'invidual' => $student->isInvidual(),
                 'createdAt' => $student->getCreatedAt()->format('Y-m-d H:i:s'),
                 'updatedAt' => $student->getUpdatedAt() ? $student->getUpdatedAt()->format('Y-m-d H:i:s') : null,
                 'deletedAt' => $student->getDeletedAt() ? $student->getDeletedAt()->format('Y-m-d H:i:s') : null,
@@ -74,7 +75,7 @@ class StudentService
 
         $student = new Student();
 
-        if (!isset($data['firstName']) || !isset($data['lastName']) || !isset($data['email']) || !isset($data['photo']) || !isset($data['invidual'])) {
+        if (!isset($data['firstName']) || !isset($data['lastName']) || !isset($data['email']) || !isset($data['invidual'])) {
             return new JsonResponse(['error' => 'Missing required fields'], Response::HTTP_BAD_REQUEST);
         }
 
@@ -169,8 +170,8 @@ class StudentService
         if (isset($data['photo'])) {
             $student->setPhoto($data['photo']);
         }
-        if (isset($data['individual'])) {
-            $student->setIndividual($data['individual']);
+        if (isset($data['invidual'])) {
+            $student->setInvidual($data['invidual']);
         }
         if (isset($data['password'])) {
             $student->setPassword(

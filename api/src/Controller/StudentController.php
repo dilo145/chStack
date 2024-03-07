@@ -12,7 +12,6 @@ use Symfony\Component\HttpFoundation\Response;
 #[Route('/api/students')]
 class StudentController extends AbstractController
 {
-
     private $studentService;
 
     public function __construct(StudentService $studentService)
@@ -37,8 +36,8 @@ class StudentController extends AbstractController
     {
         return $this->studentService->newStudent($request);
     }
-
-    #[Route('/new/import', name: 'api_student_import', methods: ['POST'])]
+  
+  #[Route('/new/import', name: 'api_student_import', methods: ['POST'])]
     public function importStudents(Request $request): JsonResponse
     {
         $csvData = $request->request->get('csvData');
@@ -67,14 +66,14 @@ class StudentController extends AbstractController
         }
     }
 
-    #[Route('/edit/{id}', name: 'api_student_edit', methods: ['PATCH'])]
+    #[Route('/edit/{id}', name: 'api_student_edit', methods: ['PUT'])]
     public function editStudent(Request $request, int $id): JsonResponse
     {
         return $this->studentService->editStudent($request, $id);
     }
 
     #[Route('/delete/{id}', name: 'api_student_delete', methods: ['DELETE'])]
-    public function deleteStudent(Request $request, int $id): JsonResponse
+    public function deleteStudent(int $id): JsonResponse
     {
         return $this->studentService->deleteStudent($id);
     }
