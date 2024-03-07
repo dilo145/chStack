@@ -24,17 +24,17 @@ class StudentRepository extends ServiceEntityRepository
 //    /**
 //     * @return Student[] Returns an array of Student objects
 //     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('s')
-//            ->andWhere('s.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('s.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
+   public function findAllBytraining(int $id): array
+   {
+       return $this->createQueryBuilder('s')
+           ->andWhere('s.training_id = :val')
+           ->setParameter('val', $id)
+           ->orderBy('s.id', 'ASC')
+           ->setMaxResults(50)
+           ->getQuery()
+           ->getResult()
+       ;
+   }
 
 //    public function findOneBySomeField($value): ?Student
 //    {

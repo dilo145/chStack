@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\User;
+use App\Entity\Registration;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
@@ -49,6 +50,16 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
             ->getOneOrNullResult();
     }
 
+    public function findByuser($value): array
+    {
+        return $this->createQueryBuilder('u')
+            ->select('u.firstName', 'u.lastName','u.email')
+            ->innerJoin('App\Entity\Registration', 'r', 'WITH', 'r.student = u.id')
+            ->andWhere('r.training = :training_id')
+            ->setParameter('training_id', $value)
+            ->getQuery()
+            ->getResult();
+    }
     //    /**
     //     * @return User[] Returns an array of User objects
     //     */
