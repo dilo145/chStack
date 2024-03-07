@@ -33,13 +33,15 @@ router.beforeEach((to, from) => {
     to,
     from,
     authRequired: to.meta.requiresAuth,
+    isLoggedIn: CheckUser.isUserSet(),
+    user: CheckUser.getUser(),
   });
 
   if (to.meta.requiresAuth) {
-    if (CheckUser.isStudent()) {
+    if (CheckUser.isUserSet()) {
       return true;
     } else {
-      return false;
+      router.push('/login');
     }
   }
 
