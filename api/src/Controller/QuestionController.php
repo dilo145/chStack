@@ -36,7 +36,7 @@ class QuestionController extends AbstractController
         return $this->questionService->read($id);
     }
 
-    #[Route('/edit/{id}', name: 'api_question_edit', methods: ['POST'])]
+    #[Route('/edit/{id}', name: 'api_question_edit', methods: ['PATCH'])]
     public function update(Request $request, int $id): Response
     {
         return $this->questionService->update($request, $id);

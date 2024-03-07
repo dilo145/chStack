@@ -36,7 +36,7 @@ class AnswerController extends AbstractController
         return $this->answerService->read($id);
     }
 
-    #[Route('/edit/{id}', name: 'api_answer_edit', methods: ['POST'])]
+    #[Route('/edit/{id}', name: 'api_answer_edit', methods: ['PATCH'])]
     public function updateAnswer(Request $request, int $id): Response
     {
         return $this->answerService->update($request, $id);
