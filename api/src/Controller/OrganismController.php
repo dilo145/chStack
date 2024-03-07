@@ -34,8 +34,8 @@ class OrganismController extends AbstractController
         $organism->setCreatedBy(3);
 
         // try {
-            $this->entityManager->persist($organism);
-            $this->entityManager->flush();
+        $this->entityManager->persist($organism);
+        $this->entityManager->flush();
         // } catch (\Exception $e) {
         //     return new JsonResponse(['error' => 'Failed to save the organism'], Response::HTTP_INTERNAL_SERVER_ERROR);
         // }
@@ -44,12 +44,10 @@ class OrganismController extends AbstractController
         return $this->json($organism);
     }
 
-    #[Route('/', name: 'app_organism_index', methods: ['GET'])]
-    public function getAll(OrganismRepository $OrganismRepository): Response
+    #[Route('/by-Creator/{id}', name: 'api_organism_by_creator', methods: ['GET'])]
+    public function getOrganismByCreator($id, OrganismRepository $organismRepository)
     {
-        $organisms = $OrganismRepository->findAll();
-
-        return $this->json($organisms);
+        $organism = $organismRepository->findBy(['createdBy' => $id]);
+        return $this->json($organism);
     }
-
 }

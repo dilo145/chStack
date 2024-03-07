@@ -91,6 +91,7 @@ class FormerService
         $former->setEmail($data['email']);
         $former->setCreatedAt();
         $former->setPhoto($data['photo'] ?? null);
+        $former->setRoles(['ROLE_FORMER']);
         //hash password
         $former->setPassword(
             $this->userPasswordHasher->hashPassword(
@@ -162,7 +163,7 @@ class FormerService
         return new JsonResponse(['message' => 'Former edited successfully'], Response::HTTP_OK);
     }
 
-    public function deleteFormer( int $id): JsonResponse
+    public function deleteFormer(int $id): JsonResponse
     {
         $former = $this->entityManager->getRepository(Former::class)->find($id);
 
