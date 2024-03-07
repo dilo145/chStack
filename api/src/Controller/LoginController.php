@@ -11,7 +11,7 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
 
 #[Route('/api/auth')]
-class RegistrationController extends AbstractController
+class LoginController extends AbstractController
 {
     #[Route('/login-user', name: 'api_user_login', methods: ['POST'])]
     public function loginUser(
@@ -32,9 +32,9 @@ class RegistrationController extends AbstractController
             return new JsonResponse(['error' => 'Invalid Email/Password'], Response::HTTP_UNAUTHORIZED);
         }
         //TODO dont delete this code
-        // if (!$userPasswordHasher->isPasswordValid($user, $data['password'])) {
-        //     return new JsonResponse(['error' => 'Invalid Email/Password'], Response::HTTP_OK);
-        // }
+         if (!$userPasswordHasher->isPasswordValid($user, $data['password'])) {
+            return new JsonResponse(['error' => 'Invalid Email/Password'], Response::HTTP_OK);
+        }
         //TODO add TOKEN tws V2 
         $resposeData = [
             'user' => [

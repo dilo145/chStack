@@ -3,7 +3,6 @@ import { useFormerStore } from "@/store/useFormerStore";
 import { onMounted, ref, toRefs } from "vue";
 import { useRouter } from "vue-router";
 import { useLoginStore } from "@/store/useLoginStore";
-import router from "@/router";
 const formerStore = useFormerStore();
 const router = useRouter();
 
