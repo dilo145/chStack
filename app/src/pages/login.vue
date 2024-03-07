@@ -1,9 +1,20 @@
 <script setup lang="ts">
-import { ref, toRefs } from "vue";
+import { useFormerStore } from "@/store/useFormerStore";
+import { onMounted, ref, toRefs } from "vue";
+import { useRouter } from "vue-router";
 import { useLoginStore } from "@/store/useLoginStore";
+const formerStore = useFormerStore();
+const router = useRouter();
 
-const visible = ref(false);
-const tab = ref(null);
+onMounted(() => {
+});
+
+const { newFormer } = toRefs(formerStore);
+
+function onFormerSubmit() {
+  formerStore.createFormer();
+}
+
 const loginStore = useLoginStore();
 const { newLogin, show } = toRefs(loginStore);
 function onLoginSubmit() {
@@ -14,6 +25,8 @@ const emailRules: any = [
   (v: string) => !!v || "Email requiered",
   (v: string) => /.+@.+\..+/.test(v) || "Email must be valid",
 ];
+const visible = ref(false);
+const tab = ref(null);
 </script>
 
 <template>
@@ -99,6 +112,9 @@ const emailRules: any = [
                   Connexion
                 </v-btn>
               </v-window-item>
+
+              <!-- Inscription -->
+
               <v-window-item value="two">
                 <div class="text-subtitle-1 text-medium-emphasis">Nom</div>
 
@@ -106,6 +122,8 @@ const emailRules: any = [
                   density="compact"
                   placeholder="Nom"
                   variant="outlined"
+                  v-model="newFormer.lastName"
+                  required
                 ></v-text-field>
 
                 <div class="text-subtitle-1 text-medium-emphasis">Prenom</div>
@@ -114,6 +132,8 @@ const emailRules: any = [
                   density="compact"
                   placeholder="Prenom"
                   variant="outlined"
+                  v-model="newFormer.firstName"
+                  required
                 ></v-text-field>
 
                 <div class="text-subtitle-1 text-medium-emphasis">Email</div>
@@ -123,6 +143,8 @@ const emailRules: any = [
                   placeholder="Email address"
                   prepend-inner-icon="mdi-email-outline"
                   variant="outlined"
+                  v-model="newFormer.email"
+                  required
                 ></v-text-field>
 
                 <div
@@ -135,13 +157,20 @@ const emailRules: any = [
                   :append-inner-icon="visible ? 'mdi-eye-off' : 'mdi-eye'"
                   :type="visible ? 'text' : 'password'"
                   density="compact"
-                  placeholder="Enter your password"
+                  placeholder="Indiquer mot de passe"
                   prepend-inner-icon="mdi-lock-outline"
                   variant="outlined"
                   @click:append-inner="visible = !visible"
+                  v-model="newFormer.password"
+                  required
                 ></v-text-field>
 
-                <v-card class="mb-6" color="surface-variant" variant="tonal">
+                <v-card
+                  class="mb-6"
+                  color="surface-variant"
+                  variant="tonal"
+                  required
+                >
                 </v-card>
 
                 <v-btn
@@ -149,7 +178,9 @@ const emailRules: any = [
                   color="blue"
                   size="large"
                   variant="tonal"
+
                   block
+                  @click="onFormerSubmit"
                 >
                   Inscription
                 </v-btn>

@@ -19,6 +19,8 @@ class CheckUser {
     let user = JSON.parse(localStorage.getItem('user') || '{}');
     return user.id;
   }
+
+
 }
 
 export default new CheckUser();
