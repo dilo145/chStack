@@ -1,3 +1,5 @@
+export type Role = 'ROLE_FORMER' | 'ROLE_STUDENT';
+
 export type Student = {
   id: number;
   invidual: boolean;
@@ -8,7 +10,7 @@ export type Student = {
   email: string;
   photo: string;
   userIdentifier: string;
-  roles: string[];
+  roles: Role[];
   password: string;
   createdAt: string;
   updatedAt: null | string;
