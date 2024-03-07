@@ -49,16 +49,18 @@ const { editStudent, isEditing } = toRefs(studentStore);
         </v-checkbox>
       </v-col>
 
-      <v-text-field
-        v-model="editStudent.firstName"
-        :disabled="!isEditing"
-        label="Firstname"
-        outlined
-        required
-      ></v-text-field>
-
       <v-row>
-        <v-col cols="12" md="6">
+        <v-col cols="6">
+          <v-text-field
+            v-model="editStudent.firstName"
+            :disabled="!isEditing"
+            label="Firstname"
+            outlined
+            required
+          ></v-text-field>
+        </v-col>
+
+        <v-col cols="6" md="6">
           <v-text-field
             v-model="editStudent.lastName"
             :disabled="!isEditing"
@@ -76,20 +78,6 @@ const { editStudent, isEditing } = toRefs(studentStore);
         outlined
         required
       ></v-text-field>
-
-      <v-col cols="12" md="6">
-        <v-select
-          v-model="editStudent.roles"
-          :items="['ROLE_FORMER', 'ROLE_STUDENT']"
-          label="Role"
-          :disabled="!isEditing"
-          outlined
-          required
-          multiple
-          return-object
-        >
-        </v-select>
-      </v-col>
 
       <v-row class="mt-6 justify-end">
         <v-btn

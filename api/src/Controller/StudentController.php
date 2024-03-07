@@ -7,6 +7,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\Response;
 
 #[Route('/api/students')]
 class StudentController extends AbstractController
@@ -34,6 +35,35 @@ class StudentController extends AbstractController
     public function newStudent(Request $request): JsonResponse
     {
         return $this->studentService->newStudent($request);
+    }
+  
+  #[Route('/new/import', name: 'api_student_import', methods: ['POST'])]
+    public function importStudents(Request $request): JsonResponse
+    {
+        $csvData = $request->request->get('csvData');
+
+        if ($csvData) {
+            $lines = explode("\n", $csvData);
+
+            array_shift($lines);
+
+            $students = [];
+            foreach ($lines as $line) {
+                if (!empty($line)) {
+                    $lineData = explode(",", $line);
+                    $student = [
+                        'firstName' => $lineData[0],
+                        'lastName' => $lineData[1],
+                        'email' => $lineData[2],
+                        'invidual' => $lineData[3]
+                    ];
+                    $students[] = $student;
+                }
+            }
+            return $this->studentService->createStudents($students);
+        } else {
+            return new JsonResponse(['error' => 'No file uploaded'], Response::HTTP_BAD_REQUEST);
+        }
     }
 
     #[Route('/edit/{id}', name: 'api_student_edit', methods: ['PUT'])]

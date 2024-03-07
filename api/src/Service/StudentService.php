@@ -36,7 +36,7 @@ class StudentService
             'email' => $student->getEmail(),
             'photo' => $student->getPhoto(),
             'roles' => $student->getRoles(),
-            'individual' => $student->isInvidual(),
+            'invidual' => $student->isInvidual(),
             'createdAt' => $student->getCreatedAt()->format('Y-m-d H:i:s'),
             'updatedAt' => $student->getUpdatedAt() ? $student->getUpdatedAt()->format('Y-m-d H:i:s') : null,
         ];
@@ -57,7 +57,7 @@ class StudentService
                 'lastName' => $student->getLastName(),
                 'email' => $student->getEmail(),
                 'photo' => $student->getPhoto(),
-                'individual' => $student->isInvidual(),
+                'invidual' => $student->isInvidual(),
                 'createdAt' => $student->getCreatedAt()->format('Y-m-d H:i:s'),
                 'updatedAt' => $student->getUpdatedAt() ? $student->getUpdatedAt()->format('Y-m-d H:i:s') : null,
                 'deletedAt' => $student->getDeletedAt() ? $student->getDeletedAt()->format('Y-m-d H:i:s') : null,
@@ -111,6 +111,37 @@ class StudentService
         return new JsonResponse(['message' => 'Student created successfully'], Response::HTTP_CREATED);
     }
 
+    public function createStudents(array $studentsData): JsonResponse
+    {
+        foreach ($studentsData as $studentData) {
+
+            if (!$this->entityManager->getRepository(Student::class)->findOneBy(['email' => $studentData['email']])) {
+                $student = new Student();
+                $student->setFirstName($studentData['firstName']);
+                $student->setLastName($studentData['lastName']);
+                $student->setEmail($studentData['email']);
+                if ($studentData['invidual'] == 'FALSE' || $studentData['invidual'] == 'false' || $studentData['invidual'] == 0) {
+                    $student->setInvidual(false);
+                } else if ($studentData['invidual'] == 'TRUE' || $studentData['invidual'] == 'true' || $studentData['invidual'] == 1) {
+                    $student->setInvidual(true);
+                }
+                $student->setCreatedAt();
+                $student->setRoles(['ROLE_STUDENT']);
+                $student->setPassword(bin2hex(random_bytes(16)));
+
+                $this->entityManager->persist($student);
+            }
+        }
+
+        try {
+            $this->entityManager->flush();
+        } catch (\Exception $e) {
+            return new JsonResponse(['error' => 'Failed to create students'], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+
+        return new JsonResponse(['message' => 'Students created successfully'], Response::HTTP_CREATED);
+    }
+
     public function editStudent(Request $request, int $id): JsonResponse
     {
         $data = json_decode($request->getContent(), true);
@@ -139,8 +170,8 @@ class StudentService
         if (isset($data['photo'])) {
             $student->setPhoto($data['photo']);
         }
-        if (isset($data['individual'])) {
-            $student->setIndividual($data['individual']);
+        if (isset($data['invidual'])) {
+            $student->setInvidual($data['invidual']);
         }
         if (isset($data['password'])) {
             $student->setPassword(
