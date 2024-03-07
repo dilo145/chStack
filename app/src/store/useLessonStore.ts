@@ -1,12 +1,12 @@
-import api from "@/services/WebService";
-import { Category } from "@/types/Category";
-import { Lesson } from "@/types/Lesson";
-import { Level } from "@/types/Level";
-import { defineStore } from "pinia";
-import { onMounted, reactive, ref } from "vue";
-import { useRouter } from "vue-router";
+import api from '@/services/WebService';
+import { Category } from '@/types/Category';
+import { Lesson } from '@/types/Lesson';
+import { Level } from '@/types/Level';
+import { defineStore } from 'pinia';
+import { onMounted, reactive, ref } from 'vue';
+import { useRouter } from 'vue-router';
 
-export const useLessonStore = defineStore("lesson", () => {
+export const useLessonStore = defineStore('lesson', () => {
   const lessons = ref<Lesson[]>([]);
   const categories = ref<Category[]>([]);
   const levels = ref<Level[]>([]);
@@ -14,41 +14,41 @@ export const useLessonStore = defineStore("lesson", () => {
   const isEditing = ref(false);
   const headers = ref<any[]>([
     {
-      title: "Title",
-      align: "start",
+      title: 'Title',
+      align: 'start',
       sortable: false,
-      value: "title",
+      value: 'title',
     },
-    { title: "Description", value: "description" },
-    { title: "Goal", value: "goal" },
-    { title: "Place", value: "place" },
-    { title: "Actions", key: "actions", sortable: false },
+    { title: 'Description', value: 'description' },
+    { title: 'Goal', value: 'goal' },
+    { title: 'Place', value: 'place' },
+    { title: 'Actions', key: 'actions', sortable: false },
   ]);
 
   const newLesson = reactive<Lesson>({
     id: 0,
-    title: "",
-    description: "",
-    place: "",
-    goal: "",
+    title: '',
+    description: '',
+    place: '',
+    goal: '',
     level: {
       id: 0,
-      name: "",
-      description: "",
+      name: '',
+      description: '',
     },
     category: [],
   });
 
   const editLesson = ref<Lesson>({
     id: 0,
-    title: "",
-    description: "",
-    place: "",
-    goal: "",
+    title: '',
+    description: '',
+    place: '',
+    goal: '',
     level: {
       id: 0,
-      name: "",
-      description: "",
+      name: '',
+      description: '',
     },
     category: [],
   });
@@ -61,48 +61,48 @@ export const useLessonStore = defineStore("lesson", () => {
         console.log(editLesson.value);
       })
       .catch((err) => {
-        console.error("Error fetching lesson:", err);
+        console.error('Error fetching lesson:', err);
       });
   }
 
   function getLessons() {
     api
-      .get<Lesson[]>("lessons")
+      .get<Lesson[]>('lessons')
       .then((data) => {
         lessons.value = data;
       })
       .catch((err) => {
-        console.error("Error fetching lessons:", err);
+        console.error('Error fetching lessons:', err);
       });
   }
 
   function getCategories() {
     api
-      .get<Category[]>("categories")
+      .get<Category[]>('categories')
       .then((data) => {
         console.log(data);
 
         categories.value = data;
       })
       .catch((err) => {
-        console.error("Error fetching categories:", err);
+        console.error('Error fetching categories:', err);
       });
   }
 
   function getLevels() {
     api
-      .get<Level[]>("levels")
+      .get<Level[]>('levels')
       .then((data) => {
         levels.value = data;
       })
       .catch((err) => {
-        console.error("Error fetching levels:", err);
+        console.error('Error fetching levels:', err);
       });
   }
 
   function createLesson() {
     api
-      .post<Lesson>("lessons/new", newLesson)
+      .post<Lesson>('lessons/new', newLesson)
       .then((response) => {
         console.log(response);
         router.push(`lessons/${response.id}`);
@@ -114,7 +114,7 @@ export const useLessonStore = defineStore("lesson", () => {
 
   function updateLesson(id: string) {
     api
-      .put<Lesson>("lessons/edit", parseInt(id), editLesson.value)
+      .put<Lesson>('lessons/edit', parseInt(id), editLesson.value)
       .then((response) => {
         getLesson(id);
         isEditing.value = false;
@@ -126,13 +126,38 @@ export const useLessonStore = defineStore("lesson", () => {
 
   function deleteLesson(id: number) {
     api
-      .delete<Lesson>("lessons/delete", id)
+      .delete<Lesson>('lessons/delete', id)
       .then(() => {
         getLessons();
       })
       .catch((err) => {
-        console.error("Error deleting lesson:", err);
+        console.error('Error deleting lesson:', err);
       });
+  }
+
+  function exportLessonsCSV() {
+    const headers = Object.keys(lessons.value[0]);
+    let csvContent = headers.join(',') + '\n';
+
+    lessons.value.forEach((lesson: Lesson) => {
+      const categories = lesson.category.map((category) => category.name).join('#');
+
+      const level = lesson.level.name;
+
+      const values = [lesson.id, lesson.title, lesson.description, lesson.place, lesson.goal, categories, level];
+
+      csvContent += values.join(',') + '\n';
+    });
+
+    const blob = new Blob([csvContent], { type: 'text/csv' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+
+    link.href = url;
+    link.download = 'lessons.csv';
+    link.click();
+
+    URL.revokeObjectURL(url);
   }
 
   onMounted(() => {
@@ -156,5 +181,6 @@ export const useLessonStore = defineStore("lesson", () => {
     deleteLesson,
     getLesson,
     updateLesson,
+    exportLessonsCSV,
   };
 });
