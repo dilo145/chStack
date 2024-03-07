@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Student;
 use App\Entity\User;
 use App\Repository\FormerRepository;
+use App\Repository\StudentRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -23,13 +24,13 @@ class StudentController extends AbstractController
         $this->entityManager = $entityManager;
     }
 
-    // #[Route('/', name: 'app_former_index', methods: ['GET'])]
-    // public function index(FormerRepository $formerRepository): Response
-    // {
-    //     $formers = $formerRepository->findAll();
+    #[Route('/', name: 'app_former_index', methods: ['GET'])]
+    public function index(StudentRepository $studentRepository): Response
+    {
+        $student = $studentRepository->findAll();
 
-    //     return $this->json($formers);
-    // }
+        return $this->json($student);
+    }
 
     #[Route('/new', name: 'api_student_new', methods: ['POST'])]
     public function newStudent(Request $request): JsonResponse
