@@ -92,6 +92,7 @@ class StudentService
         $student->setPhoto($data['photo'] ?? null);
         $student->setCreatedAt();
         $student->setInvidual($data['invidual']);
+        $student->setRoles(['ROLE_STUDENT']);
         $student->setPassword(
             $this->userPasswordHasher->hashPassword(
                 $student,
