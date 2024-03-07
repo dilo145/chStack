@@ -1,7 +1,6 @@
 <?php
 namespace App\Service;
 
-use App\Entity\Organism;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -63,7 +62,7 @@ class LevelService
             return new JsonResponse(['error' => 'Failed to update the level'], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
-        return new JsonResponse(['message' => 'Level updated successfully'], Response::HTTP_OK);
+        return new JsonResponse(['message' => 'Level updated successfully'], Response::HTTP_ACCEPTED);
     }
 
     public function delete(int $id): Response

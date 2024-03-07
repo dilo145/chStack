@@ -14,7 +14,6 @@ use Symfony\Component\HttpFoundation\Response;
 class LevelController extends AbstractController
 {
     private $levelService;
-    private $entityManager;
     public function __construct(LevelService $levelService, EntityManagerInterface $entityManager)
     {
         $this->levelService = $levelService;
@@ -49,107 +48,4 @@ class LevelController extends AbstractController
     {
         return $this->levelService->readAll();
     }
-    // #[Route('/by-Creator/{id}', name: 'api_level_by_creator', methods: ['GET'])]
-    // public function getOrganismByCreator($id)
-    // {
-    //     $organism = $this->entityManager->getRepository(Organism::class)->findBy(['createdBy' => $id]);
-    //     return $this->json($organism);
-    // }
-
-    // #[Route('/', name: 'api_organism_read_all', methods: ['GET'])]
-    // public function readAllOrganisms(): Response
-    // {
-    //     return $this->organismService->readAll();
-    // }
-
-    // #[Route('/{id}', name: 'api_organism_read', methods: ['GET'])]
-    // public function readOrganism(int $id): Response
-    // {
-    //     return $this->organismService->read($id);
-    // }
-
-
-
-    // #[Route('/delete/{id}', name: 'api_organism_delete', methods: ['DELETE'])]
-    // public function deleteOrganism(int $id): Response
-    // {
-    //     return $this->organismService->delete($id);
-    }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    // #[Route('/', name: 'levels_show', methods: ['GET'])]
-    // public function getAll(LevelRepository $LevelRepository): Response
-    // {
-    //     $levels = $LevelRepository->findAll();
-
-    //     return $this->json($levels);
-    // }
-
-    // #[Route('/{id}', name: 'level_shows', methods: ['GET'])]
-    // public function getOne(LevelRepository $LevelRepository, int $id): Response
-    // {
-    //     $level = $LevelRepository->find($id);
-
-    //     if (!$level) {
-    //         throw $this->createNotFoundException('Level not found');
-    //     }
-
-    //     return $this->json($level);
-    // }
-
-    // #[Route('/create-level', name: 'level_create', methods: ['POST'])]
-    // public function create(Request $request,  LevelRepository $LevelRepository,): Response
-    // {
-    //     $data = json_decode($request->getContent(), true);
-
-    //     $response = $LevelRepository->create($data);
-
-    //     if (!$response) {
-    //         throw $this->createNotFoundException('Error while creating lesson');
-    //     }
-
-    //     return $this->json($response);
-    // }
-
-    // #[Route('/update-level/{id}', name: 'level_update', methods: ['PUT'])]
-    // public function update(Request $request, LevelRepository $LevelRepository, int $id): Response
-    // {
-    //     $data = json_decode($request->getContent(), true);
-
-    //     $response = $LevelRepository->update($data, $id);
-
-    //     if (!$response) {
-    //         throw $this->createNotFoundException('Error while updating lesson');
-    //     }
-
-    //     return $this->json($response);
-    // }
-
-    // #[Route('/delete-level/{id}', name: 'level_delete', methods: ['DELETE'])]
-    // public function delete(LevelRepository $LevelRepository, int $id): Response
-    // {
-    //     if ($id === null) {
-    //         throw $this->createNotFoundException('Id is required');
-    //     }
-
-    //     $level = $LevelRepository->delete($id);
-
-    //     if (!$level) {
-    //         throw $this->createNotFoundException('Level not found');
-    //     }
-
-    //     return $this->json($level);
-    // }
-//}
+}
