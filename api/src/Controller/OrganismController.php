@@ -2,52 +2,58 @@
 
 namespace App\Controller;
 
-use App\Entity\Organism;
-use App\Entity\Former;
-use App\Repository\OrganismRepository;
-use App\Repository\FormerRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
-use Symfony\Component\HttpFoundation\JsonResponse;
+use App\Service\OrganismService;
 use Doctrine\ORM\EntityManagerInterface;
+use App\Entity\Organism;
 
 #[Route('/api/organisms')]
 class OrganismController extends AbstractController
 {
 
+    private $organismService;
     private $entityManager;
-
-    public function __construct(EntityManagerInterface $entityManager)
+    public function __construct(OrganismService $organismService, EntityManagerInterface $entityManager)
     {
-        $this->entityManager = $entityManager;
+        $this->organismService = $organismService;
     }
 
     #[Route('/new', name: 'api_organism_new', methods: ['POST'])]
     public function newOrganism(Request $request)
     {
-
-        $organism = new Organism();
-        $organism->setName("esgi");
-        $organism->setLogo("path/to/logo.jpg");
-        $organism->setCreatedBy(3);
-
-        // try {
-        $this->entityManager->persist($organism);
-        $this->entityManager->flush();
-        // } catch (\Exception $e) {
-        //     return new JsonResponse(['error' => 'Failed to save the organism'], Response::HTTP_INTERNAL_SERVER_ERROR);
-        // }
-
-        // // return new JsonResponse(['message' => 'Organism created successfully'], Response::HTTP_CREATED);
-        return $this->json($organism);
+        return $this->organismService->create($request);
     }
 
     #[Route('/by-Creator/{id}', name: 'api_organism_by_creator', methods: ['GET'])]
-    public function getOrganismByCreator($id, OrganismRepository $organismRepository)
+    public function getOrganismByCreator($id)
     {
-        $organism = $organismRepository->findBy(['createdBy' => $id]);
+        $organism = $this->entityManager->getRepository(Organism::class)->findBy(['createdBy' => $id]);
         return $this->json($organism);
+    }
+    #[Route('/', name: 'api_organism_read_all', methods: ['GET'])]
+    public function readAllOrganisms(): Response
+    {
+        return $this->organismService->readAll();
+    }
+
+    #[Route('/{id}', name: 'api_organism_read', methods: ['GET'])]
+    public function readOrganism(int $id): Response
+    {
+        return $this->organismService->read($id);
+    }
+
+    #[Route('/edit/{id}', name: 'api_organism_edit', methods: ['POST'])]
+    public function updateOrganism(Request $request, int $id): Response
+    {
+        return $this->organismService->update($request, $id);
+    }
+
+    #[Route('/delete/{id}', name: 'api_organism_delete', methods: ['DELETE'])]
+    public function deleteOrganism(int $id): Response
+    {
+        return $this->organismService->delete($id);
     }
 }

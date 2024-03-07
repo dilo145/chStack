@@ -1,10 +1,19 @@
 <script setup lang="ts">
 import CardOragnismeComponent from "@/./components/CardOrganismeComponent.vue";
-const variants = ['elevated', 'flat', 'tonal', 'outlined']
-</script>
+import CheckUser from "@/services/CheckUser";
+import api from "@/services/WebService";
+import { ref } from "vue";
 
+const listeOrganismes = ref([]);
+if (CheckUser.isFormer()) {
+  api
+    .get<any>("/organisms/by-Creator/" + CheckUser.getId())
+    .then((response) => {
+      listeOrganismes.value = response;
+    });
+}
+</script>
 <template>
   <h1>Organisms page</h1>
-  <CardOragnismeComponent />
+  <CardOragnismeComponent :liste="listeOrganismes" />
 </template>
-

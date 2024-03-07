@@ -9,21 +9,22 @@ export const useUserStore = defineStore("user", () => {
     const router = useRouter();
 
     const user = reactive<User>({
+        id: 0,
         firstName:"",
         lastName: "",
         email: "",
         photo: "",
-        role: [],
+        roles: [],
     });
     const isUserSet = computed(() => user.firstName !== "");
 
     function setUser(localUser : User) {
-        console.log(localUser);
+        user.id = localUser.id;
         user.firstName = localUser.firstName;
         user.lastName = localUser.lastName;
         user.email = localUser.email;
         user.photo = localUser.photo;
-        user.role = localUser.role;
+        user.roles = localUser.roles;
         localStorage.setItem("user", JSON.stringify(user));
     }
 
@@ -31,11 +32,12 @@ export const useUserStore = defineStore("user", () => {
         let localUser: string|null = localStorage.getItem("user");
         if (localUser !== null) {
             let parsedLocalUser : User = JSON.parse(localUser);
+            user.id = parsedLocalUser.id;
             user.firstName = parsedLocalUser.firstName;
             user.lastName = parsedLocalUser.lastName;
             user.email = parsedLocalUser.email;
             user.photo = parsedLocalUser.photo;
-            user.role = parsedLocalUser.role;
+            user.roles = parsedLocalUser.roles;
         }
     }
 

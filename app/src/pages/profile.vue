@@ -2,23 +2,10 @@
 import { ref } from 'vue'
 const color = ref('white')
 import WebService from "@/services/WebService";
+import {useUserStore} from "@/store/useUserStore";
 
 const jsonData = ref(null); // Declare jsonData as a reactive variable
-const user = localStorage.getItem('user');
-console.log(user)
-
-// Function to fetch JSON data from the API
-async function fetchData() {
-  try {
-    const response = await WebService.get<any>("user/findUserById"); // Await the response directly
-    jsonData.value = response; // Update jsonData with the response
-  } catch (error) {
-    console.error("Error fetching data:", error);
-    // Handle errors here
-  }
-}
-
-fetchData();
+const user = useUserStore().user;
 
 </script>
 
@@ -42,7 +29,7 @@ fetchData();
           </div>
        </div>
       </v-card-item>
-      <v-form v-if="jsonData">
+      <v-form v-if="user">
         <v-container>
           <v-row>
             <v-col
@@ -51,7 +38,7 @@ fetchData();
             >
               <v-text-field
                 label="Nom"
-                :model-value="jsonData.lastName"
+                :model-value="user.lastName"
                 variant="solo"
               ></v-text-field>
             </v-col>
@@ -62,7 +49,7 @@ fetchData();
             >
               <v-text-field
                 label="Prénom"
-                :model-value="jsonData.firstName"
+                :model-value="user.firstName"
                 variant="outlined"
               ></v-text-field>
             </v-col>
@@ -73,7 +60,7 @@ fetchData();
             >
               <v-text-field
                 label="Email"
-                :model-value="jsonData.email"
+                :model-value="user.email"
                 variant="outlined"
               ></v-text-field>
             </v-col>
