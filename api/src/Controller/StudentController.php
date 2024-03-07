@@ -24,7 +24,7 @@ class StudentController extends AbstractController
     {
         return $this->studentService->getOneStudent($id);
     }
-    
+
     #[Route('/', name: 'app_student_get_all', methods: ['GET'])]
     public function getAllStudents(): JsonResponse
     {
@@ -36,16 +36,16 @@ class StudentController extends AbstractController
     {
         return $this->studentService->newStudent($request);
     }
-    
+
     #[Route('/edit/{id}', name: 'api_student_edit', methods: ['POST'])]
     public function editStudent(Request $request, int $id): JsonResponse
     {
         return $this->studentService->editStudent($request, $id);
     }
-    
+
     #[Route('/delete/{id}', name: 'api_student_delete', methods: ['POST'])]
-    public function deleteStudent(Request $request, int $id): JsonResponse
+    public function deleteStudent(int $id): JsonResponse
     {
-        return $this->studentService->deleteStudent($request, $id);
+        return $this->studentService->deleteStudent($id);
     }
 }

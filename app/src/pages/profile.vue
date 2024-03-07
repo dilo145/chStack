@@ -4,11 +4,13 @@ const color = ref('white')
 import WebService from "@/services/WebService";
 
 const jsonData = ref(null); // Declare jsonData as a reactive variable
+const user = localStorage.getItem('user');
+console.log(user)
 
 // Function to fetch JSON data from the API
 async function fetchData() {
   try {
-    const response = await WebService.get<any>("user"); // Await the response directly
+    const response = await WebService.get<any>("user/findUserById"); // Await the response directly
     jsonData.value = response; // Update jsonData with the response
   } catch (error) {
     console.error("Error fetching data:", error);

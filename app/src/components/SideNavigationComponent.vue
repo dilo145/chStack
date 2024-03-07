@@ -1,11 +1,20 @@
 <script setup lang="ts">
 import { ref } from "vue";
+import {useRouter} from "vue-router";
+const router = useRouter();
 
 const drawer = ref(true);
 const rail = ref(true);
+const user = localStorage.getItem("user");
+function disconnectUser() {
+  localStorage.removeItem("user")
+  router.push("/login")
+}
+
 </script>
 
 <template>
+  <!-- Conditional rendering of JSON data -->
   <v-card>
     <v-layout>
       <v-navigation-drawer
@@ -71,11 +80,13 @@ const rail = ref(true);
           ></v-list-item>
         </v-list>
 
-        <template v-slot:append>
+        <template v-slot:append v-if="user">
+          <v-btn color="error" class="text-center" variant="outlined" style="width: 45px;margin: auto;display: flex;justify-content: center" icon="mdi-logout" @click="disconnectUser"/>
+
           <div class="pa-2">
             <v-list-item
               prepend-avatar="https://randomuser.me/api/portraits/men/85.jpg"
-              title="Lacos TN ou quoi le boss"
+              :title="`${user.firstName} ${user.lastName}`"
               nav
             >
               <template v-slot:append>
@@ -91,5 +102,6 @@ const rail = ref(true);
       </v-navigation-drawer>
       <v-main style="height: 100vh"></v-main>
     </v-layout>
+
   </v-card>
 </template>
