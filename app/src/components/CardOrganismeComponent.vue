@@ -9,30 +9,22 @@ defineProps({
 });
 </script>
 <template>
-  <v-col cols="auto">
-    <v-list v-if="liste.length > 0">
-      <v-list-item v-for="i in liste" :key="i.id" >
-        <v-card
-          @click="router.push('/organisms/' + i.id)"
-          max-width="100%"
-          max-height="25%"
-          class="d-flex gy-3 border cursor-pointer"
-        >
-          <img height="200px" :src="i.logo"></img>
-
-          <div class="w-75">
-            <v-card-title>{{ i.name }}</v-card-title>
-
-          </div>
-        </v-card>
-      </v-list-item>
-    </v-list>
-    <v-btn
-      class="w-100"
-      color="primary"
-      @click="router.push('/organisms/create')"
+  <v-list-item v-for="i in liste" :key="i.id">
+    <v-card
+      @click="router.push('/organisms/' + i.id)"
+      class="d-flex flex-column flex-sm-row gy-3 align-left border cursor-pointer"
     >
-      <v-icon>mdi-plus</v-icon>
-    </v-btn>
-  </v-col>
+      <v-img :src="i.logo"> </v-img>
+      <div class="w-75">
+        <v-card-title>{{ i.name }}</v-card-title>
+      </div>
+    </v-card>
+  </v-list-item>
+  <v-btn
+    class="w-100"
+    color="primary"
+    @click="router.push('/organisms/create')"
+  >
+    <v-icon>mdi-plus</v-icon>
+  </v-btn>
 </template>

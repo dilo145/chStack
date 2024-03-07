@@ -3,4 +3,5 @@ export type Organism = {
   name: string;
   logo: string;
   trainings: [];
+  created_by: number;
 };
