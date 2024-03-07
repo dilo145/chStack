@@ -1,26 +1,22 @@
 <script setup lang="ts">
-import router from "@/router";
+import router from '@/router';
+import { useOrganismStore } from '@/store/useOrganismStore';
+import { onMounted, toRefs } from 'vue';
 
-defineProps({
-  liste: {
-    type: Object,
-    required: true,
-  },
+const organismStore = useOrganismStore();
+
+onMounted(() => {
+  organismStore.getOrganisms();
 });
+
+const { Organisms: organisms } = toRefs(organismStore);
 </script>
 <template>
   <v-row class="mb-5 mt-5" align="center" justify="center">
-    <v-btn
-      class="w-auto"
-      center
-      color="primary"
-      @click="router.push('/organisms/create')"
-    >
-      Create new organism
-    </v-btn>
+    <v-btn class="w-auto" center color="primary" @click="router.push('/organisms/create')"> Create new organism </v-btn>
   </v-row>
 
-  <v-list-item v-for="i in liste" :key="i.id" v-if="liste.length > 0">
+  <v-list-item v-for="i in organisms" :key="i.id" v-if="organisms.length > 0">
     <v-card
       @click="router.push('/organisms/' + i.id)"
       class="d-flex flex-column flex-sm-row gy-3 align-left border cursor-pointer"

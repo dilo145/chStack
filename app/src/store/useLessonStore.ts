@@ -112,6 +112,14 @@ export const useLessonStore = defineStore('lesson', () => {
       });
   }
 
+  function createCategory(category: Category) {
+    console.log('createCategory');
+  }
+
+  function createLevel(level: Level) {
+    console.log('createLevel');
+  }
+
   function updateLesson(id: string) {
     api
       .put<Lesson>('lessons/edit', parseInt(id), editLesson.value)
@@ -178,6 +186,8 @@ export const useLessonStore = defineStore('lesson', () => {
     getLevels,
     getCategories,
     createLesson,
+    createCategory,
+    createLevel,
     deleteLesson,
     getLesson,
     updateLesson,
