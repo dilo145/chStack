@@ -5,10 +5,45 @@
  */
 
 // Composables
-import { createRouter, createWebHistory } from 'vue-router/auto'
+import CheckUser from '@/services/CheckUser';
+import { Router } from 'vue-router';
+import { createRouter, createWebHistory } from 'vue-router/auto';
 
-const router = createRouter({
+const router: Router = createRouter({
+  extendRoutes: (routes: any) => {
+    routes.map((route: any) => {
+      if (route.path === '/login') {
+        route.meta ??= {};
+        route.meta.requiresAuth = false;
+        return;
+      }
+
+      route.meta ??= {};
+      route.meta.requiresAuth = true;
+    });
+
+    // the return is completely optional since we are modifying the routes in place
+    return routes;
+  },
   history: createWebHistory(process.env.BASE_URL),
-})
+});
 
-export default router
+router.beforeEach((to, from) => {
+  console.log({
+    to,
+    from,
+    authRequired: to.meta.requiresAuth,
+  });
+
+  if (to.meta.requiresAuth) {
+    if (CheckUser.isStudent()) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  return true;
+});
+
+export default router;
