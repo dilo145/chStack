@@ -5,13 +5,9 @@ import api from "@/services/WebService";
 import { ref } from "vue";
 
 const listeOrganismes = ref([]);
-if (CheckUser.isFormer()) {
-  api
-    .get<any>("/organisms/by-Creator/" + CheckUser.getId())
-    .then((response) => {
-      listeOrganismes.value = response;
-    });
-}
+api.get<any>("/organisms/by-Creator/" + CheckUser.getId()).then((response) => {
+  listeOrganismes.value = response;
+});
 </script>
 <template>
   <h1>Organisms page</h1>

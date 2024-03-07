@@ -10,8 +10,8 @@ defineProps({
 </script>
 <template>
   <v-col cols="auto">
-    <v-list>
-      <v-list-item v-for="i in liste" :key="i.id">
+    <v-list v-if="liste.length > 0">
+      <v-list-item v-for="i in liste" :key="i.id" >
         <v-card
           @click="router.push('/organisms/' + i.id)"
           max-width="100%"
