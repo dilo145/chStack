@@ -15,7 +15,7 @@ class CheckUser {
     }
     return false;
   }
-  getId(): boolean {
+  getId(): number {
     let user = JSON.parse(localStorage.getItem('user') || '{}');
     return user.id;
   }

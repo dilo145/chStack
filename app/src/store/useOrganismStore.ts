@@ -3,6 +3,7 @@ import { Organism } from "@/types/Organism";
 import { defineStore } from "pinia";
 import { onMounted, reactive, ref } from "vue";
 import { useRouter } from "vue-router";
+import CheckUser from "@/services/CheckUser";
 
 export const useOrganismStore = defineStore("Organism", () => {
   const Organisms = ref<Organism[]>([]);
@@ -26,7 +27,7 @@ export const useOrganismStore = defineStore("Organism", () => {
     name: "",
     logo: "",
     trainings: [],
-    created_by: 0,
+    created_by: CheckUser.getId() || 0,
   });
 
   const editOrganism = ref<Organism>({
@@ -65,7 +66,7 @@ export const useOrganismStore = defineStore("Organism", () => {
       .post<Organism>("organisms/new", newOrganism)
       .then((response) => {
         console.log(response);
-        router.push(`organisms/${response.id}`);
+        router.push("/");
       })
       .catch((err) => {
         console.log(err);
