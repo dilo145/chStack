@@ -6,6 +6,7 @@ import WebService from "@/services/WebService";
 const jsonData = ref(null); // Declare jsonData as a reactive variable
 const user = localStorage.getItem('user');
 console.log(user)
+
 // Function to fetch JSON data from the API
 async function fetchData() {
   try {
