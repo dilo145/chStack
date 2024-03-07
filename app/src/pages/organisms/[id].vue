@@ -2,7 +2,7 @@
 import { useOrganismStore } from "@/store/useOrganismStore";
 import { computed, onMounted, toRefs } from "vue";
 import { useRouter } from "vue-router";
-
+import ClassIndex from "@/pages/classes/index.vue";
 const OrganismStore = useOrganismStore();
 
 const id = computed(() => {
@@ -77,5 +77,6 @@ const { editOrganism, isEditing } = toRefs(OrganismStore);
         >
       </v-row>
     </v-card>
+    <class-index :from-organism="true" :liste-from-organism="editOrganism.trainings" ></class-index>
   </v-col>
 </template>
