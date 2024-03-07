@@ -13,7 +13,6 @@ const id = computed(() => {
 });
 
 const router = useRouter();
-
 function onEditTraining() {
   trainingStore.updateTraining(id.value.toString());
   isEditing.value = false;
@@ -24,12 +23,15 @@ onMounted(() => {
 
   trainingStore.getTraining(id.toString());
   studentStore.getTrainingStudent(id.toString());
+  trainingStore.getOrganisms();
+  trainingStore.getStudents();
 });
 
 const { editTraining, isEditing } = toRefs(trainingStore);
 </script>
 
 <template>
+  
   <v-col cols="12">
     <h1>Classe</h1>
     <v-row>
@@ -63,11 +65,11 @@ const { editTraining, isEditing } = toRefs(trainingStore);
     <v-card title="Tous les étudiants" class="pa-6">
     <v-select
       label="Select les étudiants"
-      :items="['test1','test2']"
+      :items="trainingStore.students"
+      item-title="lastName"
       variant="outlined"
       return-object
       multiple
-      
 ></v-select>
     <!--FIN TABLE étudiants-->
 
@@ -100,13 +102,14 @@ const { editTraining, isEditing } = toRefs(trainingStore);
         outlined
         required
       ></v-text-field>
-    
+      
       <v-row>
         <v-col cols="12" md="6">
           <v-select
             v-model="editTraining.organism"
             :items="trainingStore.organisms"
             item-title="name"
+            :item-value="id"
             label="Organism"
             outlined
             required

@@ -1,12 +1,14 @@
 import api from "@/services/WebService";
 import { Organism } from "@/types/Organism";
 import { Training } from "@/types/Training";
+import { Student } from '@/types/Student';
 import { defineStore } from "pinia";
 import { onMounted, reactive, ref } from "vue";
 import { useRouter } from "vue-router";
 
 export const useTrainingStore = defineStore("training", () => {
   const trainings = ref<Training[]>();
+  const students = ref<Student[]>([]);
   const organisms = ref<Organism[]>([]);
   const router = useRouter();
   const isEditing = ref(false);
@@ -29,7 +31,6 @@ export const useTrainingStore = defineStore("training", () => {
       id: 0,
       name: "",
       logo: "",
-      trainings: [],
       created_by: 0
     },
     name: "",
@@ -42,7 +43,6 @@ export const useTrainingStore = defineStore("training", () => {
       id: 0,
       name: "",
       logo: "",
-      trainings: [],
       created_by: 0
     },
     name: "",
@@ -108,6 +108,17 @@ export const useTrainingStore = defineStore("training", () => {
       });
   }
 
+  function getStudents() {
+    api
+      .get<Student[]>('students')
+      .then((data) => {
+        students.value = data;
+      })
+      .catch((err) => {
+        console.error('Error fetching students:', err);
+      });
+  }
+
   function getOrganisms() {
     api
       .get<Organism[]>("organisms")
@@ -130,7 +141,9 @@ export const useTrainingStore = defineStore("training", () => {
     editTraining,
     isEditing,
     organisms,
+    students,
     getTrainings,
+    getStudents,
     getOrganisms,
     createTraining,
     deleteTraining,

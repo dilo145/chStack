@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Entity\Organism;
 use App\Entity\Training;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -21,30 +22,30 @@ class TrainingRepository extends ServiceEntityRepository
         parent::__construct($registry, Training::class);
     }
 
-//    /**
-//     * @return Training[] Returns an array of Training objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('t')
-//            ->andWhere('t.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('t.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
+    //    /**
+    //     * @return Training[] Returns an array of Training objects
+    //     */
+    //    public function findByExampleField($value): array
+    //    {
+    //        return $this->createQueryBuilder('t')
+    //            ->andWhere('t.exampleField = :val')
+    //            ->setParameter('val', $value)
+    //            ->orderBy('t.id', 'ASC')
+    //            ->setMaxResults(10)
+    //            ->getQuery()
+    //            ->getResult()
+    //        ;
+    //    }
 
-//    public function findOneBySomeField($value): ?Training
-//    {
-//        return $this->createQueryBuilder('t')
-//            ->andWhere('t.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+    //    public function findOneBySomeField($value): ?Training
+    //    {
+    //        return $this->createQueryBuilder('t')
+    //            ->andWhere('t.exampleField = :val')
+    //            ->setParameter('val', $value)
+    //            ->getQuery()
+    //            ->getOneOrNullResult()
+    //        ;
+    //    }
 
     public function getAll()
     {
@@ -79,7 +80,7 @@ class TrainingRepository extends ServiceEntityRepository
             ->getOneOrNullResult();
     }
 
-    public function update($data, int $id)
+    public function update($data,$organism ,int $id)
     {
         $training = $this->find($id);
 
@@ -89,7 +90,7 @@ class TrainingRepository extends ServiceEntityRepository
 
         $training->setName($data['name']);
         $training->setGoalTraining($data['goalTraining']);
-        //$training->setOrganism($data['organism']);
+        $training->setOrganism($organism);
 
         $em = $this->getEntityManager();
         $em->persist($training);
