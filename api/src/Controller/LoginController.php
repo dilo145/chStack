@@ -31,9 +31,8 @@ class LoginController extends AbstractController
         if (!$user) {
             return new JsonResponse(['error' => 'Invalid Email/Password'], Response::HTTP_UNAUTHORIZED);
         }
-        //TODO dont delete this code
         // if (!$userPasswordHasher->isPasswordValid($user, $data['password'])) {
-        //     return new JsonResponse(['error' => 'Invalid Email/Password'], Response::HTTP_OK);
+        // return new JsonResponse(['error' => 'Invalid Email/Password'], Response::HTTP_OK);
         // }
         //TODO add TOKEN tws V2 
         $resposeData = [
@@ -43,6 +42,7 @@ class LoginController extends AbstractController
                 'firstName' => $user->getFirstName(),
                 'lastName' => $user->getLastName(),
                 'photo' => $user->getPhoto(),
+                'roles' => $user->getRoles(),
             ],
             'message' => "User logged in successfully"
         ];

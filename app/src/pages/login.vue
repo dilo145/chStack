@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { ref, toRefs } from "vue";
 import { useLoginStore } from "@/store/useLoginStore";
-import router from "@/router";
 
 const visible = ref(false);
 const tab = ref(null);
@@ -9,7 +8,6 @@ const loginStore = useLoginStore();
 const { newLogin, show } = toRefs(loginStore);
 function onLoginSubmit() {
   loginStore.login();
-  // router.go(-1);
 }
 
 const emailRules: any = [

@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import SideNavigationComponent from "@/components/SideNavigationComponent.vue";
 import { ref } from "vue";
-const token = ref(false);
+const token = localStorage.getItem("user");
 </script>
 
 <template>
