@@ -44,8 +44,8 @@ class StudentController extends AbstractController
     }
 
     #[Route('/delete/{id}', name: 'api_student_delete', methods: ['POST'])]
-    public function deleteStudent(Request $request, int $id): JsonResponse
+    public function deleteStudent(int $id): JsonResponse
     {
-        return $this->studentService->deleteStudent($request, $id);
+        return $this->studentService->deleteStudent($id);
     }
 }

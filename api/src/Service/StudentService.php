@@ -161,7 +161,7 @@ class StudentService
         return new JsonResponse(['message' => 'Student edited successfully'], Response::HTTP_OK);
     }
 
-    public function deleteStudent(Request $request, int $id): JsonResponse
+    public function deleteStudent(int $id): JsonResponse
     {
         $student = $this->entityManager->getRepository(Student::class)->find($id);
 

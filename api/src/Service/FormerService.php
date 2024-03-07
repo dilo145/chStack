@@ -162,7 +162,7 @@ class FormerService
         return new JsonResponse(['message' => 'Former edited successfully'], Response::HTTP_OK);
     }
 
-    public function deleteFormer(Request $request, int $id): JsonResponse
+    public function deleteFormer( int $id): JsonResponse
     {
         $former = $this->entityManager->getRepository(Former::class)->find($id);
 

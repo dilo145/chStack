@@ -21,16 +21,17 @@ class RegistrationController extends AbstractController
     ): JsonResponse {
         $data = json_decode($request->getContent(), true);
         if (!isset($data['email']) || !isset($data['password'])) {
-            return new JsonResponse(['error' => 'Missing required fields'], Response::HTTP_OK);
+            return new JsonResponse(['error' => 'Missing required fields'], Response::HTTP_BAD_REQUEST);
         }
         try {
             $user = $userRepository->findByEmail($data['email']);
         } catch (\Exception $e) {
-            return new JsonResponse(['error' => 'Invalid Email/Password'], Response::HTTP_OK);
+            return new JsonResponse(['error' => 'Invalid Email/Password'], Response::HTTP_UNAUTHORIZED);
         }
         if (!$user) {
-            return new JsonResponse(['error' => 'Invalid Email/Password'], Response::HTTP_OK);
+            return new JsonResponse(['error' => 'Invalid Email/Password'], Response::HTTP_UNAUTHORIZED);
         }
+        //TODO dont delete this code
         // if (!$userPasswordHasher->isPasswordValid($user, $data['password'])) {
         //     return new JsonResponse(['error' => 'Invalid Email/Password'], Response::HTTP_OK);
         // }

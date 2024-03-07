@@ -44,8 +44,8 @@ class FormerController extends AbstractController
     }
 
     #[Route('/delete/{id}', name: 'api_former_delete', methods: ['POST'])]
-    public function deleteFormer(Request $request, int $id): JsonResponse
+    public function deleteFormer(int $id): JsonResponse
     {
-        return $this->formerService->deleteFormer($request, $id);
+        return $this->formerService->deleteFormer($id);
     }
 }
