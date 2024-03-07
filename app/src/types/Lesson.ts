@@ -8,5 +8,5 @@ export type Lesson = {
   goal: string;
   place: string;
   level: Level;
-  category: Category;
+  category: Category[];
 };

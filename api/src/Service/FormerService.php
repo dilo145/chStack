@@ -8,14 +8,17 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class FormerService
 {
     private $entityManager;
+    private $userPasswordHasher;
 
-    public function __construct(EntityManagerInterface $entityManager)
+    public function __construct(EntityManagerInterface $entityManager, UserPasswordHasherInterface $userPasswordHasher)
     {
         $this->entityManager = $entityManager;
+        $this->userPasswordHasher = $userPasswordHasher;
     }
 
     public function getOneFormer(int $id): JsonResponse
@@ -71,7 +74,7 @@ class FormerService
 
         $former = new Former();
 
-        if (!isset($data['firstName']) || !isset($data['lastName']) || !isset($data['email']) || !isset($data['photo'])) {
+        if (!isset($data['firstName']) || !isset($data['lastName']) || !isset($data['email'])) {
             return new JsonResponse(['error' => 'Missing required fields'], Response::HTTP_BAD_REQUEST);
         }
 
@@ -86,9 +89,16 @@ class FormerService
         $former->setFirstName($data['firstName']);
         $former->setLastName($data['lastName']);
         $former->setEmail($data['email']);
-        $former->setPhoto($data['photo']);
         $former->setCreatedAt();
-        $former->setPassword('password');
+        $former->setPhoto($data['photo'] ?? null);
+        //hash password
+        $former->setPassword(
+            $this->userPasswordHasher->hashPassword(
+                $former,
+                $data['password']
+            )
+        );
+
 
         try {
             $this->entityManager->persist($former);
@@ -132,7 +142,12 @@ class FormerService
             $former->setIndividual($data['individual']);
         }
         if (isset($data['password'])) {
-            $former->setPassword($data['password']);
+            $former->setPassword(
+                $this->userPasswordHasher->hashPassword(
+                    $former,
+                    $data['password']
+                )
+            );
         }
 
         $former->setUpdatedAt();
@@ -147,7 +162,7 @@ class FormerService
         return new JsonResponse(['message' => 'Former edited successfully'], Response::HTTP_OK);
     }
 
-    public function deleteFormer(int $id): JsonResponse
+    public function deleteFormer( int $id): JsonResponse
     {
         $former = $this->entityManager->getRepository(Former::class)->find($id);
 
@@ -165,5 +180,4 @@ class FormerService
 
         return new JsonResponse(['message' => 'Former deleted successfully'], Response::HTTP_OK);
     }
-
 }

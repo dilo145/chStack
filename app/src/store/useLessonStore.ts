@@ -7,7 +7,7 @@ import { onMounted, reactive, ref } from "vue";
 import { useRouter } from "vue-router";
 
 export const useLessonStore = defineStore("lesson", () => {
-  const lessons = ref<Lesson[]>();
+  const lessons = ref<Lesson[]>([]);
   const categories = ref<Category[]>([]);
   const levels = ref<Level[]>([]);
   const router = useRouter();
@@ -36,11 +36,7 @@ export const useLessonStore = defineStore("lesson", () => {
       name: "",
       description: "",
     },
-    category: {
-      id: 0,
-      name: "",
-      description: "",
-    },
+    category: [],
   });
 
   const editLesson = ref<Lesson>({
@@ -54,16 +50,12 @@ export const useLessonStore = defineStore("lesson", () => {
       name: "",
       description: "",
     },
-    category: {
-      id: 0,
-      name: "",
-      description: "",
-    },
+    category: [],
   });
 
   function getLesson(id: string) {
     api
-      .get<Lesson>(`get-lesson/${id}`)
+      .get<Lesson>(`lessons/${id}`)
       .then((data) => {
         editLesson.value = data;
         console.log(editLesson.value);
@@ -75,7 +67,7 @@ export const useLessonStore = defineStore("lesson", () => {
 
   function getLessons() {
     api
-      .get<Lesson[]>("get-lessons")
+      .get<Lesson[]>("lessons")
       .then((data) => {
         lessons.value = data;
       })
@@ -86,7 +78,7 @@ export const useLessonStore = defineStore("lesson", () => {
 
   function getCategories() {
     api
-      .get<Category[]>("get-categories")
+      .get<Category[]>("categories")
       .then((data) => {
         console.log(data);
 
@@ -99,7 +91,7 @@ export const useLessonStore = defineStore("lesson", () => {
 
   function getLevels() {
     api
-      .get<Level[]>("get-levels")
+      .get<Level[]>("levels")
       .then((data) => {
         levels.value = data;
       })
@@ -110,7 +102,7 @@ export const useLessonStore = defineStore("lesson", () => {
 
   function createLesson() {
     api
-      .post<Lesson>("create-lesson", newLesson)
+      .post<Lesson>("lessons/new", newLesson)
       .then((response) => {
         console.log(response);
         router.push(`lessons/${response.id}`);
@@ -122,10 +114,9 @@ export const useLessonStore = defineStore("lesson", () => {
 
   function updateLesson(id: string) {
     api
-      .put<Lesson>("update-lesson", parseInt(id), editLesson.value)
+      .put<Lesson>("lessons/edit", parseInt(id), editLesson.value)
       .then((response) => {
-        console.log(response);
-        editLesson.value = response;
+        getLesson(id);
         isEditing.value = false;
       })
       .catch((err) => {
@@ -135,7 +126,7 @@ export const useLessonStore = defineStore("lesson", () => {
 
   function deleteLesson(id: number) {
     api
-      .delete<Lesson>("delete-lesson", id)
+      .delete<Lesson>("lessons/delete", id)
       .then(() => {
         getLessons();
       })
@@ -146,6 +137,8 @@ export const useLessonStore = defineStore("lesson", () => {
 
   onMounted(() => {
     getLessons();
+    getLevels();
+    getCategories();
   });
 
   return {

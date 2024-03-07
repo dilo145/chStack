@@ -1,53 +1,50 @@
 <?php
-
 namespace App\Controller;
 
-use App\Entity\User;
-use App\Form\RegistrationFormType;
-use App\Security\EmailVerifier;
-use App\Security\LoginAuthenticator;
-use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bridge\Twig\Mime\TemplatedEmail;
+use App\Service\RegistrationService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
-use Symfony\Component\Mailer\MailerInterface;
-use Symfony\Component\Mime\Address;
-use Symfony\Component\Mime\Email;
-use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Http\Authentication\UserAuthenticatorInterface;
-use Symfony\Contracts\Translation\TranslatorInterface;
-use SymfonyCasts\Bundle\VerifyEmail\Exception\VerifyEmailExceptionInterface;
+use Symfony\Component\HttpFoundation\Request;
 
+#[Route('/api/registrations')]
 class RegistrationController extends AbstractController
 {
-    #[Route('/api/register', name: 'app_register', methods: ['POST'])]
-    public function register(
-        Request $request,
-        UserPasswordHasherInterface $userPasswordHasher,
-        EntityManagerInterface $entityManager,
-    ): Response {
-        $user = new User();
+    private $registrationService;
 
-        // encode the plain password
-        $user->setPassword(
-            $userPasswordHasher->hashPassword(
-                $user,
-                "password"
-            )
-        );
-        $user->setLastName("kjhdhf");
-        $user->setFirstName("kjhdf");
-        $user->setEmail("qsjkfh@gmail.com");
-        $user->setRoles(['ROLE_USER']);
-        $user->setPhoto("photo");
-        $user->setCreatedAt(new \DateTimeImmutable());
+    public function __construct(RegistrationService $registrationService)
+    {
+        $this->registrationService = $registrationService;
+    }
 
-        $entityManager->persist($user);
-        $entityManager->flush();
+    #[Route('/new', name: 'api_registration_new', methods: ['POST'])]
+    public function newRegistration(Request $request): Response
+    {
+        return $this->registrationService->create($request);
+    }
 
-        return $this->json($user);
+    #[Route('/{id}', name: 'api_registration_read', methods: ['GET'])]
+    public function readRegistration(int $id): Response
+    {
+        return $this->registrationService->read($id);
+    }
+
+    #[Route('/', name: 'api_registration_read_all', methods: ['GET'])]
+    public function readAllRegistrations(): Response
+    {
+        return $this->registrationService->readAll();
+    }
+
+    #[Route('/edit/{id}', name: 'api_registration_edit', methods: ['POST'])]
+    public function updateRegistration(Request $request, int $id): Response
+    {
+        return $this->registrationService->update($request, $id);
+    }
+
+    #[Route('/delete/{id}', name: 'api_registration_delete', methods: ['DELETE'])]
+    public function deleteRegistration(int $id): Response
+    {
+        return $this->registrationService->delete($id);
     }
 }
+?>
