@@ -35,7 +35,7 @@ class RegistrationController extends AbstractController
         return $this->registrationService->readAll();
     }
 
-    #[Route('/edit/{id}', name: 'api_registration_edit', methods: ['POST'])]
+    #[Route('/edit/{id}', name: 'api_registration_edit', methods: ['PATCH'])]
     public function updateRegistration(Request $request, int $id): Response
     {
         return $this->registrationService->update($request, $id);

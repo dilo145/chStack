@@ -136,8 +136,5 @@ pnpm-debug.log*
 *.sln
 *.sw?
 
-.env
-.env.local
-
 typed-router.d.ts
 components.d.ts
