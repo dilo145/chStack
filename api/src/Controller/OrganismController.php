@@ -45,9 +45,9 @@ class OrganismController extends AbstractController
     }
 
     #[Route('/by-Creator/{id}', name: 'api_organism_by_creator', methods: ['GET'])]
-    public function getOrganismByCreator($id, OrganismRepository $organismRepository)
+    public function getOrganismByCreator($id)
     {
-        $organism = $organismRepository->findBy(['createdBy' => $id]);
+        $organism = $this->entityManager->getRepository(Organism::class)->findBy(['createdBy' => $id]);
         return $this->json($organism);
     }
 }
