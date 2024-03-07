@@ -21,7 +21,6 @@ export const useStudentStore = defineStore('student', () => {
     },
     { title: 'Lastname', value: 'lastName' },
     { title: 'Email', value: 'email' },
-    { title: 'invidual', value: 'invidual' },
     { title: 'Actions', key: 'actions', sortable: false },
   ]);
 

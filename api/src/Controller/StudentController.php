@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Service\StudentService;
 use App\Repository\StudentRepository;
+use App\Repository\UserRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -19,7 +20,25 @@ class StudentController extends AbstractController
     {
         $this->studentService = $studentService;
     }
+    #[Route('/export/{id}', name:'export_csv', methods: ['GET'])]
+    public function exportStudents(UserRepository $UserRepository, int $id): Response
+    {
+        // Fetch data from your database or any source
+        $students = $UserRepository->findByuser($id);
 
+        // Generate CSV data
+        $csvData = "ID,FirstName,LastName,Email\n"; // CSV header
+        foreach ($students as $student) {
+            $csvData .= "{$student['id']},{$student['firstName']},{$student['lastName']},{$student['email']}\n";
+        }
+
+        // Return CSV data as response
+        $response = new Response($csvData);
+        $response->headers->set('Content-Type', 'text/csv');
+        $response->headers->set('Content-Disposition', 'attachment; filename="students.csv"');
+
+        return $response;
+    }
     #[Route('/{id}', name: 'app_student_get_one', methods: ['GET'])]
     public function getOneStudent(int $id): JsonResponse
     {
@@ -80,9 +99,9 @@ class StudentController extends AbstractController
     }
 
     #[Route('/get_by_training/{id}', name: 'app_student_get_all_by_training', methods: ['GET'])]
-    public function getAllStudentsByTraining(StudentRepository $StudentRepository, int $id): JsonResponse
+    public function getAllStudentsByTraining(UserRepository $UserRepository, int $id): JsonResponse
     {
-        $students = $StudentRepository->findAllBytraining($id);
+        $students = $UserRepository->findByuser($id);
         return $this->json($students);
     }
 }
