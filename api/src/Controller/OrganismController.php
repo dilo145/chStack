@@ -30,8 +30,7 @@ class OrganismController extends AbstractController
     #[Route('/by-Creator/{id}', name: 'api_organism_by_creator', methods: ['GET'])]
     public function getOrganismByCreator($id)
     {
-        $organism = $this->entityManager->getRepository(Organism::class)->findBy(['createdBy' => $id]);
-        return $this->json($organism);
+        return $this->organismService->readByCreator($id);
     }
     #[Route('/', name: 'api_organism_read_all', methods: ['GET'])]
     public function readAllOrganisms(): Response
@@ -45,7 +44,7 @@ class OrganismController extends AbstractController
         return $this->organismService->read($id);
     }
 
-    #[Route('/edit/{id}', name: 'api_organism_edit', methods: ['POST'])]
+    #[Route('/edit/{id}', name: 'api_organism_edit', methods: ['PUT'])]
     public function updateOrganism(Request $request, int $id): Response
     {
         return $this->organismService->update($request, $id);

@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Service;
 
 use App\Entity\Organism;
@@ -41,6 +42,26 @@ class OrganismService
         return new JsonResponse(['message' => 'Answer created successfully'], Response::HTTP_CREATED);
     }
 
+    public function readByCreator(int $id): Response
+    {
+        try {
+            $organisms = $this->entityManager->getRepository(Organism::class)->findBy(['createdBy' => $id]);
+        } catch (\Exception $e) {
+            return new JsonResponse(['error' => 'Failed to read the organism'], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+
+        $data = [];
+        foreach ($organisms as $organism) {
+            $data[] = [
+                'id' => $organism->getId(),
+                'name' => $organism->getName(),
+                'logo' => $organism->getLogo(),
+                'created_by' => $organism->getCreatedBy()
+            ];
+        }
+        return new JsonResponse($data, Response::HTTP_OK);
+    }
+
     public function read(int $id): Response
     {
         $organism = $this->entityManager->getRepository(Organism::class)->find($id);
@@ -64,7 +85,7 @@ class OrganismService
             'name' => $organism->getName(),
             'logo' => $organism->getLogo(),
             'created_by' => $organism->getCreatedBy(),
-            'training' => $trainingsData
+            'trainings' => $trainingsData
         ];
 
         return new JsonResponse($data, Response::HTTP_OK);
@@ -89,8 +110,17 @@ class OrganismService
 
     public function update(Request $request, int $id): Response
     {
-        $organism = $this->entityManager->getRepository(Organism::class)->find($id);
-        $trainings = $this->entityManager->getRepository(Training::class)->findBy(['organism' => $organism]);
+        try {
+            $organism = $this->entityManager->getRepository(Organism::class)->find($id);
+        } catch (\Exception $e) {
+            return new JsonResponse(['error' => 'Failed to update the organism'], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+
+        try {
+            $trainings = $this->entityManager->getRepository(Training::class)->findBy(['organism' => $organism]);
+        } catch (\Exception $e) {
+            return new JsonResponse(['error' => 'Failed to update the organism'], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
 
         if ($organism == null) {
             throw new NotFoundHttpException('Organism not found');
@@ -150,5 +180,4 @@ class OrganismService
 
         return new JsonResponse(['message' => 'Organism deleted successfully'], Response::HTTP_OK);
     }
-
 }

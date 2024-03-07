@@ -25,12 +25,14 @@ export const useOrganismStore = defineStore("Organism", () => {
     id: 0,
     name: "",
     logo: "",
+    trainings: [],
   });
 
   const editOrganism = ref<Organism>({
     id: 0,
     name: "",
     logo: "",
+    trainings: [],
   });
 
   function getOrganism(id: string) {
