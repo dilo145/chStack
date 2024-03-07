@@ -20,22 +20,4 @@ class LevelRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Level::class);
     }
-
-    public function getAll()
-    {
-        return $this->createQueryBuilder('l')
-            ->select('l.id', 'l.name', 'l.description')
-            ->getQuery()
-            ->getResult();
-    }
-
-    public function getOne(int $id)
-    {
-        return $this->createQueryBuilder('l')
-            ->select('l.id', 'l.name', 'l.description')
-            ->where('l.id = :id')
-            ->setParameter('id', $id)
-            ->getQuery()
-            ->getOneOrNullResult();
-    }
 }

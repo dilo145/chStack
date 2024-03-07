@@ -6,7 +6,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Service\LevelService;
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Response;
 
 
@@ -14,7 +13,7 @@ use Symfony\Component\HttpFoundation\Response;
 class LevelController extends AbstractController
 {
     private $levelService;
-    public function __construct(LevelService $levelService, EntityManagerInterface $entityManager)
+    public function __construct(LevelService $levelService)
     {
         $this->levelService = $levelService;
     }
