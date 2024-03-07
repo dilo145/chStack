@@ -8,7 +8,7 @@ const rail = ref(true);
 const user = localStorage.getItem("user");
 function disconnectUser() {
   localStorage.removeItem("user")
-  router.push("/login")
+  location.replace('/login')
 }
 
 </script>
