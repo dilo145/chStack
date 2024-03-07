@@ -57,4 +57,11 @@ class UserController extends AbstractController
 
         return new JsonResponse(['message' => 'User deleted successfully'], Response::HTTP_OK);
     }
+
+    #[Route('/get_by_training/{id}', name: 'app_student_get_all_by_training', methods: ['GET'])]
+    public function getAllStudentsByTraining(UserRepository $UserRepository, int $id): JsonResponse
+    {
+        $students = $UserRepository->findByuser($id);
+        return $this->json($students);
+    }
 }

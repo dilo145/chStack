@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Service\StudentService;
+use App\Repository\StudentRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -76,5 +77,12 @@ class StudentController extends AbstractController
     public function deleteStudent(int $id): JsonResponse
     {
         return $this->studentService->deleteStudent($id);
+    }
+
+    #[Route('/get_by_training/{id}', name: 'app_student_get_all_by_training', methods: ['GET'])]
+    public function getAllStudentsByTraining(StudentRepository $StudentRepository, int $id): JsonResponse
+    {
+        $students = $StudentRepository->findAllBytraining($id);
+        return $this->json($students);
     }
 }

@@ -86,6 +86,17 @@ export const useStudentStore = defineStore('student', () => {
       });
   }
 
+  function getTrainingStudent(id: string) {
+    api
+      .get<Student[]>(`users/get_by_training/${id}`)
+      .then((data) => {
+        students.value = data;
+        console.log(students);
+      })
+      .catch((err) => {
+        console.error("Error fetching training:", err);
+      });
+  }
   function createStudent() {
     api
       .post<Student>('students/new', newStudent)
@@ -133,6 +144,7 @@ export const useStudentStore = defineStore('student', () => {
     isEditing,
     getStudent,
     getStudents,
+    getTrainingStudent,
     updateStudent,
     createStudent,
     deleteStudent,
