@@ -88,8 +88,8 @@ onMounted(() => {
     </template>
 
     <template v-slot:item.invidual="{ item }">
-      <v-chip v-if="item.invidual !== null" color="primary"> indiviual </v-chip>
-      <v-chip v-else color="primary"> non-invidual </v-chip>
+      <v-chip v-if="item.invidual === true" color="primary"> indiviual </v-chip>
+      <v-chip v-else> non-invidual </v-chip>
     </template>
   </v-data-table>
 
