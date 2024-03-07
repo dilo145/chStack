@@ -21,47 +21,31 @@ function onDeleteValidate(id: number) {
 <template>
   <h1>Classes</h1>
   <DataTableActions />
-
-  <v-data-table
-    :items="trainingStore.trainings"
-    :headers="trainingStore.headers"
-    class="elevation-1 mt-6"
-  >
+  
+  <v-data-table :items="trainingStore.trainings" :headers="trainingStore.headers" class="elevation-1 mt-6">
     <template v-slot:item.actions="{ item }">
-      <v-icon
-        class="me-2"
-        size="small"
-        @click="
-          router.push(`/classes/${item.id}`);
-          trainingStore.isEditing = false;
-        "
-      >
+      <v-icon class="me-2" size="small" @click="
+    router.push(`/classes/${item.id}`);
+  trainingStore.isEditing = false;
+  ">
         mdi-eye
       </v-icon>
-      <v-icon
-        class="me-2"
-        size="small"
-        color="secondary"
-        @click="
-          router.push(`/classes/${item.id}`);
-          trainingStore.isEditing = true;
-        "
-      >
+      <v-icon class="me-2" size="small" color="secondary" @click="
+    router.push(`/classes/${item.id}`);
+  trainingStore.isEditing = true;
+  ">
         mdi-pencil
       </v-icon>
-      <v-icon
-        size="small"
-        color="red"
-        @click="
-          isDeleteModalOpen = true;
-          id = item.id;
-        "
-      >
+      <v-icon size="small" color="red" @click="
+    isDeleteModalOpen = true;
+  id = item.id;
+  ">
         mdi-delete
       </v-icon>
     </template>
 
     <!-- No data message -->
+
     <template v-slot:no-data>
       <v-alert color="error" icon="mdi-alert">
         No training found. Please add a new training.
@@ -72,9 +56,7 @@ function onDeleteValidate(id: number) {
   <!-- Delete confirmation dialog -->
   <v-dialog v-model="isDeleteModalOpen" width="500">
     <v-card>
-      <v-card-title class="text-center"
-        >Are you sure you want to delete this training?</v-card-title
-      >
+      <v-card-title class="text-center">Are you sure you want to delete this training?</v-card-title>
       <v-card-actions class="justify-end">
         <v-btn @click="isDeleteModalOpen = false">Cancel</v-btn>
         <v-btn color="red" @click="onDeleteValidate(id)">Delete</v-btn>
