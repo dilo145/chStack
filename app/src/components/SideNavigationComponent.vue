@@ -19,8 +19,7 @@ function disconnectUser() {
 <template>
   <!-- Conditional rendering of JSON data -->
   <v-card>
-    <v-layout>
-      <v-navigation-drawer v-model="drawer" :rail="rail" permanent @click="rail = false">
+      <v-navigation-drawer v-model="drawer" fixed :rail="rail" permanent @click="rail = false">
         <v-divider></v-divider>
 
         <v-img v-if="!rail" src="../assets/logo.png" class="ma-2 w-50 mb-4"></v-img>
@@ -99,6 +98,5 @@ function disconnectUser() {
         </template>
       </v-navigation-drawer>
       <v-main style="height: 100vh"></v-main>
-    </v-layout>
   </v-card>
 </template>
