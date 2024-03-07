@@ -3,10 +3,12 @@ import { Former } from "@/types/Former";
 import { defineStore } from "pinia";
 import { onMounted, reactive, ref } from "vue";
 import { useRouter } from "vue-router";
+import {Lesson} from "@/types/Lesson";
 
 export const useFormerStore = defineStore("former", () => {
   const formers = ref<Former[]>();
   const router = useRouter();
+  const isEditing = ref(false);
 
   const newFormer = reactive<Former>({
     speciality: "",
@@ -16,6 +18,27 @@ export const useFormerStore = defineStore("former", () => {
     password: "",
     photo: "",
   });
+
+  const editFormer = ref<Former>({
+    speciality: "",
+    firstName: "",
+    lastName: "",
+    email: "",
+    password: "",
+    photo: "",
+  });
+
+  function getFormerById(id: string) {
+    api
+        .get<Former>(`formers/${id}`)
+        .then((data) => {
+          editFormer.value = data;
+          return data;
+        })
+        .catch((err) => {
+          console.error("Error fetching former:", err);
+        });
+  }
 
   function createFormer() {
     api
@@ -29,8 +52,29 @@ export const useFormerStore = defineStore("former", () => {
       });
   }
 
+  function updateFormer(id: string) {
+    api
+        .put<Former>("formers/edit", parseInt(id), editFormer.value)
+        .then((response) => {
+          let data = getFormerById(id);
+          //edit photo in local storage
+            if (data.photo !== "") {
+                localStorage.setItem("user.photo", data.photo);
+            }
+
+          isEditing.value = false;
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+  }
+
   return {
     newFormer,
+    editFormer,
     createFormer,
+    updateFormer,
+    getFormerById,
+    isEditing,
   };
 })

@@ -1,8 +1,12 @@
 <script setup lang="ts">
 import DataTableActions from "@/components/lessons/DataTableActions.vue";
 import { useLessonStore } from "@/store/useLessonStore";
-import { onMounted, ref } from "vue";
+import {onMounted, ref, toRefs} from "vue";
 import { useRouter } from "vue-router";
+import {useUserStore} from "@/store/useUserStore";
+const { user } = toRefs(useUserStore());
+const userUserStore = useUserStore();
+const role = userUserStore.getRole();
 
 const lessonStore = useLessonStore();
 const router = useRouter();
@@ -37,6 +41,7 @@ onMounted(() => {
           router.push(`/lessons/${item.id}`);
           lessonStore.isEditing = false;
         "
+        v-if="role && role === 'ROLE_FORMER'"
       >
         mdi-eye
       </v-icon>
@@ -48,6 +53,7 @@ onMounted(() => {
           router.push(`/lessons/${item.id}`);
           lessonStore.isEditing = true;
         "
+        v-if="role && role === 'ROLE_FORMER'"
       >
         mdi-pencil
       </v-icon>
@@ -58,6 +64,7 @@ onMounted(() => {
           isDeleteModalOpen = true;
           id = item.id;
         "
+        v-if="role && role === 'ROLE_FORMER'"
       >
         mdi-delete
       </v-icon>

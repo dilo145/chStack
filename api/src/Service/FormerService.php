@@ -113,6 +113,7 @@ class FormerService
 
     public function editFormer(Request $request, int $id): JsonResponse
     {
+
         $data = json_decode($request->getContent(), true);
 
         $former = $this->entityManager->getRepository(Former::class)->find($id);

@@ -29,7 +29,6 @@ export const useLoginStore = defineStore("login", () => {
           //add to html <v-alert text type="success">response.data.message</v-alert>
           show.showMessage = true;
           show.message = response.data.message;
-          console.log(response.data.user as User)
           useUserStore().setUser(response.data.user as User);
           setTimeout(() => {
             router.push("/");
@@ -42,6 +41,7 @@ export const useLoginStore = defineStore("login", () => {
       });
     }
   }
+
   return {
     newLogin,
     show,

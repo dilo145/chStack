@@ -1,5 +1,4 @@
-import {Level} from "@/types/Level";
-import {Category} from "@/types/Category";
+
 
 export type Former = {
   speciality: string;

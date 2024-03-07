@@ -1,11 +1,38 @@
 <script setup lang="ts">
-import { ref } from 'vue'
-const color = ref('white')
-import WebService from "@/services/WebService";
-import {useUserStore} from "@/store/useUserStore";
+import {onMounted, ref, toRefs} from 'vue'
 
-const jsonData = ref(null); // Declare jsonData as a reactive variable
-const user = useUserStore().user;
+import {useUserStore} from "@/store/useUserStore";
+import { useFormerStore } from "@/store/useFormerStore";
+const { user } = toRefs(useUserStore());
+const userUserStore = useUserStore();
+const role = userUserStore.getRole();
+const color = ref('white')
+const formerStore = useFormerStore();
+const { editFormer, isEditing } = toRefs(formerStore);
+
+onMounted(() => {
+  if (role && role === 'ROLE_FORMER') {
+    const id = user.value.id.toString();
+    formerStore.getFormerById(id.toString());
+  }
+});
+
+const disable = ref(false);
+if (role && role === 'ROLE_STUDENT') {
+  disable.value = true;
+}
+
+
+function submitForm() {
+  formerStore.updateFormer(user.value.id.toString());
+  isEditing.value = false;
+  useUserStore().setPhoto(editFormer.value.photo);
+  useUserStore().setEmail(editFormer.value.email);
+  location.reload();
+}
+function resetForm() {
+  // reset form logic here
+}
 
 </script>
 
@@ -24,35 +51,14 @@ const user = useUserStore().user;
               class="mx-auto rounded-circle "
               style="width: 90px; border-radius: 9px;"
               alt="Avatar"
-              src="https://avatars0.githubusercontent.com/u/9064066?v=4&s=460"
+              :src="user.photo"
             ></v-img>
           </div>
        </div>
       </v-card-item>
       <v-form v-if="user">
         <v-container>
-          <v-row>
-            <v-col
-              cols="12"
-              sm="6"
-            >
-              <v-text-field
-                label="Nom"
-                :model-value="user.lastName"
-                variant="solo"
-              ></v-text-field>
-            </v-col>
-
-            <v-col
-              cols="12"
-              sm="6"
-            >
-              <v-text-field
-                label="Prénom"
-                :model-value="user.firstName"
-                variant="outlined"
-              ></v-text-field>
-            </v-col>
+          <v-row v-if="role && role === 'ROLE_FORMER'">
 
             <v-col
               cols="12"
@@ -60,11 +66,66 @@ const user = useUserStore().user;
             >
               <v-text-field
                 label="Email"
-                :model-value="user.email"
+                v-model="editFormer.email"
                 variant="outlined"
+                :disabled="disable"
               ></v-text-field>
             </v-col>
 
+            <v-col
+              cols="12"
+              sm="6">
+              <v-text-field
+                type="password"
+                density="compact"
+                placeholder="Change your password"
+                prepend-inner-icon="mdi-lock-outline"
+                variant="outlined"
+                v-model="editFormer.password"
+                :disabled="disable"
+              ></v-text-field>
+            </v-col>
+            <v-col
+              cols="12"
+              sm="6">
+              <v-text-field
+                v-model="editFormer.photo"
+                label="Url Logo"
+                outlined
+                :disabled="disable"
+                prepend-icon="mdi-camera"
+                required
+              ></v-text-field>
+            </v-col>
+
+          </v-row>
+          <v-row v-else >
+
+            <v-col
+              cols="12"
+              sm="6"
+            >
+              <v-text-field
+                label="Email"
+                v-model="user.email"
+                variant="outlined"
+                :disabled="disable"
+              ></v-text-field>
+            </v-col>
+
+            <v-col
+              cols="12"
+              sm="6">
+              <v-text-field
+                type="password"
+                density="compact"
+                placeholder="Change your password"
+                prepend-inner-icon="mdi-lock-outline"
+                variant="outlined"
+                v-model="user.password"
+                :disabled="disable"
+              ></v-text-field>
+            </v-col>
             <v-col
               cols="12"
               sm="6">
@@ -73,6 +134,8 @@ const user = useUserStore().user;
                 label="Photo Profil"
                 placeholder="Pick an avatar"
                 prepend-icon="mdi-camera"
+                :disabled="disable"
+                v-model="user.photo"
               >
               </v-file-input>
             </v-col>
@@ -83,7 +146,8 @@ const user = useUserStore().user;
           <v-btn
             class="mt-4"
             color="#7649FF"
-            @click="validate"
+            @click="submitForm"
+            :disabled="disable"
           >
             Enregistrer
           </v-btn>
@@ -92,6 +156,7 @@ const user = useUserStore().user;
             class="mt-4"
             color="error"
             @click="reset"
+            :disabled="disable"
           >
             Annuler
           </v-btn>

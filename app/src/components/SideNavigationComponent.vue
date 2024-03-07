@@ -1,16 +1,21 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import {ref, toRefs} from "vue";
 import {useRouter} from "vue-router";
 import {useUserStore} from "@/store/useUserStore";
-const router = useRouter();
+import {useLoginStore} from "@/store/useLoginStore";
 
 const drawer = ref(true);
 const rail = ref(true);
-const user = useUserStore().user;
+const { user } = toRefs(useUserStore());
+const userUserStore = useUserStore();
+const userLoginStore = useLoginStore();
+const role = userUserStore.getRole();
 
 function disconnectUser() {
-  localStorage.removeItem("user")
-  location.replace('/login')
+  localStorage.removeItem("user");
+  // remove the user in pinia
+  useUserStore().removeUser();
+  location.reload();
 }
 
 </script>
@@ -39,11 +44,20 @@ function disconnectUser() {
         ></v-img>
         <v-list density="compact" nav>
           <v-list-item
+              link
+              to="/calendar"
+              prepend-icon="mdi-school"
+              title="Calendrier"
+              value="calendrier"
+              v-if="role && role === 'ROLE_STUDENT'"
+          ></v-list-item>
+          <v-list-item
             link
             to="/"
             prepend-icon="mdi-account-group"
             title="Organisms"
             value="organisms"
+            v-if="role && role === 'ROLE_FORMER'"
           ></v-list-item>
           <v-list-item
             link
@@ -58,10 +72,11 @@ function disconnectUser() {
             prepend-icon="mdi-school"
             title="Classes"
             value="classes"
+            v-if="role && role === 'ROLE_FORMER'"
           ></v-list-item>
           <v-list-item
             link
-            to="/grades"
+            to="/graduation"
             prepend-icon="mdi-book-open-variant"
             title="Notes / Examen"
             value="grades"
@@ -72,6 +87,7 @@ function disconnectUser() {
             prepend-icon="mdi-account-group-outline"
             title="Etudiants"
             value="students"
+            v-if="role && role === 'ROLE_FORMER'"
           ></v-list-item>
           <v-list-item
             link
@@ -87,10 +103,11 @@ function disconnectUser() {
 
           <div class="pa-2">
             <v-list-item
-              prepend-avatar="https://randomuser.me/api/portraits/men/85.jpg"
+              :prepend-avatar="user.photo"
               :title="`${user.firstName} ${user.lastName}`"
               nav
             >
+              <div style="font-size: 12px">{{ role }}</div>
               <template v-slot:append>
                 <v-btn
                   icon="mdi-chevron-left"
