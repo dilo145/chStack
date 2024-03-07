@@ -74,7 +74,6 @@ export const useTrainingStore = defineStore("training", () => {
       .post<Training>("/trainings/new", newTraining)
       .then((response) => {
         console.log(response);
-        router.push(`classes/${response.id}`);
       })
       .catch((err) => {
         console.log(err);
