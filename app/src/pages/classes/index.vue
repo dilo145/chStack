@@ -31,18 +31,9 @@ defineProps({
 </script>
 
 <template>
-  <h1>Classes</h1>
-  <DataTableActions v-if="!fromOrganism" />
-
-  <v-data-table
-    :items="fromOrganism ? listeFromOrganism : trainingStore.trainings"
-    :headers="trainingStore.headers"
-    class="elevation-1 mt-6"
-  >
   <h1>Liste des classes</h1>
-  <DataTableActions />
-  
-  <v-data-table :items="trainingStore.trainings" :headers="trainingStore.headers" class="elevation-1 mt-6">
+  <DataTableActions v-if="!fromOrganism" />
+  <v-data-table :items="fromOrganism ? listeFromOrganism : trainingStore.trainings" :headers="trainingStore.headers" class="elevation-1 mt-6">
     <template v-slot:item.actions="{ item }">
       <v-icon
         class="me-2"
@@ -52,6 +43,7 @@ defineProps({
           trainingStore.isEditing = false;
         "
       >
+      </v-icon>
       <v-icon class="me-2" size="small" @click="
         router.push(`/classes/${item.id}`);
         trainingStore.isEditing = false;
@@ -67,6 +59,7 @@ defineProps({
           trainingStore.isEditing = true;
         "
       >
+    </v-icon>
       <v-icon class="me-2" size="small" color="secondary" @click="
         router.push(`/classes/${item.id}`);
         trainingStore.isEditing = true;
@@ -81,6 +74,7 @@ defineProps({
           id = item.id;
         "
       >
+      </v-icon>
       <v-icon size="small" color="red" @click="
         isDeleteModalOpen = true;
         id = item.id;
