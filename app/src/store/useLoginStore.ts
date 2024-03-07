@@ -3,6 +3,8 @@ import { RetourLogin } from "@/types/retourLogin";
 import { defineStore } from "pinia";
 import { reactive } from "vue";
 import { useRouter } from "vue-router";
+import {useUserStore} from "@/store/useUserStore";
+import {User} from "@/types/User";
 export const useLoginStore = defineStore("login", () => {
   const newLogin = reactive<any>({
     email: "",
@@ -27,6 +29,7 @@ export const useLoginStore = defineStore("login", () => {
           //add to html <v-alert text type="success">response.data.message</v-alert>
           show.showMessage = true;
           show.message = response.data.message;
+          useUserStore().setUser(response.data.user as User);
           setTimeout(() => {
             router.push("/");
           }, 1500);
