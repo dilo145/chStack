@@ -6,6 +6,7 @@ const rail = ref(true);
 </script>
 
 <template>
+  <!-- Conditional rendering of JSON data -->
   <v-card>
     <v-layout>
       <v-navigation-drawer
