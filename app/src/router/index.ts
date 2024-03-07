@@ -29,14 +29,6 @@ const router: Router = createRouter({
 });
 
 router.beforeEach((to, from) => {
-  console.log({
-    to,
-    from,
-    authRequired: to.meta.requiresAuth,
-    isLoggedIn: CheckUser.isUserSet(),
-    user: CheckUser.getUser(),
-  });
-
   if (to.meta.requiresAuth) {
     if (CheckUser.isUserSet()) {
       return true;
