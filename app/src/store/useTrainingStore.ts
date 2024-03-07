@@ -28,10 +28,12 @@ export const useTrainingStore = defineStore("training", () => {
     organism: {
       id: 0,
       name: "",
-      logo: ""
+      logo: "",
+      trainings: [],
+      created_by: 0
     },
     name: "",
-    goal_training: "",
+    goalTraining: "",
   });
 
   const editTraining = ref<Training>({
@@ -39,7 +41,9 @@ export const useTrainingStore = defineStore("training", () => {
     organism: {
       id: 0,
       name: "",
-      logo: ""
+      logo: "",
+      trainings: [],
+      created_by: 0
     },
     name: "",
     goal_training: "",

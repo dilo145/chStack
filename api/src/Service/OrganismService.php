@@ -76,7 +76,13 @@ class OrganismService
             $trainingsData[] = [
                 'id' => $training->getId(),
                 'name' => $training->getName(),
-                'goal' => $training->getGoalTraining()
+                'goal' => $training->getGoalTraining(),
+                'organism' => [
+                    'id' => $training->getOrganism()->getId(),
+                    'name' => $training->getOrganism()->getName(),
+                    'logo' => $training->getOrganism()->getLogo(),
+                    'created_by' => $training->getOrganism()->getCreatedBy()
+                ]
             ];
         }
 

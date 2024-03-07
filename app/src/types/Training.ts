@@ -4,5 +4,4 @@ export type Training = {
   organism: Organism;
   name: string;
   goal_training: string;
-  
 };
