@@ -2,78 +2,50 @@
 
 namespace App\Controller;
 
-use App\Entity\Level;
-use App\Repository\LevelRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use App\Service\LevelService;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\HttpFoundation\Response;
 
 
 #[Route('/api/levels')]
 class LevelController extends AbstractController
 {
-    #[Route('/', name: 'levels_show', methods: ['GET'])]
-    public function getAll(LevelRepository $LevelRepository): Response
+    private $levelService;
+    public function __construct(LevelService $levelService, EntityManagerInterface $entityManager)
     {
-        $levels = $LevelRepository->findAll();
-
-        return $this->json($levels);
+        $this->levelService = $levelService;
     }
 
-    #[Route('/{id}', name: 'level_shows', methods: ['GET'])]
-    public function getOne(LevelRepository $LevelRepository, int $id): Response
+    #[Route('/new', name: 'api_level_new', methods: ['POST'])]
+    public function newLevel(Request $request)
     {
-        $level = $LevelRepository->find($id);
-
-        if (!$level) {
-            throw $this->createNotFoundException('Level not found');
-        }
-
-        return $this->json($level);
+        return $this->levelService->create($request);
     }
 
-    // #[Route('/create-level', name: 'level_create', methods: ['POST'])]
-    // public function create(Request $request,  LevelRepository $LevelRepository,): Response
-    // {
-    //     $data = json_decode($request->getContent(), true);
+    #[Route('/edit/{id}', name: 'api_level_edit', methods: ['PATCH'])]
+    public function updateLevel(Request $request, int $id): Response
+    {
+        return $this->levelService->update($request, $id);
+    }
 
-    //     $response = $LevelRepository->create($data);
+    #[Route('/delete/{id}', name: 'api_level_delete', methods: ['DELETE'])]
+    public function deleteLevel(int $id): Response
+    {
+        return $this->levelService->delete($id);
+    }
 
-    //     if (!$response) {
-    //         throw $this->createNotFoundException('Error while creating lesson');
-    //     }
+    #[Route('/{id}', name: 'api_level_read', methods: ['GET'])]
+    public function readLevel(int $id): Response
+    {
+        return $this->levelService->read($id);
+    }
 
-    //     return $this->json($response);
-    // }
-
-    // #[Route('/update-level/{id}', name: 'level_update', methods: ['PUT'])]
-    // public function update(Request $request, LevelRepository $LevelRepository, int $id): Response
-    // {
-    //     $data = json_decode($request->getContent(), true);
-
-    //     $response = $LevelRepository->update($data, $id);
-
-    //     if (!$response) {
-    //         throw $this->createNotFoundException('Error while updating lesson');
-    //     }
-
-    //     return $this->json($response);
-    // }
-
-    // #[Route('/delete-level/{id}', name: 'level_delete', methods: ['DELETE'])]
-    // public function delete(LevelRepository $LevelRepository, int $id): Response
-    // {
-    //     if ($id === null) {
-    //         throw $this->createNotFoundException('Id is required');
-    //     }
-
-    //     $level = $LevelRepository->delete($id);
-
-    //     if (!$level) {
-    //         throw $this->createNotFoundException('Level not found');
-    //     }
-
-    //     return $this->json($level);
-    // }
+    #[Route('/', name: 'api_level_read_all', methods: ['GET'])]
+    public function readAllLevels(): Response
+    {
+        return $this->levelService->readAll();
+    }
 }
