@@ -151,10 +151,24 @@ export const useLessonStore = defineStore('lesson', () => {
     api
       .get<Level[]>('levels')
       .then((data) => {
+        console.log(data);
+
         levels.value = data;
       })
       .catch((err) => {
         console.error('Error fetching levels:', err);
+      });
+  }
+
+  function getLevel(id: string) {
+    api
+      .get<Level>(`levels/${id}`)
+      .then((data) => {
+        editLevel.value = data;
+        console.log(editLevel.value);
+      })
+      .catch((err) => {
+        console.error('Error fetching level:', err);
       });
   }
 
@@ -181,8 +195,15 @@ export const useLessonStore = defineStore('lesson', () => {
       });
   }
 
-  function createLevel(level: Level) {
-    console.log('createLevel');
+  function createLevel() {
+    api
+      .post<any>('levels/new', newLevel)
+      .then(() => {
+        router.push('lessons');
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }
 
   function updateLesson(id: string) {
@@ -202,6 +223,18 @@ export const useLessonStore = defineStore('lesson', () => {
       .put<Category>('categories/edit', parseInt(id), editCategory.value)
       .then(() => {
         getCategory(id);
+        isEditing.value = false;
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+
+  function updateLevel(id: string) {
+    api
+      .put<Level>('levels/edit', parseInt(id), editLevel.value)
+      .then(() => {
+        getLevel(id);
         isEditing.value = false;
       })
       .catch((err) => {
@@ -288,9 +321,10 @@ export const useLessonStore = defineStore('lesson', () => {
     categoryHeaders,
     levelHeaders,
     getLessons,
-    getLevels,
     getCategories,
     getCategory,
+    getLevels,
+    getLevel,
     createLesson,
     createCategory,
     createLevel,
@@ -300,6 +334,7 @@ export const useLessonStore = defineStore('lesson', () => {
     getLesson,
     updateLesson,
     updateCategory,
+    updateLevel,
     exportLessonsCSV,
   };
 });

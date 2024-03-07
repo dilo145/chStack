@@ -24,7 +24,7 @@ class LevelController extends AbstractController
         return $this->levelService->create($request);
     }
 
-    #[Route('/edit/{id}', name: 'api_level_edit', methods: ['PATCH'])]
+    #[Route('/edit/{id}', name: 'api_level_edit', methods: ['PUT'])]
     public function updateLevel(Request $request, int $id): Response
     {
         return $this->levelService->update($request, $id);

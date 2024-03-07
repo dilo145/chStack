@@ -20,7 +20,7 @@ function onDeleteValidate(id: number) {
 onMounted(() => {
   lessonStore.getLessons();
   lessonStore.getCategories();
-  lessonStore.getLessons();
+  lessonStore.getLevels();
 });
 </script>
 
@@ -86,7 +86,7 @@ onMounted(() => {
           <h2 class="mt-5">Categories</h2>
         </v-col>
 
-        <v-col cols="6" align-self="end">
+        <v-col cols="6" align-self="end" class="text-end">
           <v-btn
             color="primary"
             variant="outlined"
@@ -151,7 +151,25 @@ onMounted(() => {
 
     <!-- LEVELS -->
     <v-col cols="6">
-      <h2 class="mt-6">Levels</h2>
+      <v-row>
+        <v-col cols="6">
+          <h2 class="mt-5">Levels</h2>
+        </v-col>
+
+        <v-col cols="6" align-self="end" class="text-end">
+          <v-btn
+            color="primary"
+            variant="outlined"
+            @click="
+              router.push('/levels/create');
+              lessonStore.isEditing = false;
+            "
+          >
+            <v-icon icon="mdi-plus"></v-icon>
+            Add Level
+          </v-btn>
+        </v-col>
+      </v-row>
 
       <v-data-table
         :items="lessonStore.levels"
@@ -163,7 +181,7 @@ onMounted(() => {
             class="me-2"
             size="small"
             @click="
-              router.push(`/lessons/${item.id}`);
+              router.push(`/levels/${item.id}`);
               lessonStore.isEditing = false;
             "
           >
@@ -174,7 +192,7 @@ onMounted(() => {
             size="small"
             color="secondary"
             @click="
-              router.push(`/lessons/${item.id}`);
+              router.push(`/levels/${item.id}`);
               lessonStore.isEditing = true;
             "
           >
@@ -194,9 +212,9 @@ onMounted(() => {
         </template>
 
         <template v-slot:no-data>
-          <v-alert color="error" icon="mdi-alert">
-            No lessons found. Please add a new lesson.
-          </v-alert>
+          <div class="text-subtitle">
+            No levels found. Please add a new level.
+          </div>
         </template>
       </v-data-table>
     </v-col>
