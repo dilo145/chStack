@@ -11,7 +11,7 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
 
 #[Route('/api/auth')]
-class RegistrationController extends AbstractController
+class LoginController extends AbstractController
 {
     #[Route('/login-user', name: 'api_user_login', methods: ['POST'])]
     public function loginUser(

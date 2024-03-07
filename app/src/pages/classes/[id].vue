@@ -1,9 +1,11 @@
 <script setup lang="ts">
 import { useTrainingStore } from "@/store/useTrainingStore";
+import { useStudentStore } from "@/store/useStudentStore";
 import { computed, onMounted, toRefs } from "vue";
 import { useRouter } from "vue-router";
 
 const trainingStore = useTrainingStore();
+const studentStore = useStudentStore();
 
 const id = computed(() => {
   return router.currentRoute.value.params.id;
@@ -20,6 +22,7 @@ onMounted(() => {
   const id = router.currentRoute.value.params.id;
 
   trainingStore.getTraining(id.toString());
+  studentStore.getTrainingStudent(id.toString());
 });
 
 const { editTraining, isEditing } = toRefs(trainingStore);
@@ -95,5 +98,17 @@ const { editTraining, isEditing } = toRefs(trainingStore);
         >
       </v-row>
     </v-card>
+  </v-col>
+
+  <v-col>
+    <v-data-table :items="studentStore.trainings" :headers="studentStore.headers" class="elevation-1 mt-6">
+
+      <!-- no DATA -->
+      <template v-slot:no-data>
+      <v-alert color="error" icon="mdi-alert">
+        No students found. Please add a new students.
+      </v-alert>
+    </template>
+    </v-data-table>
   </v-col>
 </template>
