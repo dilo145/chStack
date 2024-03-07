@@ -73,9 +73,7 @@ onMounted(() => {
     </template>
 
     <template v-slot:no-data>
-      <v-alert color="error" icon="mdi-alert">
-        No students found. Please add a new student.
-      </v-alert>
+      <div class="text-subtitle">No levels found. Please add a new item.</div>
     </template>
 
     <template v-slot:item.firstName="{ item }">

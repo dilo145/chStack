@@ -71,9 +71,7 @@ onMounted(() => {
     </template>
 
     <template v-slot:no-data>
-      <v-alert color="error" icon="mdi-alert">
-        No lessons found. Please add a new lesson.
-      </v-alert>
+      <div class="text-subtitle">No levels found. Please add a new item.</div>
     </template>
   </v-data-table>
 
@@ -142,9 +140,9 @@ onMounted(() => {
         </template>
 
         <template v-slot:no-data>
-          <v-alert color="error" icon="mdi-alert">
-            No lessons found. Please add a new lesson.
-          </v-alert>
+          <div class="text-subtitle">
+            No levels found. Please add a new item.
+          </div>
         </template>
       </v-data-table>
     </v-col>
@@ -213,7 +211,7 @@ onMounted(() => {
 
         <template v-slot:no-data>
           <div class="text-subtitle">
-            No levels found. Please add a new level.
+            No levels found. Please add a new item.
           </div>
         </template>
       </v-data-table>
