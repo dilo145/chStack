@@ -44,4 +44,10 @@ class OrganismController extends AbstractController
         return $this->json($organism);
     }
 
+    #[Route('/by-Creator/{id}', name: 'api_organism_by_creator', methods: ['GET'])]
+    public function getOrganismByCreator($id, OrganismRepository $organismRepository)
+    {
+        $organism = $organismRepository->findBy(['createdBy' => $id]);
+        return $this->json($organism);
+    }
 }
