@@ -7,6 +7,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Entity\Level;
+use App\Entity\Lesson;
 
 class LevelService
 {
@@ -71,6 +72,12 @@ class LevelService
 
         if ($level == null) {
             throw new NotFoundHttpException('Level not found');
+        }
+
+        $lesson_that_uses_level = $this->entityManager->getRepository(Lesson::class)->findOneBy(['level' => $level]);
+
+        if ($lesson_that_uses_level != null) {
+            $lesson_that_uses_level->setLevel(null);
         }
 
         try {

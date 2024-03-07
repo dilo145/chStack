@@ -25,7 +25,7 @@ class CategoryController extends AbstractController
         return $this->categoryService->create($request);
     }
     
-    #[Route('/edit/{id}', name: 'api_category_edit', methods: ['PATCH'])]
+    #[Route('/edit/{id}', name: 'api_category_edit', methods: ['PUT'])]
     public function updateCategory(Request $request, int $id): Response
     {
         return $this->categoryService->update($request, $id);
