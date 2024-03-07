@@ -24,6 +24,28 @@ export const useLessonStore = defineStore('lesson', () => {
     { title: 'Place', value: 'place' },
     { title: 'Actions', key: 'actions', sortable: false },
   ]);
+  const categoryHeaders = ref<any[]>([
+    {
+      title: 'Id',
+      align: 'start',
+      sortable: false,
+      value: 'id',
+    },
+    { title: 'Name', value: 'name' },
+    { title: 'Description', value: 'description' },
+    { title: 'Actions', key: 'actions', sortable: false },
+  ]);
+  const levelHeaders = ref<any[]>([
+    {
+      title: 'Id',
+      align: 'start',
+      sortable: false,
+      value: 'id',
+    },
+    { title: 'Name', value: 'name' },
+    { title: 'Description', value: 'description' },
+    { title: 'Actions', key: 'actions', sortable: false },
+  ]);
 
   const newLesson = reactive<Lesson>({
     id: 0,
@@ -51,6 +73,30 @@ export const useLessonStore = defineStore('lesson', () => {
       description: '',
     },
     category: [],
+  });
+
+  const newCategory = reactive<Category>({
+    id: 0,
+    name: '',
+    description: '',
+  });
+
+  const editCategory = ref<Category>({
+    id: 0,
+    name: '',
+    description: '',
+  });
+
+  const newLevel = reactive<Level>({
+    id: 0,
+    name: '',
+    description: '',
+  });
+
+  const editLevel = ref<Level>({
+    id: 0,
+    name: '',
+    description: '',
   });
 
   function getLesson(id: string) {
@@ -89,6 +135,18 @@ export const useLessonStore = defineStore('lesson', () => {
       });
   }
 
+  function getCategory(id: string) {
+    api
+      .get<Category>(`categories/${id}`)
+      .then((data) => {
+        editCategory.value = data;
+        console.log(editCategory.value);
+      })
+      .catch((err) => {
+        console.error('Error fetching category:', err);
+      });
+  }
+
   function getLevels() {
     api
       .get<Level[]>('levels')
@@ -112,8 +170,15 @@ export const useLessonStore = defineStore('lesson', () => {
       });
   }
 
-  function createCategory(category: Category) {
-    console.log('createCategory');
+  function createCategory() {
+    api
+      .post<any>('categories/new', newCategory)
+      .then(() => {
+        router.push('lessons');
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }
 
   function createLevel(level: Level) {
@@ -132,6 +197,18 @@ export const useLessonStore = defineStore('lesson', () => {
       });
   }
 
+  function updateCategory(id: string) {
+    api
+      .put<Category>('categories/edit', parseInt(id), editCategory.value)
+      .then(() => {
+        getCategory(id);
+        isEditing.value = false;
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+
   function deleteLesson(id: number) {
     api
       .delete<Lesson>('lessons/delete', id)
@@ -140,6 +217,28 @@ export const useLessonStore = defineStore('lesson', () => {
       })
       .catch((err) => {
         console.error('Error deleting lesson:', err);
+      });
+  }
+
+  function deleteCategory(id: number) {
+    api
+      .delete<any>('categories/delete', id)
+      .then(() => {
+        getCategories();
+      })
+      .catch((err) => {
+        console.error('Error deleting category:', err);
+      });
+  }
+
+  function deleteLevel(id: number) {
+    api
+      .delete<any>('levels/delete', id)
+      .then(() => {
+        getLevels();
+      })
+      .catch((err) => {
+        console.error('Error deleting level:', err);
       });
   }
 
@@ -179,18 +278,28 @@ export const useLessonStore = defineStore('lesson', () => {
     headers,
     newLesson,
     editLesson,
+    newCategory,
+    editCategory,
+    newLevel,
+    editLevel,
     isEditing,
     categories,
     levels,
+    categoryHeaders,
+    levelHeaders,
     getLessons,
     getLevels,
     getCategories,
+    getCategory,
     createLesson,
     createCategory,
     createLevel,
     deleteLesson,
+    deleteCategory,
+    deleteLevel,
     getLesson,
     updateLesson,
+    updateCategory,
     exportLessonsCSV,
   };
 });
