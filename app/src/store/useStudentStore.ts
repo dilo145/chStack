@@ -6,29 +6,29 @@ import { Training } from "@/types/Training";
 import { Student } from "@/types/Student";
 
 export const useStudentStore = defineStore("student", () => {
-    
-    const students = ref<Student[]>();
-    const trainings = ref<Training[]>();
-    const router = useRouter();
-    const headers = ref<any[]>([
-        {
-            title: "ID",
-            align: "start",
-            sortable: false,
-            value: "id",
-        },
-        { title: "Nom", value: "last_name" },
-        { title: "Prénom", value: "first_name" },
-        { title: "Email", value: "Email" },
-        { title: "Actions", key: "actions", sortable: false },
-    ]);
+
+  const students = ref<Student[]>();
+  const trainings = ref<Training[]>();
+  const router = useRouter();
+  const headers = ref<any[]>([
+    {
+      title: "Nom",
+      align: "start",
+      sortable: false,
+      value: "lastName",
+    },
+    { title: "Prénom", value: "firstName" },
+    { title: "Email", value: "email" },
+    { title: "Actions", key: "actions", sortable: false },
+  ]);
 
 
-function getTrainingStudent(id: string) {
+  function getTrainingStudent(id: string) {
     api
-      .get<Student[]>(`students/get_by_training/${id}`)
+      .get<Student[]>(`users/get_by_training/${id}`)
       .then((data) => {
         students.value = data;
+        console.log(students);
       })
       .catch((err) => {
         console.error("Error fetching training:", err);

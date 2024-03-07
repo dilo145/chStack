@@ -19,7 +19,7 @@ function onDeleteValidate(id: number) {
 </script>
 
 <template>
-  <h1>Classes</h1>
+  <h1>Liste des classes</h1>
   <DataTableActions />
   
   <v-data-table :items="trainingStore.trainings" :headers="trainingStore.headers" class="elevation-1 mt-6">

@@ -30,7 +30,7 @@ const { editTraining, isEditing } = toRefs(trainingStore);
 
 <template>
   <v-col cols="12">
-    <h1>Training detail page</h1>
+    <h1>Class</h1>
 
     <v-btn
       v-if="!isEditing"
@@ -101,7 +101,8 @@ const { editTraining, isEditing } = toRefs(trainingStore);
   </v-col>
 
   <v-col>
-    <v-data-table :items="studentStore.trainings" :headers="studentStore.headers" class="elevation-1 mt-6">
+    <h2>Liste des étudiants</h2>
+    <v-data-table :items="studentStore.students" :headers="studentStore.headers" class="elevation-1 mt-6">
 
       <!-- no DATA -->
       <template v-slot:no-data>
