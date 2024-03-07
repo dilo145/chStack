@@ -35,6 +35,7 @@ class StudentService
             'lastName' => $student->getLastName(),
             'email' => $student->getEmail(),
             'photo' => $student->getPhoto(),
+            'roles' => $student->getRoles(),
             'individual' => $student->isInvidual(),
             'createdAt' => $student->getCreatedAt()->format('Y-m-d H:i:s'),
             'updatedAt' => $student->getUpdatedAt() ? $student->getUpdatedAt()->format('Y-m-d H:i:s') : null,
@@ -74,7 +75,7 @@ class StudentService
 
         $student = new Student();
 
-        if (!isset($data['firstName']) || !isset($data['lastName']) || !isset($data['email']) || !isset($data['photo']) || !isset($data['invidual'])) {
+        if (!isset($data['firstName']) || !isset($data['lastName']) || !isset($data['email']) || !isset($data['invidual'])) {
             return new JsonResponse(['error' => 'Missing required fields'], Response::HTTP_BAD_REQUEST);
         }
 

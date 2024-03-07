@@ -11,7 +11,6 @@ use Symfony\Component\Routing\Annotation\Route;
 #[Route('/api/students')]
 class StudentController extends AbstractController
 {
-
     private $studentService;
 
     public function __construct(StudentService $studentService)
@@ -37,13 +36,13 @@ class StudentController extends AbstractController
         return $this->studentService->newStudent($request);
     }
 
-    #[Route('/edit/{id}', name: 'api_student_edit', methods: ['POST'])]
+    #[Route('/edit/{id}', name: 'api_student_edit', methods: ['PUT'])]
     public function editStudent(Request $request, int $id): JsonResponse
     {
         return $this->studentService->editStudent($request, $id);
     }
 
-    #[Route('/delete/{id}', name: 'api_student_delete', methods: ['POST'])]
+    #[Route('/delete/{id}', name: 'api_student_delete', methods: ['DELETE'])]
     public function deleteStudent(int $id): JsonResponse
     {
         return $this->studentService->deleteStudent($id);
