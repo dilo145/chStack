@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Service\StudentService;
+use App\Repository\UserRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -18,7 +19,18 @@ class StudentController extends AbstractController
     {
         $this->studentService = $studentService;
     }
+    #[Route('/export/{id}', name:'export_csv', methods: ['GET'])]
+    public function exportStudents(UserRepository $UserRepository, int $id): Response
+    {
+        // Fetch data from your database or any source
+        $students = $UserRepository->findByuser($id);
 
+        // Generate CSV data
+        $csvData = "ID,FirstName,LastName,Email\n"; // CSV header
+        foreach ($students as $student) {
+            $csvData .= "{$student['id']},{$student['firstName']},{$student['lastName']},{$student['email']}\n";
+        }
+      
     #[Route('/new', name: 'api_student_new', methods: ['POST'])]
     public function newStudent(Request $request): JsonResponse
     {

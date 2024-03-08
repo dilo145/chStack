@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { useStudentStore } from "@/store/useStudentStore";
+import { Student } from "@/types/Student";
 import { onMounted, ref } from "vue";
 import { useRouter } from "vue-router";
 
@@ -14,8 +15,11 @@ function onDeleteValidate() {
   isDeleteModalOpen.value = false;
 }
 
-onMounted(() => {
-  studentStore.getStudents();
+const students = ref<Student[]>([]);
+
+onMounted(async () => {
+  students.value = [... (await studentStore.getStudents()) as []];
+  console.log(students,studentStore.headers)
 });
 </script>
 
@@ -34,7 +38,7 @@ onMounted(() => {
   </v-col>
 
   <v-data-table
-    :items="studentStore.students"
+    :items="students"
     :headers="studentStore.headers"
     class="elevation-1 mt-6"
   >
