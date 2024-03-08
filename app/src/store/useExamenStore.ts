@@ -27,7 +27,7 @@ export const useExamenStore = defineStore("examen", () => {
     api
         .get<Exam[]>('exams')
         .then((data) => {
-          examens.value = data;
+          examens.value = data
         })
         .catch((err) => {
           console.error('Error fetching lessons:', err);
@@ -39,7 +39,7 @@ export const useExamenStore = defineStore("examen", () => {
         .post<Exam>('exams/new', newExamen)
         .then((response) => {
           console.log(response);
-          router.push(`examen/${response.id}`);
+          router.push('/exams');
         })
         .catch((err) => {
           console.log(err);
@@ -59,10 +59,10 @@ export const useExamenStore = defineStore("examen", () => {
     }
 
   onMounted(() => {
-
   });
 
   return {
+      examens,
       newExamen,
       editExamen,
       updateExam,

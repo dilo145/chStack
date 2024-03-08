@@ -6,6 +6,7 @@ use App\Repository\ExamRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Ignore;
 
 #[ORM\Entity(repositoryClass: ExamRepository::class)]
 class Exam
@@ -20,6 +21,7 @@ class Exam
 
     #[ORM\ManyToOne(inversedBy: 'exam')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Ignore]
     private ?Lesson $lesson = null;
 
     #[ORM\OneToMany(targetEntity: Question::class, mappedBy: 'exam')]

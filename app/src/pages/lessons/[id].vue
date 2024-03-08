@@ -3,6 +3,7 @@ import { useLessonStore } from "@/store/useLessonStore";
 import { useRessourceStore } from "@/store/useRessourceStore";
 import { onMounted, ref, toRefs } from "vue";
 import { useRouter } from "vue-router";
+import {useUserStore} from "@/store/useUserStore";
 
 const lessonStore = useLessonStore();
 const ressourceStore = useRessourceStore();
@@ -27,7 +28,9 @@ onMounted(() => {
   lessonStore.getLesson(id.value);
   ressourceStore.getRessourcesForLesson(id.value);
 });
-
+const { user } = toRefs(useUserStore());
+const userUserStore = useUserStore();
+const role = userUserStore.getRole();
 const { editLesson, isEditing } = toRefs(lessonStore);
 </script>
 
@@ -35,15 +38,20 @@ const { editLesson, isEditing } = toRefs(lessonStore);
   <v-col cols="12">
     <h1>Lesson detail page</h1>
 
-    <v-btn
-      v-if="!isEditing"
-      @click="isEditing = true"
-      color="primary"
-      class="mb-6"
-    >
-      <v-icon icon="mdi-pencil"> </v-icon>
-      Edit</v-btn
-    >
+    <div  v-if="role && role === 'ROLE_FORMER'">
+
+      <v-btn
+
+        v-if="!isEditing"
+        @click="isEditing = true"
+        color="primary"
+        class="mb-6"
+      >
+        <v-icon icon="mdi-pencil"> </v-icon>
+        Edit</v-btn
+      >
+
+    </div>
 
     <v-card class="pa-6">
       <v-text-field
@@ -139,7 +147,7 @@ const { editLesson, isEditing } = toRefs(lessonStore);
             <h2 class="mt-5">External Ressources Link</h2>
           </v-col>
 
-          <v-col cols="6" align-self="end" class="text-end">
+          <v-col cols="6" align-self="end" class="text-end"  v-if="role && role === 'ROLE_FORMER'">
             <v-btn
               color="primary"
               variant="outlined"
@@ -155,6 +163,7 @@ const { editLesson, isEditing } = toRefs(lessonStore);
         </v-row>
 
         <v-data-table
+
           :items="ressourceStore.ressources"
           :headers="ressourceStore.headers"
           class="elevation-1 mt-6"

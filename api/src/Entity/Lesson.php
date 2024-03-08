@@ -39,7 +39,7 @@ class Lesson
     #[ORM\OneToMany(targetEntity: Resource::class, mappedBy: 'lesson', fetch: "EAGER")]
     private Collection $resource;
 
-    #[ORM\OneToMany(targetEntity: Exam::class, mappedBy: 'lesson')]
+    #[ORM\OneToMany(targetEntity: Exam::class, mappedBy: 'lesson', fetch :"EAGER")]
     private Collection $exam;
 
     public function __construct()
