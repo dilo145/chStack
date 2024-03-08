@@ -19,6 +19,7 @@ class StudentController extends AbstractController
     {
         $this->studentService = $studentService;
     }
+    
     #[Route('/export/{id}', name:'export_csv', methods: ['GET'])]
     public function exportStudents(UserRepository $UserRepository, int $id): Response
     {
@@ -30,6 +31,14 @@ class StudentController extends AbstractController
         foreach ($students as $student) {
             $csvData .= "{$student['id']},{$student['firstName']},{$student['lastName']},{$student['email']}\n";
         }
+
+        // Return CSV data as response
+        $response = new Response($csvData);
+        $response->headers->set('Content-Type', 'text/csv');
+        $response->headers->set('Content-Disposition', 'attachment; filename="students.csv"');
+
+        return $response;
+    }
       
     #[Route('/new', name: 'api_student_new', methods: ['POST'])]
     public function newStudent(Request $request): JsonResponse

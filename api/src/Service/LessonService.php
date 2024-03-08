@@ -23,11 +23,11 @@ class LessonService
     {
         $data = json_decode($request->getContent(), true);
 
-        if (!isset($data['title']) || !isset($data['description']) || !isset($data['place']) || !isset($data['goal']) || !isset($data['levelId']) || !isset($data['categories'])) {
+        if (!isset($data['title']) || !isset($data['description']) || !isset($data['place']) || !isset($data['goal']) || !isset($data['level']['id'])) {
             return new JsonResponse(['error' => 'All fields are required'], Response::HTTP_BAD_REQUEST);
         }
 
-        $level = $this->entityManager->getRepository(Level::class)->find($data['levelId']);
+        $level = $this->entityManager->getRepository(Level::class)->find($data['level']['id']);
 
         if ($level == null) {
             return new JsonResponse(['error' => 'Level not found'], Response::HTTP_NOT_FOUND);
@@ -39,8 +39,8 @@ class LessonService
         $lesson->setPlace($data['place']);
         $lesson->setGoal($data['goal']);
         $lesson->setLevel($level);
-        if (isset($data['categories'])) {
-            foreach ($data['categories'] as $categoryId) {
+        if (isset($data['category'])) {
+            foreach ($data['category'] as $categoryId) {
                 $category = $this->entityManager->getRepository(Categories::class)->findOneById($categoryId);
                 if ($category == null) {
                     throw new NotFoundHttpException('Category not found');

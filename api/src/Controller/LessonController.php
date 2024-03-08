@@ -3,12 +3,8 @@
 namespace App\Controller;
 
 use App\Service\LessonService;
-use App\Repository\CategoriesRepository;
-use App\Repository\LessonRepository;
-use App\Repository\LevelRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
 

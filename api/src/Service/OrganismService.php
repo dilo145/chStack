@@ -3,6 +3,7 @@
 namespace App\Service;
 
 use App\Entity\Organism;
+use App\Entity\User;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -23,8 +24,9 @@ class OrganismService
     {
         $data = json_decode($request->getContent(), true);
 
-        if ($data['created_by'] == null) {
-            throw new NotFoundHttpException('Error while creating organism: Current user not found');
+        $user = $this->entityManager->getRepository(User::class)->find($data['created_by']);
+        if ($user == null) {
+            throw new NotFoundHttpException('Error while creating organism: User not found');
         }
 
         $organism = new Organism();

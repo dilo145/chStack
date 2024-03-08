@@ -35,6 +35,8 @@ class TrainingService
             $organism = $this->entityManager->getRepository(Organism::class)->find($data['organismId']);
             if($organism) {
                 $training->setOrganism($organism);
+            } else {
+                return new JsonResponse(['error' => 'Organism not found'], Response::HTTP_NOT_FOUND);
             }
         }
 
