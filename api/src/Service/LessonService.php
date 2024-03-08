@@ -99,7 +99,7 @@ class LessonService
                 'place' => $lesson->getPlace(),
                 'goal' => $lesson->getGoal(),
                 'level' => $lesson->getLevel()->getName(),
-                'category' => $lesson->getCategory()->getName()
+                'category' => $lesson->getCategory()
             ];
         }
 

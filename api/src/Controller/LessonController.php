@@ -2,10 +2,7 @@
 
 namespace App\Controller;
 
-use App\Entity\Lesson;
-use App\Repository\CategoriesRepository;
-use App\Repository\LessonRepository;
-use App\Repository\LevelRepository;
+use App\Service\LessonService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
