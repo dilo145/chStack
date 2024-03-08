@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { useTrainingStore } from "@/store/useTrainingStore";
+import DetailTableActions from "@/components/classes/DetailTableActions.vue";
 import { useStudentStore } from "@/store/useStudentStore";
+import { useTrainingStore } from "@/store/useTrainingStore";
 import { computed, onMounted, toRefs } from "vue";
 import { useRouter } from "vue-router";
-import DetailTableActions from "@/components/classes/DetailTableActions.vue";
 
 const trainingStore = useTrainingStore();
 const studentStore = useStudentStore();
@@ -20,10 +20,8 @@ function onEditTraining() {
 }
 
 function onImportCSV() {
-  console.log('import csv click');
+  console.log("import csv click");
 }
-
-
 
 onMounted(() => {
   const id = router.currentRoute.value.params.id;
@@ -32,32 +30,27 @@ onMounted(() => {
   studentStore.getTrainingStudent(id.toString());
   trainingStore.getOrganisms();
   trainingStore.getStudents();
-
 });
 
 const { editTraining, isEditing } = toRefs(trainingStore);
 </script>
 
 <template>
-  
   <v-col cols="12">
     <h1>Classe</h1>
     <v-row>
       <v-btn
-      prepend-icon="mdi-pencil"
-      v-if="!isEditing"
-      @click="isEditing = true"
-      color="primary"
-      class="ma-3 mb-6"
-    >
-       Edit</v-btn
-    >
+        prepend-icon="mdi-pencil"
+        v-if="!isEditing"
+        @click="isEditing = true"
+        color="primary"
+        class="ma-3 mb-6"
+      >
+        Edit</v-btn
+      >
 
-    <DetailTableActions />
-  
-
+      <DetailTableActions />
     </v-row>
-    
 
     <v-card class="pa-6">
       <v-text-field
@@ -67,12 +60,13 @@ const { editTraining, isEditing } = toRefs(trainingStore);
         outlined
         required
       ></v-text-field>
-      
+
       <v-row>
         <v-col cols="12" md="6">
           <v-select
             v-model="editTraining.organism"
             :items="trainingStore.organisms"
+            :disabled="!isEditing"
             item-title="name"
             :item-value="id"
             label="Organism"
@@ -95,7 +89,6 @@ const { editTraining, isEditing } = toRefs(trainingStore);
           ></v-text-field>
         </v-col>
       </v-row>
-
 
       <!-- buttons at the end  -->
       <v-row class="mt-6 justify-end">
@@ -120,14 +113,17 @@ const { editTraining, isEditing } = toRefs(trainingStore);
 
   <v-col>
     <h2>Liste des étudiants</h2>
-    <v-data-table :items="studentStore.students" :headers="studentStore.headers" class="elevation-1 mt-6">
-      
+    <v-data-table
+      :items="studentStore.students"
+      :headers="studentStore.headers"
+      class="elevation-1 mt-6"
+    >
       <!-- no DATA -->
       <template v-slot:no-data>
-      <v-alert color="error" icon="mdi-alert">
-        No students found. Please add a new students.
-      </v-alert>
-    </template>
+        <div class="text-subtitle">
+          No students found. Please add a new students.
+        </div>
+      </template>
     </v-data-table>
   </v-col>
 </template>
