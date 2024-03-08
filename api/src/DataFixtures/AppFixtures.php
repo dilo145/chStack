@@ -5,63 +5,27 @@ namespace App\DataFixtures;
 use App\Entity\Former;
 use App\Entity\Student;
 use Doctrine\Bundle\FixturesBundle\Fixture;
+use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
 use Faker\Factory;
 use Faker\Generator;
 
 use function PHPUnit\Framework\isEmpty;
 
-class AppFixtures extends Fixture
+class AppFixtures extends Fixture implements DependentFixtureInterface
 {
-  /**
-   * @var Generator
-   */
-    private Generator $faker;
-
-    public function __construct() 
+    public function getDependencies()
     {
-        $this->faker = Factory::create('fr_FR');
+        return [
+            StudentFixtures::class,
+            FormerFixtures::class,
+            OrganismFixtures::class,
+            LevelFixtures::class,
+        ];
     }
 
-    public function load(ObjectManager $manager): void
+    public function load(ObjectManager $manager)
     {
 
-        // Former
-        $formers = [];
-        for ($i = 0; $i < 1; $i++) {
-            $former = new Former();
-            $former
-                ->setFirstName($this->faker->firstName())
-                ->setLastName($this->faker->lastName())
-                ->setEmail($this->faker->email())
-                ->setPhoto($this->faker->imageUrl())
-                ->setPassword($this->faker->password())
-                ->setCreatedAt()
-                ->setSpeciality($this->faker->randomLetter())
-                ->setRoles(['ROLE_FORMER']);
-            $formers[] = $former;
-            $manager->persist($former);
-        }
-
-        // $formersTemp = $formers;
-
-        // Student
-        $students = [];
-        for ($i = 0; $i < 50; $i++) {
-            $student = new Student();
-            $student
-                ->setFirstName($this->faker->firstName())
-                ->setLastName($this->faker->lastName())
-                ->setEmail($this->faker->email())
-                ->setPhoto($this->faker->imageUrl())
-                ->setPassword($this->faker->password())
-                ->setCreatedAt()
-                ->setInvidual($this->faker->boolean(30))
-                ->setRoles(['ROLE_STUDENT']);
-            $students[] = $student;
-            $manager->persist($student);
-        }
-
-     $manager->flush();
     }
 }
