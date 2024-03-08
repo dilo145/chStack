@@ -29,7 +29,10 @@ onMounted(() => {
   const id = router.currentRoute.value.params.id;
 
   trainingStore.getTraining(id.toString());
- studentStore.getTrainingStudent(id.toString())
+  studentStore.getTrainingStudent(id.toString());
+  trainingStore.getOrganisms();
+  trainingStore.getStudents();
+
 });
 
 const { editTraining, isEditing } = toRefs(trainingStore);
