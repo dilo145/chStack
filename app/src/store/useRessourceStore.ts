@@ -79,9 +79,9 @@ export const useRessourceStore = defineStore('ressource', () => {
       });
   }
 
-  function createRessource() {
+  function createRessource(id: string) {
     api
-      .post<Ressource>('ressources/new', newRessource)
+      .post<Ressource>(`ressources/new/${id}`, newRessource)
       .then(() => {
         router.push('/lessons');
       })

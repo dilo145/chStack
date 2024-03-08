@@ -1,50 +1,35 @@
 <script setup lang="ts">
-import {ref, toRefs} from "vue";
-import {useRouter} from "vue-router";
-import {useUserStore} from "@/store/useUserStore";
-import {useLoginStore} from "@/store/useLoginStore";
+import { useUserStore } from '@/store/useUserStore';
+import { ref, toRefs } from 'vue';
+import { useRouter } from 'vue-router';
 
 const drawer = ref(true);
 const rail = ref(false);
 const { user } = toRefs(useUserStore());
 const userUserStore = useUserStore();
 const role = userUserStore.getRole();
+const router = useRouter();
 
 function disconnectUser() {
-  localStorage.removeItem("user");
+  localStorage.removeItem('user');
   // remove the user in pinia
   useUserStore().removeUser();
   location.reload();
 }
 
-function messageUser(){
+function messageUser() {
   router.push('/message');
 }
-
 </script>
 
 <template>
-  <!-- Conditional rendering of JSON data -->
   <v-card>
     <v-layout>
-      <v-navigation-drawer
-        v-model="drawer"
-        :rail="rail"
-        permanent
-        @click="rail = false"
-      >
+      <v-navigation-drawer v-model="drawer" :rail="rail" permanent @click="rail = false">
         <v-divider></v-divider>
 
-        <v-img
-          v-if="!rail"
-          src="../assets/logo.png"
-          class="ma-2 w-50 mb-4"
-        ></v-img>
-        <v-img
-          v-if="rail"
-          src="../assets/small-logo.png"
-          class="w-50 mx-auto ma-2"
-        ></v-img>
+        <v-img v-if="!rail" src="../assets/logo.png" class="ma-2 w-50 mb-4"></v-img>
+        <v-img v-if="rail" src="../assets/small-logo.png" class="w-50 mx-auto ma-2"></v-img>
         <v-list density="compact" nav>
           <v-list-item
             link
@@ -62,13 +47,7 @@ function messageUser(){
             value="organisms"
             v-if="role && role === 'ROLE_FORMER'"
           ></v-list-item>
-          <v-list-item
-            link
-            to="/lessons"
-            prepend-icon="mdi-school"
-            title="Cours"
-            value="lessons"
-          ></v-list-item>
+          <v-list-item link to="/lessons" prepend-icon="mdi-school" title="Cours" value="lessons"></v-list-item>
           <v-list-item
             link
             to="/classes"
@@ -77,13 +56,7 @@ function messageUser(){
             value="classes"
             v-if="role && role === 'ROLE_FORMER'"
           ></v-list-item>
-          <v-list-item
-            link
-            to="/examen"
-            prepend-icon="mdi-book-open-variant"
-            title="Examen"
-            value="grades"
-          ></v-list-item>
+          <v-list-item link to="/examen" prepend-icon="mdi-book-open-variant" title="Examen" value="grades"></v-list-item>
           <v-list-item
             link
             to="/students"
@@ -92,13 +65,7 @@ function messageUser(){
             value="students"
             v-if="role && role === 'ROLE_FORMER'"
           ></v-list-item>
-          <v-list-item
-            link
-            to="/profile"
-            prepend-icon="mdi-account"
-            title="Mon Compte"
-            value="account"
-          ></v-list-item>
+          <v-list-item link to="/profile" prepend-icon="mdi-account" title="Mon Compte" value="account"></v-list-item>
         </v-list>
 
         <template v-slot:append v-if="user">
@@ -118,18 +85,10 @@ function messageUser(){
             </v-list-item>
           </div>
           <div class="pa-2" v-else>
-            <v-list-item
-              :prepend-avatar="user.photo"
-              :title="`${user.firstName} ${user.lastName}`"
-              nav
-            >
+            <v-list-item :prepend-avatar="user.photo" :title="`${user.firstName} ${user.lastName}`" nav>
               <div style="font-size: 12px">{{ role }}</div>
               <template v-slot:append>
-                <v-btn
-                  icon="mdi-chevron-left"
-                  variant="text"
-                  @click.stop="rail = !rail"
-                ></v-btn>
+                <v-btn icon="mdi-chevron-left" variant="text" @click.stop="rail = !rail"></v-btn>
               </template>
             </v-list-item>
           </div>
@@ -137,14 +96,12 @@ function messageUser(){
       </v-navigation-drawer>
       <v-main style="height: 100vh"></v-main>
     </v-layout>
-
   </v-card>
 </template>
 
 <style>
-.column{
+.column {
   display: flex !important;
   flex-direction: column !important;
 }
-
 </style>

@@ -38,10 +38,10 @@ class ResourceController extends AbstractController
         return $this->ressourceService->getRessourcesByLesson($lessonId);
     }
 
-    #[Route('/new', name: 'api_resource_new', methods: ['POST'])]
-    public function newResource(Request $request): JsonResponse
+    #[Route('/new/{lessonId}', name: 'api_resource_new', methods: ['POST'])]
+    public function newResource(Request $request, int $lessonId): JsonResponse
     {
-        return $this->ressourceService->newResource($request);
+        return $this->ressourceService->newResource($request, $lessonId);
     }
 
     #[Route('/edit/{id}', name: 'api_resource_edit', methods: ['PUT'])]

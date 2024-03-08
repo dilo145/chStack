@@ -2,7 +2,6 @@
 
 namespace App\Controller;
 
-use App\Entity\Lesson;
 use App\Repository\CategoriesRepository;
 use App\Repository\LessonRepository;
 use App\Repository\LevelRepository;
@@ -40,13 +39,13 @@ class LessonController extends AbstractController
         $data = json_decode($request->getContent(), true);
 
         $level = $LevelRepository->find($data["level"]["id"]);
-        $category = $CategoriesRepository->find($data["category"]["id"]);
+        $categories = $data["category"];
 
-        if ($level == null || $category == null) {
+        if ($level == null || $categories == null) {
             throw $this->createNotFoundException('Error while accessing joined data');
         }
 
-        $response = $LessonRepository->create($data, $level, $category);
+        $response = $LessonRepository->create($data, $level, $categories);
 
         if (!$response) {
             throw $this->createNotFoundException('Error while creating lesson');

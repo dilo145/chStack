@@ -1,10 +1,9 @@
 <script setup lang="ts">
 import { useLessonStore } from "@/store/useLessonStore";
-import { ref, toRefs } from "vue";
+import { toRefs } from "vue";
 import { useRouter } from "vue-router";
 
 const lessonStore = useLessonStore();
-const isSnackbarOpen = ref(true);
 const router = useRouter();
 
 const { newLesson } = toRefs(lessonStore);
