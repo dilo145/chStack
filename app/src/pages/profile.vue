@@ -31,7 +31,7 @@ function submitForm() {
   location.reload();
 }
 function resetForm() {
-  // reset form logic here
+
 }
 
 </script>

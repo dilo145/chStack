@@ -36,6 +36,7 @@ export const useLessonStore = defineStore('lesson', () => {
     { title: 'Description', value: 'description' },
     { title: 'Actions', key: 'actions', sortable: false },
   ]);
+
   const levelHeaders = ref<any[]>([
     {
       title: 'Id',
@@ -127,8 +128,6 @@ export const useLessonStore = defineStore('lesson', () => {
     api
       .get<Category[]>('categories')
       .then((data) => {
-        console.log(data);
-
         categories.value = data;
       })
       .catch((err) => {
