@@ -3,9 +3,10 @@ import {ref, toRefs} from "vue";
 import {useRouter} from "vue-router";
 import {useUserStore} from "@/store/useUserStore";
 import {useLoginStore} from "@/store/useLoginStore";
+import router from "@/router";
 
 const drawer = ref(true);
-const rail = ref(true);
+const rail = ref(false);
 const { user } = toRefs(useUserStore());
 const userUserStore = useUserStore();
 const userLoginStore = useLoginStore();
@@ -16,6 +17,10 @@ function disconnectUser() {
   // remove the user in pinia
   useUserStore().removeUser();
   location.reload();
+}
+
+function messageUser(){
+  router.push('/message');
 }
 
 </script>
@@ -76,9 +81,9 @@ function disconnectUser() {
           ></v-list-item>
           <v-list-item
             link
-            to="/graduation"
+            to="/examen"
             prepend-icon="mdi-book-open-variant"
-            title="Notes / Examen"
+            title="Examen"
             value="grades"
           ></v-list-item>
           <v-list-item
@@ -99,7 +104,10 @@ function disconnectUser() {
         </v-list>
 
         <template v-slot:append v-if="user">
-          <v-btn color="error" class="text-center" variant="outlined" style="width: 45px;margin: auto;display: flex;justify-content: center" icon="mdi-logout" @click="disconnectUser"/>
+          <div class="d-flex flex-sm-row flex-column ga-3" :class="rail ? 'column' : '' ">
+            <v-btn color="error" class="text-center" variant="outlined" style="width: 45px;margin: auto;display: flex;justify-content: center" icon="mdi-logout" @click="disconnectUser"/>
+            <v-btn color="" class="text-center" variant="outlined" style="width: 45px;margin: auto;display: flex;justify-content: center" icon="mdi-message-text-outline" @click="messageUser"/>
+          </div>
 
           <div class="pa-2">
             <v-list-item
@@ -124,3 +132,11 @@ function disconnectUser() {
 
   </v-card>
 </template>
+
+<style>
+.column{
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+</style>

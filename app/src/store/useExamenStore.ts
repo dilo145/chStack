@@ -7,7 +7,7 @@ import api from "@/services/WebService";
 import {Lesson} from "@/types/Lesson";
 
 export const useExamenStore = defineStore("examen", () => {
-  const examen = ref<Former[]>();
+  const examens = ref<Exam[]>([]);
   const router = useRouter();
   const isEditing = ref(false);
 
@@ -25,22 +25,48 @@ export const useExamenStore = defineStore("examen", () => {
 
   function getExam() {
     api
-        .get<Lesson[]>('lessons')
+        .get<Exam[]>('exams')
         .then((data) => {
-          exam.value = data;
+          examens.value = data;
         })
         .catch((err) => {
           console.error('Error fetching lessons:', err);
         });
   }
 
+  function createExam() {
+    api
+        .post<Exam>('exams/new', newExamen)
+        .then((response) => {
+          console.log(response);
+          router.push(`examen/${response.id}`);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+  }
+
+    function updateExam(id: string) {
+        api
+            .put<Exam>('exams/edit', parseInt(id), editExamen.value)
+            .then((response) => {
+            getExam();
+            isEditing.value = false;
+            })
+            .catch((err) => {
+            console.log(err);
+            });
+    }
+
   onMounted(() => {
-    getExamen();
+
   });
 
   return {
-    lessons,
-    getLessons,
-
+      newExamen,
+      editExamen,
+      updateExam,
+      getExam,
+      createExam
   };
 });
