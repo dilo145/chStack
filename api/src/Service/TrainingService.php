@@ -97,6 +97,26 @@ class TrainingService
         return new JsonResponse($trainingsData, Response::HTTP_OK);
     }
 
+    public function getAll(): Response
+    {
+        $trainings = $this->entityManager->getRepository(Training::class)->findAll();
+        $trainingsData = [];
+
+        foreach ($trainings as $training) {
+            $trainingsData[] = [
+                'id' => $training->getId(),
+                'name' => $training->getName(),
+                'goalTraining' => $training->getGoalTraining(),
+                'organism' => $training->getOrganism(),
+                'registrations' => $training->getRegistrations(),
+                'lesson' => $training->getLesson(),
+                'formers' => $training->getFormers()
+            ];
+        }
+
+        return new JsonResponse($trainingsData, Response::HTTP_OK);
+    }
+
     public function update(Request $request, int $id): Response
     {
         $training = $this->entityManager->getRepository(Training::class)->find($id);

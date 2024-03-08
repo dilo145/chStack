@@ -21,7 +21,7 @@ class StudentController extends AbstractController
     }
     
     #[Route('/export/{id}', name:'export_csv', methods: ['GET'])]
-    public function exportStudents(UserRepository $UserRepository, int $id): Response
+    public function exportStudents(UserRepository $UserRepository, int $id): JsonResponse
     {
         // Fetch data from your database or any source
         $students = $UserRepository->findByuser($id);
