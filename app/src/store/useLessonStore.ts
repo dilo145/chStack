@@ -15,6 +15,12 @@ export const useLessonStore = defineStore('lesson', () => {
   const loading = ref(true);
   const headers = ref<any[]>([
     {
+      title: 'Id',
+      align: 'start',
+      sortable: false,
+      value: 'id',
+    },
+    {
       title: 'Title',
       align: 'start',
       sortable: false,
