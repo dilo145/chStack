@@ -2,97 +2,49 @@
 
 namespace App\Controller;
 
-use App\Entity\Training;
-use App\Entity\Organism;
-use App\Entity\Former;
-use App\Repository\TrainingRepository;
-use App\Repository\OrganismRepository;
-use App\Repository\FormerRepository;
+use App\Service\TrainingService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use Doctrine\ORM\EntityManagerInterface;
 
 #[Route('/api/trainings')]
 class TrainingController extends AbstractController
 {
 
-    private $entityManager;
+    private $trainingService;
 
-    public function __construct(EntityManagerInterface $entityManager)
+    public function __construct(TrainingService $trainingService)
     {
-        $this->entityManager = $entityManager;
+        $this->trainingService = $trainingService;
     }
 
     #[Route('/new', name: 'api_training_new', methods: ['POST'])]
-    public function newTraining(Request $request, TrainingRepository $TrainingRepository, OrganismRepository $OrganismRepository)
+    public function newTraining(Request $request)
     {
-        $data = json_decode($request->getContent(), true);
-
-        $organism = $OrganismRepository->find($data["organism"]["id"]);
-
-        if ($organism == null) {
-            throw $this->createNotFoundException('Error while creating training');
-        }
-
-        $response = $TrainingRepository->create($data, $organism);
-
-        if (!$response) {
-            throw $this->createNotFoundException('Error while creating training');
-        }
-
-        return $this->json($response);
+        return $this->trainingService->create($request);
     }
 
-    #[Route('/', name: 'app_training_index', methods: ['GET'])]
-    public function getAll(TrainingRepository $TrainingRepository): Response
+    #[Route('/{id}', name: 'api_training_get_one', methods: ['GET'])]
+    public function getOne(int $id)
     {
-        $trainings = $TrainingRepository->findAll();
-
-        return $this->json($trainings);
+        return $this->trainingService->read($id);
     }
 
-    #[Route('/update/{id}', name: 'training_update', methods: ['PUT'])]
-    public function update(Request $request, TrainingRepository $TrainingRepository, int $id): Response
+    #[Route('/getAllbyFormer/{formerId}', name: 'app_training_index', methods: ['GET'])]
+    public function getAllByFormer(int $formerId)
     {
-        $data = json_decode($request->getContent(), true);
-        
-        $response = $TrainingRepository->update($data, $id);
-
-        if (!$response) {
-            throw $this->createNotFoundException('Error while updating training');
-        }
-
-        return $this->json($response);
+        return $this->trainingService->getAllByFormer($formerId);
     }
 
-    #[Route('/delete/{id}', name: 'training_delete', methods: ['DELETE'])]
-    public function delete(TrainingRepository $TrainingRepository, int $id): Response
+    #[Route('/edit/{id}', name: 'api_training_edit', methods: ['PUT'])]
+    public function update(Request $request, int $id)
     {
-        if ($id === null) {
-            throw $this->createNotFoundException('Id is required');
-        }
-
-        $Training = $TrainingRepository->delete($id);
-
-        if (!$Training) {
-            throw $this->createNotFoundException('Training not found');
-        }
-
-        return $this->json($Training);
+        return $this->trainingService->update($request, $id);
     }
 
-    #[Route('/getOne/{id}', name: 'training_show', methods: ['GET'])]
-    public function getOne(TrainingRepository $TrainingRepository, int $id): Response
+    #[Route('/delete/{id}', name: 'api_training_delete', methods: ['DELETE'])]
+    public function delete(int $id)
     {
-        $Training = $TrainingRepository->find($id);
-
-        if (!$Training) {
-            throw $this->createNotFoundException('Training not found');
-        }
-
-        return $this->json($Training);
+        return $this->trainingService->delete($id);
     }
 }

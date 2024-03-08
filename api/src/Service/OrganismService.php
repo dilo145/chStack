@@ -24,7 +24,7 @@ class OrganismService
         $data = json_decode($request->getContent(), true);
 
         if ($data['created_by'] == null) {
-            throw new NotFoundHttpException('Error while creating organism: Question not found');
+            throw new NotFoundHttpException('Error while creating organism: Current user not found');
         }
 
         $organism = new Organism();
@@ -36,10 +36,10 @@ class OrganismService
             $this->entityManager->persist($organism);
             $this->entityManager->flush();
         } catch (\Exception $e) {
-            return new JsonResponse(['error' => 'Failed to save the answer'], Response::HTTP_INTERNAL_SERVER_ERROR);
+            return new JsonResponse(['error' => 'Failed to save the organism'], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
-        return new JsonResponse(['message' => 'Answer created successfully'], Response::HTTP_CREATED);
+        return new JsonResponse(['message' => 'Organism created successfully'], Response::HTTP_CREATED);
     }
 
     public function readByCreator(int $id): Response
@@ -50,7 +50,8 @@ class OrganismService
             return new JsonResponse(['error' => 'Failed to read the organism'], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
-        $data = [];
+        $organismsData = [];
+
         foreach ($organisms as $organism) {
             $data[] = [
                 'id' => $organism->getId(),
@@ -59,7 +60,7 @@ class OrganismService
                 'created_by' => $organism->getCreatedBy()
             ];
         }
-        return new JsonResponse($data, Response::HTTP_OK);
+        return new JsonResponse($organismsData, Response::HTTP_OK);
     }
 
     public function read(int $id): Response

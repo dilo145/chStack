@@ -3,7 +3,6 @@
 namespace App\Controller;
 
 use App\Service\StudentService;
-use App\Repository\StudentRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -20,25 +19,13 @@ class StudentController extends AbstractController
         $this->studentService = $studentService;
     }
 
-    #[Route('/{id}', name: 'app_student_get_one', methods: ['GET'])]
-    public function getOneStudent(int $id): JsonResponse
-    {
-        return $this->studentService->getOneStudent($id);
-    }
-
-    #[Route('/', name: 'app_student_get_all', methods: ['GET'])]
-    public function getAllStudents(): JsonResponse
-    {
-        return $this->studentService->getAllStudents();
-    }
-
     #[Route('/new', name: 'api_student_new', methods: ['POST'])]
     public function newStudent(Request $request): JsonResponse
     {
         return $this->studentService->newStudent($request);
     }
   
-  #[Route('/new/import', name: 'api_student_import', methods: ['POST'])]
+    #[Route('/new/import', name: 'api_student_import', methods: ['POST'])]
     public function importStudents(Request $request): JsonResponse
     {
         $csvData = $request->request->get('csvData');
@@ -67,6 +54,24 @@ class StudentController extends AbstractController
         }
     }
 
+    #[Route('/', name: 'api_student_get_all', methods: ['GET'])]
+    public function getAllStudents(): JsonResponse
+    {
+        return $this->studentService->getAllStudents();
+    }
+
+    #[Route('/{id}', name: 'api_student_get_one', methods: ['GET'])]
+    public function getOneStudent(int $id): JsonResponse
+    {
+        return $this->studentService->getOneStudent($id);
+    }
+
+    #[Route('/getByTraining/{trainingId}', name: 'api_student_get_all_by_training', methods: ['GET'])]
+    public function getAllStudentsByTraining(int $trainingId): JsonResponse
+    {
+        return $this->studentService->getAllStudentsByTraining($trainingId);
+    }
+
     #[Route('/edit/{id}', name: 'api_student_edit', methods: ['PUT'])]
     public function editStudent(Request $request, int $id): JsonResponse
     {
@@ -77,12 +82,5 @@ class StudentController extends AbstractController
     public function deleteStudent(int $id): JsonResponse
     {
         return $this->studentService->deleteStudent($id);
-    }
-
-    #[Route('/get_by_training/{id}', name: 'app_student_get_all_by_training', methods: ['GET'])]
-    public function getAllStudentsByTraining(StudentRepository $StudentRepository, int $id): JsonResponse
-    {
-        $students = $StudentRepository->findAllBytraining($id);
-        return $this->json($students);
     }
 }

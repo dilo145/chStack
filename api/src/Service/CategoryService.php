@@ -37,6 +37,40 @@ class CategoryService
         return new JsonResponse(['status' => 'Category created!'], Response::HTTP_CREATED);
     }
 
+    public function read(int $id): Response
+    {
+        $category = $this->entityManager->getRepository(Categories::class)->find($id);
+
+        if ($category == null) {
+            throw new NotFoundHttpException('Category not found');
+        }
+
+        $data = [
+            'id' => $category->getId(),
+            'name' => $category->getName(),
+            'description' => $category->getDescription()
+        ];
+
+        return new JsonResponse($data, Response::HTTP_OK);
+    }
+
+    public function readAll(): Response
+    {
+        $categories = $this->entityManager->getRepository(Categories::class)->findAll();
+
+        $data = [];
+
+        foreach ($categories as $category) {
+            $data[] = [
+                'id' => $category->getId(),
+                'name' => $category->getName(),
+                'description' => $category->getDescription()
+            ];
+        }
+
+        return new JsonResponse($data, Response::HTTP_OK);
+    }
+
     public function update(Request $request, int $id): Response
     {
         $category = $this->entityManager->getRepository(Categories::class)->find($id);
@@ -80,39 +114,5 @@ class CategoryService
         }
 
         return new JsonResponse(['message' => 'Category deleted successfully'], Response::HTTP_OK);
-    }
-
-    public function read(int $id): Response
-    {
-        $category = $this->entityManager->getRepository(Categories::class)->find($id);
-
-        if ($category == null) {
-            throw new NotFoundHttpException('Category not found');
-        }
-
-        $data = [
-            'id' => $category->getId(),
-            'name' => $category->getName(),
-            'description' => $category->getDescription()
-        ];
-
-        return new JsonResponse($data, Response::HTTP_OK);
-    }
-
-    public function readAll(): Response
-    {
-        $categories = $this->entityManager->getRepository(Categories::class)->findAll();
-
-        $data = [];
-
-        foreach ($categories as $category) {
-            $data[] = [
-                'id' => $category->getId(),
-                'name' => $category->getName(),
-                'description' => $category->getDescription()
-            ];
-        }
-
-        return new JsonResponse($data, Response::HTTP_OK);
     }
 }
