@@ -12,6 +12,7 @@ export const useLessonStore = defineStore('lesson', () => {
   const levels = ref<Level[]>([]);
   const router = useRouter();
   const isEditing = ref(false);
+  const loading = ref(true);
   const headers = ref<any[]>([
     {
       title: 'Title',
@@ -35,6 +36,7 @@ export const useLessonStore = defineStore('lesson', () => {
     { title: 'Description', value: 'description' },
     { title: 'Actions', key: 'actions', sortable: false },
   ]);
+
   const levelHeaders = ref<any[]>([
     {
       title: 'Id',
@@ -126,8 +128,6 @@ export const useLessonStore = defineStore('lesson', () => {
     api
       .get<Category[]>('categories')
       .then((data) => {
-        console.log(data);
-
         categories.value = data;
       })
       .catch((err) => {
@@ -304,9 +304,11 @@ export const useLessonStore = defineStore('lesson', () => {
     getLessons();
     getLevels();
     getCategories();
+    loading.value = false;
   });
 
   return {
+    loading,
     lessons,
     headers,
     newLesson,

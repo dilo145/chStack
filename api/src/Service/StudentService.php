@@ -74,7 +74,7 @@ class StudentService
         $student->setFirstName($data['firstName']);
         $student->setLastName($data['lastName']);
         $student->setEmail($data['email']);
-        $student->setPhoto($data['photo'] ?? null);
+        $student->setPhoto($data['photo'] != null ? $data['photo'] : "https://randomuser.me/api/portraits/men/25.jpg");
         $student->setCreatedAt();
         $student->setInvidual($data['invidual']);
         $student->setRoles(['ROLE_STUDENT']);
@@ -194,9 +194,7 @@ class StudentService
             }
             $student->setEmail($data['email']);
         }
-        if (isset($data['photo'])) {
-            $student->setPhoto($data['photo']);
-        }
+        $student->setPhoto($data['photo'] != null ? $data['photo'] : "https://randomuser.me/api/portraits/men/25.jpg");
         if (isset($data['invidual'])) {
             $student->setInvidual($data['invidual']);
         }

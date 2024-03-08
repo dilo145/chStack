@@ -43,7 +43,7 @@ class FormerService
         $former->setLastName($data['lastName']);
         $former->setEmail($data['email']);
         $former->setCreatedAt();
-        $former->setPhoto($data['photo'] ?? null);
+        $former->setPhoto($data['photo'] != null ? $data['photo'] : "https://randomuser.me/api/portraits/men/25.jpg");
         $former->setRoles(['ROLE_FORMER']);
         //hash password
         $former->setPassword(
@@ -136,7 +136,7 @@ class FormerService
             $former->setEmail($data['email']);
         }
         if (isset($data['photo'])) {
-            $former->setPhoto($data['photo']);
+        $former->setPhoto($data['photo'] ?? "https://randomuser.me/api/portraits/men/25.jpg");
         }
         if (isset($data['individual'])) {
             $former->setIndividual($data['individual']);
