@@ -1,39 +1,39 @@
-import api from "@/services/WebService";
-import { Organism } from "@/types/Organism";
-import { defineStore } from "pinia";
-import { onMounted, reactive, ref } from "vue";
-import { useRouter } from "vue-router";
-import CheckUser from "@/services/CheckUser";
+import CheckUser from '@/services/CheckUser';
+import api from '@/services/WebService';
+import { Organism } from '@/types/Organism';
+import { defineStore } from 'pinia';
+import { onMounted, reactive, ref } from 'vue';
+import { useRouter } from 'vue-router';
 
-export const useOrganismStore = defineStore("Organism", () => {
+export const useOrganismStore = defineStore('Organism', () => {
   const Organisms = ref<Organism[]>([]);
   const router = useRouter();
   const isEditing = ref(false);
   const headers = ref<any[]>([
     {
-      title: "Title",
-      align: "start",
+      title: 'Title',
+      align: 'start',
       sortable: false,
-      value: "title",
+      value: 'title',
     },
-    { title: "Description", value: "description" },
-    { title: "Goal", value: "goal" },
-    { title: "Place", value: "place" },
-    { title: "Actions", key: "actions", sortable: false },
+    { title: 'Description', value: 'description' },
+    { title: 'Goal', value: 'goal' },
+    { title: 'Place', value: 'place' },
+    { title: 'Actions', key: 'actions', sortable: false },
   ]);
 
   const newOrganism = reactive<Organism>({
     id: 0,
-    name: "",
-    logo: "",
+    name: '',
+    logo: '',
     trainings: [],
     created_by: CheckUser.getId() || 0,
   });
 
   const editOrganism = ref<Organism>({
     id: 0,
-    name: "",
-    logo: "",
+    name: '',
+    logo: '',
     trainings: [],
     created_by: 0,
   });
@@ -43,30 +43,28 @@ export const useOrganismStore = defineStore("Organism", () => {
       .get<Organism>(`organisms/${id}`)
       .then((data) => {
         editOrganism.value = data;
-        console.log(editOrganism.value);
       })
       .catch((err) => {
-        console.error("Error fetching Organism:", err);
+        console.error('Error fetching Organism:', err);
       });
   }
 
   function getOrganisms() {
     api
-      .get<Organism[]>("organisms")
+      .get<Organism[]>('organisms')
       .then((data) => {
         Organisms.value = data;
       })
       .catch((err) => {
-        console.error("Error fetching Organisms:", err);
+        console.error('Error fetching Organisms:', err);
       });
   }
 
   function createOrganism() {
     api
-      .post<Organism>("organisms/new", newOrganism)
+      .post<Organism>('organisms/new', newOrganism)
       .then((response) => {
-        console.log(response);
-        router.push("/");
+        router.push('/');
       })
       .catch((err) => {
         console.log(err);
@@ -75,7 +73,7 @@ export const useOrganismStore = defineStore("Organism", () => {
 
   function updateOrganism(id: string) {
     api
-      .put<Organism>("organisms/edit", parseInt(id), editOrganism.value)
+      .put<Organism>('organisms/edit', parseInt(id), editOrganism.value)
       .then((response) => {
         getOrganism(id);
         isEditing.value = false;
@@ -87,12 +85,12 @@ export const useOrganismStore = defineStore("Organism", () => {
 
   function deleteOrganism(id: number) {
     api
-      .delete<Organism>("organisms/delete", id)
+      .delete<Organism>('organisms/delete', id)
       .then(() => {
         getOrganisms();
       })
       .catch((err) => {
-        console.error("Error deleting Organism:", err);
+        console.error('Error deleting Organism:', err);
       });
   }
 

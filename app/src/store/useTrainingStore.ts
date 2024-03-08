@@ -1,12 +1,12 @@
-import api from "@/services/WebService";
-import { Organism } from "@/types/Organism";
-import { Training } from "@/types/Training";
+import api from '@/services/WebService';
+import { Organism } from '@/types/Organism';
 import { Student } from '@/types/Student';
-import { defineStore } from "pinia";
-import { onMounted, reactive, ref } from "vue";
-import { useRouter } from "vue-router";
+import { Training } from '@/types/Training';
+import { defineStore } from 'pinia';
+import { onMounted, reactive, ref } from 'vue';
+import { useRouter } from 'vue-router';
 
-export const useTrainingStore = defineStore("training", () => {
+export const useTrainingStore = defineStore('training', () => {
   const trainings = ref<Training[]>();
   const students = ref<Student[]>([]);
   const organisms = ref<Organism[]>([]);
@@ -14,50 +14,49 @@ export const useTrainingStore = defineStore("training", () => {
   const isEditing = ref(false);
   const headers = ref<any[]>([
     {
-      title: "ID",
-      align: "start",
+      title: 'ID',
+      align: 'start',
       sortable: false,
-      value: "id",
+      value: 'id',
     },
-    { title: "Organism", value: "organism.name" },
-    { title: "Nom", value: "name" },
-    { title: "Goal", value: "goalTraining" },
-    { title: "Actions", key: "actions", sortable: false },
+    { title: 'Organism', value: 'organism.name' },
+    { title: 'Nom', value: 'name' },
+    { title: 'Goal', value: 'goalTraining' },
+    { title: 'Actions', key: 'actions', sortable: false },
   ]);
 
   const newTraining = reactive<Training>({
     id: 0,
     organism: {
       id: 0,
-      name: "",
-      logo: "",
-      created_by: 0
+      name: '',
+      logo: '',
+      created_by: 0,
     },
-    name: "",
-    goalTraining: "",
+    name: '',
+    goalTraining: '',
   });
 
   const editTraining = ref<Training>({
     id: 0,
     organism: {
       id: 0,
-      name: "",
-      logo: "",
-      created_by: 0
+      name: '',
+      logo: '',
+      created_by: 0,
     },
-    name: "",
-    goal_training: "",
+    name: '',
+    goal_training: '',
   });
-
 
   function getTrainings() {
     api
-      .get<Training[]>("trainings")
+      .get<Training[]>('trainings')
       .then((data) => {
         trainings.value = data;
       })
       .catch((err) => {
-        console.error("Error fetching training:", err);
+        console.error('Error fetching training:', err);
       });
   }
 
@@ -66,19 +65,16 @@ export const useTrainingStore = defineStore("training", () => {
       .get<Training>(`/trainings/getOne/${id}`)
       .then((data) => {
         editTraining.value = data;
-        console.log(editTraining.value);
       })
       .catch((err) => {
-        console.error("Error fetching training:", err);
+        console.error('Error fetching training:', err);
       });
   }
 
   function createTraining() {
     api
-      .post<Training>("/trainings/new", newTraining)
-      .then((response) => {
-        console.log(response);
-      })
+      .post<Training>('/trainings/new', newTraining)
+      .then((response) => {})
       .catch((err) => {
         console.log(err);
       });
@@ -86,9 +82,8 @@ export const useTrainingStore = defineStore("training", () => {
 
   function updateTraining(id: string) {
     api
-      .put<Training>("trainings/update", parseInt(id), editTraining.value)
+      .put<Training>('trainings/update', parseInt(id), editTraining.value)
       .then((response) => {
-        console.log(response);
         editTraining.value = response;
         isEditing.value = false;
       })
@@ -99,12 +94,12 @@ export const useTrainingStore = defineStore("training", () => {
 
   function deleteTraining(id: number) {
     api
-      .delete<Training>("trainings/delete", id)
+      .delete<Training>('trainings/delete', id)
       .then(() => {
         getTrainings();
       })
       .catch((err) => {
-        console.error("Error deleting training:", err);
+        console.error('Error deleting training:', err);
       });
   }
 
@@ -121,12 +116,12 @@ export const useTrainingStore = defineStore("training", () => {
 
   function getOrganisms() {
     api
-      .get<Organism[]>("organisms")
+      .get<Organism[]>('organisms')
       .then((data) => {
         organisms.value = data;
       })
       .catch((err) => {
-        console.error("Error fetching levels:", err);
+        console.error('Error fetching levels:', err);
       });
   }
 

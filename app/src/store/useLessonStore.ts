@@ -112,7 +112,6 @@ export const useLessonStore = defineStore('lesson', () => {
       .get<Lesson>(`lessons/${id}`)
       .then((data) => {
         editLesson.value = data;
-        console.log(editLesson.value);
       })
       .catch((err) => {
         console.error('Error fetching lesson:', err);
@@ -146,7 +145,6 @@ export const useLessonStore = defineStore('lesson', () => {
       .get<Category>(`categories/${id}`)
       .then((data) => {
         editCategory.value = data;
-        console.log(editCategory.value);
       })
       .catch((err) => {
         console.error('Error fetching category:', err);
@@ -157,8 +155,6 @@ export const useLessonStore = defineStore('lesson', () => {
     api
       .get<Level[]>('levels')
       .then((data) => {
-        console.log(data);
-
         levels.value = data;
       })
       .catch((err) => {
@@ -171,7 +167,6 @@ export const useLessonStore = defineStore('lesson', () => {
       .get<Level>(`levels/${id}`)
       .then((data) => {
         editLevel.value = data;
-        console.log(editLevel.value);
       })
       .catch((err) => {
         console.error('Error fetching level:', err);
@@ -182,7 +177,6 @@ export const useLessonStore = defineStore('lesson', () => {
     api
       .post<Lesson>('lessons/new', newLesson)
       .then((response) => {
-        console.log(response);
         router.push(`lessons/${response.id}`);
       })
       .catch((err) => {

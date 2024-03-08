@@ -68,7 +68,6 @@ export const useStudentStore = defineStore('student', () => {
       .get<Student>(`students/${id}`)
       .then((data) => {
         editStudent.value = data;
-        console.log(editStudent.value);
       })
       .catch((err) => {
         console.error('Error fetching lesson:', err);
@@ -94,7 +93,6 @@ export const useStudentStore = defineStore('student', () => {
       .get<Student[]>(`users/get_by_training/${id}`)
       .then((data) => {
         students.value = data;
-        console.log(students);
       })
       .catch((err) => {
         console.error('Error fetching training:', err);
