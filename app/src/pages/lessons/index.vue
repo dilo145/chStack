@@ -48,7 +48,6 @@ onMounted(() => {
           router.push(`/lessons/${item.id}`);
           lessonStore.isEditing = false;
         "
-        v-if="role && role === 'ROLE_FORMER'"
       >
         mdi-eye
       </v-icon>
@@ -84,7 +83,7 @@ onMounted(() => {
   </v-data-table>
 
   <!-- CATEGORIES and LEVELS -->
-  <v-row>
+  <v-row  v-if="role && role === 'ROLE_FORMER'">
     <!-- CATEGORIES -->
     <v-col cols="6">
       <v-row>
@@ -107,7 +106,7 @@ onMounted(() => {
         </v-col>
       </v-row>
 
-      <v-data-table
+      <v-data-table  v-if="role && role === 'ROLE_FORMER'"
         :items="lessonStore.categories"
         :headers="lessonStore.categoryHeaders"
         class="elevation-1 mt-6"
@@ -156,7 +155,7 @@ onMounted(() => {
     </v-col>
 
     <!-- LEVELS -->
-    <v-col cols="6">
+    <v-col cols="6"  v-if="role && role === 'ROLE_FORMER'">
       <v-row>
         <v-col cols="6">
           <h2 class="mt-5">Levels</h2>
@@ -226,7 +225,7 @@ onMounted(() => {
     </v-col>
   </v-row>
 
-  <v-dialog v-model="isDeleteModalOpen" width="500">
+  <v-dialog v-model="isDeleteModalOpen" width="500" >
     <v-card>
       <v-card-title class="text-center"
         >Are you sure you want to delete this item?</v-card-title

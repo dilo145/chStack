@@ -1,15 +1,17 @@
 <script setup lang="ts">
+import { useLessonStore } from "@/store/useLessonStore";
 import { useRessourceStore } from "@/store/useRessourceStore";
 import { toRefs } from "vue";
 import { useRouter } from "vue-router";
 
 const ressourceStore = useRessourceStore();
+const lessonStore = useLessonStore();
 const router = useRouter();
 
 const { newRessource } = toRefs(ressourceStore);
 
 function onRessourceSubmit() {
-  ressourceStore.createRessource();
+  ressourceStore.createRessource(lessonStore.editLesson.id.toString());
 }
 </script>
 

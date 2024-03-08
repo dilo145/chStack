@@ -3,6 +3,7 @@
 namespace App\Service;
 
 use App\Entity\Resource;
+use App\Entity\Lesson;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -75,7 +76,7 @@ class ResourceService
             ->getResult();
 
         if (!$resources) {
-            return new JsonResponse(['error' => 'No resources found'], Response::HTTP_NOT_FOUND);
+            return new JsonResponse([], Response::HTTP_OK);
         }
 
         $toReturn = [];
@@ -94,7 +95,7 @@ class ResourceService
         return new JsonResponse($toReturn, Response::HTTP_OK);
     }
 
-    public function newResource(Request $request): JsonResponse
+    public function newResource(Request $request, int $lessonId): JsonResponse
     {
         $data = json_decode($request->getContent(), true);
 
@@ -108,6 +109,7 @@ class ResourceService
         $resource->setDescription($data['description']);
         $todayDate = new \DateTimeImmutable();
         $resource->setCreatedAt($todayDate);
+        $resource->setLesson($this->entityManager->getRepository(Lesson::class)->find($lessonId));
 
         try {
             $this->entityManager->persist($resource);
@@ -181,7 +183,8 @@ class ResourceService
 
         try {
             // $this->entityManager->remove($resource);
-            $resource->setDeletedAt();
+            $date = new \DateTimeImmutable();
+            $resource->setDeletedAt($date);
             $this->entityManager->flush();
         } catch (\Exception $e) {
             return new JsonResponse(['error' => 'Failed to delete the resource'], Response::HTTP_INTERNAL_SERVER_ERROR);

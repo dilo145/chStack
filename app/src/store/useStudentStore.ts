@@ -21,6 +21,7 @@ export const useStudentStore = defineStore('student', () => {
     },
     { title: 'Lastname', value: 'lastName' },
     { title: 'Email', value: 'email' },
+    { title: 'Individual', value: 'invidual' },
     { title: 'Actions', key: 'actions', sortable: false },
   ]);
 
@@ -67,7 +68,6 @@ export const useStudentStore = defineStore('student', () => {
       .get<Student>(`students/${id}`)
       .then((data) => {
         editStudent.value = data;
-        console.log(editStudent.value);
       })
       .catch((err) => {
         console.error('Error fetching lesson:', err);
@@ -85,7 +85,7 @@ export const useStudentStore = defineStore('student', () => {
         .catch((err) => {
           console.error('Error fetching students:', err);
         });
-    })
+    });
   }
 
   function getTrainingStudent(id: string) {
@@ -93,10 +93,9 @@ export const useStudentStore = defineStore('student', () => {
       .get<Student[]>(`users/get_by_training/${id}`)
       .then((data) => {
         students.value = data;
-        console.log(students);
       })
       .catch((err) => {
-        console.error("Error fetching training:", err);
+        console.error('Error fetching training:', err);
       });
   }
   function createStudent() {

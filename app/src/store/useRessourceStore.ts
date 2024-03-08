@@ -46,7 +46,6 @@ export const useRessourceStore = defineStore('ressource', () => {
       .get<Ressource>(`ressources/${id}`)
       .then((data) => {
         editRessource.value = data;
-        console.log(editRessource.value);
       })
       .catch((err) => {
         console.error('Error fetching lesson:', err);
@@ -57,8 +56,6 @@ export const useRessourceStore = defineStore('ressource', () => {
     api
       .get<Ressource[]>('ressources')
       .then((data) => {
-        console.log('ici frero', data);
-
         ressources.value = data;
       })
       .catch((err) => {
@@ -70,8 +67,6 @@ export const useRessourceStore = defineStore('ressource', () => {
     api
       .get<Ressource[]>('ressources/lesson/' + id)
       .then((data) => {
-        console.log('ici frero', data);
-
         ressources.value = data;
       })
       .catch((err) => {
@@ -79,9 +74,9 @@ export const useRessourceStore = defineStore('ressource', () => {
       });
   }
 
-  function createRessource() {
+  function createRessource(id: string) {
     api
-      .post<Ressource>('ressources/new', newRessource)
+      .post<Ressource>(`ressources/new/${id}`, newRessource)
       .then(() => {
         router.push('/lessons');
       })

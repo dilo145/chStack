@@ -22,6 +22,8 @@ if (role && role === 'ROLE_STUDENT') {
   disable.value = true;
 }
 
+const a = ref("")
+const b = ref("")
 
 function submitForm() {
   formerStore.updateFormer(user.value.id.toString());
@@ -122,27 +124,25 @@ function resetForm() {
                 placeholder="Change your password"
                 prepend-inner-icon="mdi-lock-outline"
                 variant="outlined"
-                v-model="user.password"
                 :disabled="disable"
               ></v-text-field>
             </v-col>
             <v-col
               cols="12"
               sm="6">
-              <v-file-input
-                accept="image/png, image/jpeg, image/bmp"
+              <v-text-field
                 label="Photo Profil"
                 placeholder="Pick an avatar"
                 prepend-icon="mdi-camera"
                 :disabled="disable"
                 v-model="user.photo"
               >
-              </v-file-input>
+              </v-text-field>
             </v-col>
 
           </v-row>
         </v-container>
-        <div class="d-flex justify-center ga-6 mb-8">
+        <div class="d-flex justify-center ga-6 mb-8" v-if="role && role === 'ROLE_FORMER'">
           <v-btn
             class="mt-4"
             color="#7649FF"
@@ -155,7 +155,6 @@ function resetForm() {
           <v-btn
             class="mt-4"
             color="error"
-            @click="reset"
             :disabled="disable"
           >
             Annuler

@@ -41,7 +41,7 @@ class LessonRepository extends ServiceEntityRepository
             ->getOneOrNullResult();
     }
 
-    public function create($data, $level, $category)
+    public function create($data, $level, $categories)
     {
         $lesson = new Lesson();
         $lesson->setTitle($data['title']);
@@ -50,7 +50,17 @@ class LessonRepository extends ServiceEntityRepository
         $lesson->setGoal($data['goal']);
 
         $lesson->setLevel($level);
-        $lesson->addCategory($category);
+        $db_categories = $lesson->getCategory();
+
+        foreach ($db_categories as $db_category) {
+            $lesson->removeCategory($db_category);
+        }
+
+        foreach ($categories as $category) {
+            $cat = $this->getEntityManager()->getRepository(Categories::class)->find($category['id']);
+
+            $lesson->addCategory($cat);
+        }
 
 
         $em = $this->getEntityManager();

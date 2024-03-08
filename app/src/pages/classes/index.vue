@@ -1,10 +1,9 @@
 <script setup lang="ts">
 import DataTableActions from "@/components/classes/DataTableActions.vue";
 import { useTrainingStore } from "@/store/useTrainingStore";
-import { ref } from "vue";
+import { onMounted, ref } from "vue";
 import { useRouter } from "vue-router";
 
-const search = ref();
 const router = useRouter();
 const trainingStore = useTrainingStore();
 
@@ -15,6 +14,10 @@ function onDeleteValidate(id: number) {
   trainingStore.deleteTraining(id);
   isDeleteModalOpen.value = false;
 }
+
+onMounted(() => {
+  trainingStore.getTrainings();
+});
 
 defineProps({
   fromOrganism: {
