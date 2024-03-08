@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\CategoriesRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Ignore;
 
 #[ORM\Entity(repositoryClass: CategoriesRepository::class)]
 class Categories
@@ -19,6 +20,7 @@ class Categories
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $description = null;
 
+    #[Ignore]
     #[ORM\ManyToOne(inversedBy: 'category')]
     private ?Lesson $lesson = null;
 

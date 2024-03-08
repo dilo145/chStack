@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\ResourceRepository;
+use Symfony\Component\Serializer\Annotation\Ignore;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: ResourceRepository::class)]
@@ -28,6 +29,8 @@ class Resource
     #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $deletedAt = null;
 
+
+    #[Ignore]
     #[ORM\ManyToOne(inversedBy: 'resource')]
     private ?Lesson $lesson = null;
 

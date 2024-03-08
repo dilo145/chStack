@@ -2,80 +2,61 @@
 
 namespace App\Entity;
 
+use App\Entity\User;
 use App\Repository\FormerRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Ignore;
 
 #[ORM\Entity(repositoryClass: FormerRepository::class)]
-class Former
+class Former extends User
 {
-    #[ORM\Id]
-    #[ORM\GeneratedValue]
-    #[ORM\Column]
-    private ?int $id = null;
 
-    #[ORM\OneToOne(mappedBy: 'former', cascade: ['persist', 'remove'])]
-    private ?User $user = null;
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $speciality = null;
 
-    #[ORM\ManyToMany(targetEntity: Organism::class, mappedBy: 'former')]
-    private Collection $organisms;
+    #[Ignore]
+    #[ORM\ManyToMany(targetEntity: Training::class, inversedBy: 'formers')]
+    private Collection $trainings;
 
     public function __construct()
     {
-        $this->organisms = new ArrayCollection();
+        $this->trainings = new ArrayCollection();
     }
 
-    public function getId(): ?int
+    public function getSpeciality(): ?string
     {
-        return $this->id;
+        return $this->speciality;
     }
 
-    public function getUser(): ?User
+    public function setSpeciality(?string $speciality): static
     {
-        return $this->user;
-    }
-
-    public function setUser(?User $user): static
-    {
-        // unset the owning side of the relation if necessary
-        if ($user === null && $this->user !== null) {
-            $this->user->setFormer(null);
-        }
-
-        // set the owning side of the relation if necessary
-        if ($user !== null && $user->getFormer() !== $this) {
-            $user->setFormer($this);
-        }
-
-        $this->user = $user;
+        $this->speciality = $speciality;
 
         return $this;
     }
 
     /**
-     * @return Collection<int, Organism>
+     * @return Collection<int, Training>
      */
-    public function getOrganisms(): Collection
+    public function getTrainings(): Collection
     {
-        return $this->organisms;
+        return $this->trainings;
     }
 
-    public function addOrganism(Organism $organism): static
+    public function addTraining(Training $training): static
     {
-        if (!$this->organisms->contains($organism)) {
-            $this->organisms->add($organism);
-            $organism->addFormer($this);
+        if (!$this->trainings->contains($training)) {
+            $this->trainings->add($training);
         }
 
         return $this;
     }
 
-    public function removeOrganism(Organism $organism): static
+    public function removeTraining(Training $training): static
     {
-        if ($this->organisms->removeElement($organism)) {
-            $organism->removeFormer($this);
-        }
+        $this->trainings->removeElement($training);
 
         return $this;
     }

@@ -2,25 +2,17 @@
 
 namespace App\Entity;
 
+use App\Entity\User;
 use App\Repository\StudentRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: StudentRepository::class)]
-class Student
+class Student extends User
 {
-    #[ORM\Id]
-    #[ORM\GeneratedValue]
-    #[ORM\Column]
-    private ?int $id = null;
-
     #[ORM\Column]
     private ?bool $invidual = null;
-
-    #[ORM\OneToOne(mappedBy: 'student', cascade: ['persist', 'remove'])]
-    private ?User $user = null;
-
     #[ORM\OneToMany(targetEntity: Registration::class, mappedBy: 'student')]
     private Collection $registrations;
 
@@ -33,11 +25,6 @@ class Student
         $this->answer = new ArrayCollection();
     }
 
-    public function getId(): ?int
-    {
-        return $this->id;
-    }
-
     public function isInvidual(): ?bool
     {
         return $this->invidual;
@@ -46,28 +33,6 @@ class Student
     public function setInvidual(bool $invidual): static
     {
         $this->invidual = $invidual;
-
-        return $this;
-    }
-
-    public function getUser(): ?User
-    {
-        return $this->user;
-    }
-
-    public function setUser(?User $user): static
-    {
-        // unset the owning side of the relation if necessary
-        if ($user === null && $this->user !== null) {
-            $this->user->setStudent(null);
-        }
-
-        // set the owning side of the relation if necessary
-        if ($user !== null && $user->getStudent() !== $this) {
-            $user->setStudent($this);
-        }
-
-        $this->user = $user;
 
         return $this;
     }
