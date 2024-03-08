@@ -107,7 +107,6 @@ function messageUser(){
               <v-icon icon="mdi-logout"></v-icon>
               Logout
             </v-btn>
-            <v-btn color="" class="text-center" variant="outlined" style="width: 45px;margin: auto;display: flex;justify-content: center" icon="mdi-message-text-outline" @click="messageUser"/>
           </v-col>
 
           <div class="pa-2" v-if="!rail && user.photo !== null">
