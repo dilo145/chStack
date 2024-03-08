@@ -5,18 +5,24 @@ import axios from 'axios';
 import api from '@/services/WebService';
 
 const router = useRouter();
+const id = router.currentRoute.value.params.id;
 
-onMounted(() => {
-  const id = router.currentRoute.value.params.id;
-  onExportCSV(id.toString());
-});
+
+// onMounted(() => {
+//   onExportCSV(id.toString());
+// });
 
 function onExportCSV(id: string) {
   api
-    .get(`/students/export/1`)
-    .then(response => {
+    .get(`/students/export/${id}`,{responseType:'blob'})
+    .then((response:any) => {
       // Handle the CSV data response
       console.log(response);
+      const urlObject = window.URL.createObjectURL(new Blob([response]));
+      const a = document.createElement('a');
+      a.href = urlObject
+      a.setAttribute('download','data.csv');
+      a.click()
       return response;
     })
     .catch(err => {
@@ -79,7 +85,7 @@ function onImportCSV() {
     
     
     <v-col class="d-flex justify-end">
-      <v-btn  prepend-icon="mdi-export" class="mr-3"  variant="outlined" @click="onExportCSV" color="secondary">
+      <v-btn  prepend-icon="mdi-export" class="mr-3"  variant="outlined" @click="()=>onExportCSV(id.toString())" color="secondary">
       Export étudiants
     </v-btn>
       <v-btn  prepend-icon="mdi-import" class=""  variant="outlined" @click="onImportCSV" color="primary">

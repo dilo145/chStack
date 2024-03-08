@@ -75,14 +75,17 @@ export const useStudentStore = defineStore('student', () => {
   }
 
   function getStudents() {
-    api
-      .get<Student[]>('students')
-      .then((data) => {
-        students.value = data;
-      })
-      .catch((err) => {
-        console.error('Error fetching students:', err);
-      });
+    return new Promise((resolve, reject) => {
+      api
+        .get<Student[]>('students')
+        .then((data) => {
+          // students.value = data;
+          resolve(data);
+        })
+        .catch((err) => {
+          console.error('Error fetching students:', err);
+        });
+    })
   }
 
   function getTrainingStudent(id: string) {
