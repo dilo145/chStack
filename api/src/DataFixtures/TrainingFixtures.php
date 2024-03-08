@@ -30,7 +30,7 @@ class TrainingFixtures extends Fixture
             $training
                 ->setName($faker->firstName())
                 ->setGoalTraining($faker->words(5, true))
-                ->setOrganism($faker->label($organism));
+                ->setOrganism($organism);
             $manager->persist($training);
         }
 

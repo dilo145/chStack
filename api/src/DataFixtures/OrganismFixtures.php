@@ -3,6 +3,7 @@
 namespace App\DataFixtures;
 
 use App\Entity\Organism;
+use App\Entity\Former;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 use Faker\Factory;
@@ -23,9 +24,11 @@ class OrganismFixtures extends Fixture
         $faker = Factory::create('fr_FR');
 
         for ($i = 0; $i < 1; $i++) {
+            $formers = $this->entityManager->getRepository(Former::class)->findAll();
             $organism = new Organism();
             $organism
-                ->setName($faker->firstName());
+                ->setName($faker->firstName())
+                ->setCreatedBy($formers[0]->getId());
             $manager->persist($organism);
         }
 

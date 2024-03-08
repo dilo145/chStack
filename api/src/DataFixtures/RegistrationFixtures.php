@@ -9,8 +9,9 @@ use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 use Faker\Factory;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 
-class RegistrationFixtures extends Fixture
+class RegistrationFixtures extends Fixture implements DependentFixtureInterface
 {
     private $entityManager;
 

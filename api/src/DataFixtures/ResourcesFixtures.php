@@ -23,15 +23,15 @@ class ResourceFixtures extends Fixture
     {
         $faker = Factory::create('fr_FR');
         
-        $lesson = $this->entityManager->getRepository(Lesson::class)->find($faker->numberBetween(1, 20));
+        $lesson = $this->entityManager->getRepository(Lesson::class)->find($faker->numberBetween(1, 10));
 
-        for ($i = 0; $i < 3; $i++) {
+        for ($i = 0; $i < 20; $i++) {
             $resource = new Resource();
             $resource
                 ->setName($faker->title())
-                ->setDescription($faker->description())
-                ->setCreatedAt()
-                ->setLesson($lesson);
+                ->setDescription($faker->title())
+                ->setCreatedAt();
+                // ->setLesson($lesson)
             $manager->persist($resource);
         }
 

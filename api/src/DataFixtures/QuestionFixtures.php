@@ -9,8 +9,9 @@ use Doctrine\Persistence\ObjectManager;
 use Faker\Factory;
 use App\Entity\Exam;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 
-class QuestionFixtures extends Fixture
+class QuestionFixtures extends Fixture implements DependentFixtureInterface
 {
 
     private $entityManager;
@@ -24,20 +25,21 @@ class QuestionFixtures extends Fixture
         $faker = Factory::create('fr_FR');
 
         $exam = $this->entityManager->getRepository(Exam::class)->find($faker->numberBetween(1, 20));
-        $answerQuestion = $this->entityManager->getRepository(Answer::class)->find($faker->numberBetween(1, 20));
+        // $answerQuestion = $this->entityManager->getRepository(Answer::class)->find($faker->numberBetween(1, 20));
 
         for ($i = 0; $i < 20; $i++) {
             $question = new Question();
             $question
-                ->setQuestion($faker->label())
-                ->setAnswer($faker->label())
-                ->setExam($faker->label($exam))
-                ->setAnswerQuestion($faker->label($answerQuestion));
+                ->setQuestion($faker->words(7, true))
+                ->setAnswer($faker->words(7, true));
+                // ->setExam($faker->label($exam))
+                // ->setAnswerQuestion($faker->label($answerQuestion));
             $manager->persist($question);
         }
 
         $manager->flush();
     }
+
     public function getDependencies()
     {
         return [

@@ -10,13 +10,6 @@ use Doctrine\ORM\EntityManagerInterface;
 
 class LevelFixtures extends Fixture
 {
-            
-    private $entityManager;
-
-    public function __construct(EntityManagerInterface $entityManager)
-    {
-        $this->entityManager = $entityManager;
-    }
 
     public function load(ObjectManager $manager): void
     {
@@ -26,7 +19,7 @@ class LevelFixtures extends Fixture
             $level = new Level();
             $level
                 ->setName($faker->firstName())
-                ->setDescription($faker->description());
+                ->setDescription($faker->words(7, true));
             $manager->persist($level);
         }
 

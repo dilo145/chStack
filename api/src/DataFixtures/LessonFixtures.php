@@ -10,10 +10,9 @@ use Doctrine\Persistence\ObjectManager;
 use Faker\Factory;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Entity\Categories;
-use App\Entity\Resource;
-use App\Entity\Exam;
+use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 
-class LessonFixtures extends Fixture
+class LessonFixtures extends Fixture implements DependentFixtureInterface
 {
     private $entityManager;
 
@@ -27,32 +26,34 @@ class LessonFixtures extends Fixture
         $faker = Factory::create('fr_FR');
         
         $training = $this->entityManager->getRepository(Training::class)->find($faker->numberBetween(1, 20));
-        $category = $this->entityManager->getRepository(Categories::class)->find($faker->numberBetween(1, 20));
+        $category = $this->entityManager->getRepository(Categories::class)->find($faker->numberBetween(1, 3));
         $level = $this->entityManager->getRepository(Level::class)->find($faker->numberBetween(1, 20));
-        $resource = $this->entityManager->getRepository(Resource::class)->find($faker->numberBetween(1, 20));
-        $exam = $this->entityManager->getRepository(Exam::class)->find($faker->numberBetween(1, 20));
+        // $resource = $this->entityManager->getRepository(Resource::class)->find($faker->numberBetween(1, 20));
+        // $exam = $this->entityManager->getRepository(Exam::class)->find($faker->numberBetween(1, 20));
 
         for ($i = 0; $i < 10; $i++) {
             $lesson = new Lesson();
             $lesson
                 ->setTitle($faker->title())
-                ->setDescription($faker->description())
-                ->setGoal($faker->goal())
-                ->setPlace($faker->place())
+                ->setDescription($faker->words(7, true))
+                ->setGoal($faker->words(5, true))
+                ->setPlace($faker->words(12, true))
                 ->addTraining($training)
                 ->addCategory($category)
-                ->setLevel($level)
-                ->addResource($resource)
-                ->addExam($exam);
+                ->setLevel($level);
+                // ->addResource($resource)
+                // ->addExam($exam);
             $manager->persist($lesson);
         }
 
         $manager->flush();
     }
+
     public function getDependencies()
     {
         return [
-            LevelFixtures::class
+            LevelFixtures::class,
+            CategoryFixtures::class
         ];
     }
 }
