@@ -1,4 +1,4 @@
-import axios, { AxiosInstance, AxiosResponse } from 'axios';
+import axios, { AxiosInstance, AxiosResponse, AxiosRequestConfig } from "axios";
 
 class WebService {
   private api: AxiosInstance;
@@ -12,9 +12,9 @@ class WebService {
     });
   }
 
-  async get<JSON>(path: string): Promise<JSON> {
+  async get<JSON>(path: string, headers?: AxiosRequestConfig): Promise<JSON> {
     try {
-      const response: AxiosResponse<JSON> = await this.api.get<JSON>(path);
+      const response: AxiosResponse<JSON> = await this.api.get<JSON>(path, { ...headers });
       return response.data;
     } catch (error) {
       console.error('Error fetching data:', error);

@@ -24,15 +24,15 @@ class StudentRepository extends ServiceEntityRepository
 //    /**
 //     * @return Student[] Returns an array of Student objects
 //     */
-   public function findAllBytraining(int $id): array
+   public function findBytraining(int $id): array
    {
        return $this->createQueryBuilder('s')
-           ->andWhere('s.training_id = :val')
-           ->setParameter('val', $id)
-           ->orderBy('s.id', 'ASC')
-           ->setMaxResults(50)
-           ->getQuery()
-           ->getResult()
+        ->select('s.firstName', 's.lastName', 's.email', 's.id') // Selecting specific fields
+        ->innerJoin('App\Entity\Registration', 'r', 'WITH', 'r.student = s.id') // Joining with the Registration entity using the student ID
+        ->andWhere('r.training = :training_id') // Filtering by training_id
+        ->setParameter('training_id', $id)
+        ->getQuery()
+        ->getResult()
        ;
    }
 
