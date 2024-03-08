@@ -24,7 +24,7 @@ class StudentService
     public function getOneStudent(int $id): JsonResponse
     {
         $student = $this->entityManager->getRepository(Student::class)->find($id);
-        
+
         if (!$student) {
             return new JsonResponse(['error' => 'Student not found'], Response::HTTP_NOT_FOUND);
         }

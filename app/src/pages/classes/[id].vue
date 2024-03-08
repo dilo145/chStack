@@ -14,7 +14,6 @@ const id = computed(() => {
 });
 
 const router = useRouter();
-
 function onEditTraining() {
   trainingStore.updateTraining(id.value.toString());
   isEditing.value = false;
@@ -37,6 +36,7 @@ const { editTraining, isEditing } = toRefs(trainingStore);
 </script>
 
 <template>
+  
   <v-col cols="12">
     <h1>Classe</h1>
     <v-row>
@@ -64,13 +64,14 @@ const { editTraining, isEditing } = toRefs(trainingStore);
         outlined
         required
       ></v-text-field>
-    
+      
       <v-row>
         <v-col cols="12" md="6">
           <v-select
             v-model="editTraining.organism"
             :items="trainingStore.organisms"
             item-title="name"
+            :item-value="id"
             label="Organism"
             outlined
             required
