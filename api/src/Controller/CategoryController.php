@@ -2,8 +2,7 @@
 
 namespace App\Controller;
 
-use App\Entity\Category;
-use App\Repository\CategoriesRepository;
+use App\Service\CategoryService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -12,67 +11,42 @@ use Symfony\Component\Routing\Annotation\Route;
 #[Route('/api/categories')]
 class CategoryController extends AbstractController
 {
-    #[Route('/', name: 'categories_show', methods: ['GET'])]
-    public function getAll(CategoriesRepository $CategoriesRepository): Response
-    {
-        $categories = $CategoriesRepository->findAll();
 
-        return $this->json($categories);
+    private $categoryService;
+
+    public function __construct(CategoryService $categoryService)
+    {
+        $this->categoryService = $categoryService;
     }
 
-    #[Route('/{id}', name: 'category_shows', methods: ['GET'])]
-    public function getOne(CategoriesRepository $CategoriesRepository, int $id): Response
+    #[Route('/new', name: 'api_category_new', methods: ['POST'])]
+    public function newCategory(Request $request)
     {
-        $category = $CategoriesRepository->find($id);
-
-        if (!$category) {
-            throw $this->createNotFoundException('Category not found');
-        }
-
-        return $this->json($category);
+        return $this->categoryService->create($request);
+    }
+    
+    #[Route('/edit/{id}', name: 'api_category_edit', methods: ['PUT'])]
+    public function updateCategory(Request $request, int $id): Response
+    {
+        return $this->categoryService->update($request, $id);
     }
 
-    // #[Route('/create-category', name: 'category_create', methods: ['POST'])]
-    // public function create(Request $request,  CategoriesRepository $CategoriesRepository,): Response
-    // {
-    //     $data = json_decode($request->getContent(), true);
-        
-    //     $response = $CategoriesRepository->create($data);
+    #[Route('/delete/{id}', name: 'api_category_delete', methods: ['DELETE'])]
+    public function deleteLevel(int $id): Response
+    {
+        return $this->categoryService->delete($id);
+    }
 
-    //     if (!$response) {
-    //         throw $this->createNotFoundException('Error while creating lesson');
-    //     }
+    #[Route('/{id}', name: 'api_category_read', methods: ['GET'])]
+    public function readCategory(int $id): Response
+    {
+        return $this->categoryService->read($id);
+    }
 
-    //     return $this->json($response);
-    // }
+    #[Route('/', name: 'api_category_read_all', methods: ['GET'])]
+    public function readAllLevels(): Response
+    {
+        return $this->categoryService->readAll();
+    }
 
-    // #[Route('/update-category/{id}', name: 'category_update', methods: ['PUT'])]
-    // public function update(Request $request, CategoriesRepository $CategoriesRepository, int $id): Response
-    // {
-    //     $data = json_decode($request->getContent(), true);
-        
-    //     $response = $CategoriesRepository->update($data, $id);
-
-    //     if (!$response) {
-    //         throw $this->createNotFoundException('Error while updating lesson');
-    //     }
-
-    //     return $this->json($response);
-    // }
-
-    // #[Route('/delete-category/{id}', name: 'category_delete', methods: ['DELETE'])]
-    // public function delete(CategoriesRepository $CategoriesRepository, int $id): Response
-    // {
-    //     if ($id === null) {
-    //         throw $this->createNotFoundException('Id is required');
-    //     }
-
-    //     $category = $CategoriesRepository->delete($id);
-
-    //     if (!$category) {
-    //         throw $this->createNotFoundException('Category not found');
-    //     }
-
-    //     return $this->json($category);
-    // }
 }

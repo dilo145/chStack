@@ -3,28 +3,48 @@
 namespace App\Controller;
 
 use App\Service\StudentService;
+use App\Repository\StudentRepository;
+use App\Repository\UserRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\Response;
 
 #[Route('/api/students')]
 class StudentController extends AbstractController
 {
-
     private $studentService;
 
     public function __construct(StudentService $studentService)
     {
         $this->studentService = $studentService;
     }
+    #[Route('/export/{id}', name:'export_csv', methods: ['GET'])]
+    public function exportStudents(UserRepository $UserRepository, int $id): Response
+    {
+        // Fetch data from your database or any source
+        $students = $UserRepository->findByuser($id);
 
+        // Generate CSV data
+        $csvData = "ID,FirstName,LastName,Email\n"; // CSV header
+        foreach ($students as $student) {
+            $csvData .= "{$student['id']},{$student['firstName']},{$student['lastName']},{$student['email']}\n";
+        }
+
+        // Return CSV data as response
+        $response = new Response($csvData);
+        $response->headers->set('Content-Type', 'text/csv');
+        $response->headers->set('Content-Disposition', 'attachment; filename="students.csv"');
+
+        return $response;
+    }
     #[Route('/{id}', name: 'app_student_get_one', methods: ['GET'])]
     public function getOneStudent(int $id): JsonResponse
     {
         return $this->studentService->getOneStudent($id);
     }
-    
+
     #[Route('/', name: 'app_student_get_all', methods: ['GET'])]
     public function getAllStudents(): JsonResponse
     {
@@ -36,16 +56,52 @@ class StudentController extends AbstractController
     {
         return $this->studentService->newStudent($request);
     }
-    
-    #[Route('/edit/{id}', name: 'api_student_edit', methods: ['POST'])]
+  
+  #[Route('/new/import', name: 'api_student_import', methods: ['POST'])]
+    public function importStudents(Request $request): JsonResponse
+    {
+        $csvData = $request->request->get('csvData');
+
+        if ($csvData) {
+            $lines = explode("\n", $csvData);
+
+            array_shift($lines);
+
+            $students = [];
+            foreach ($lines as $line) {
+                if (!empty($line)) {
+                    $lineData = explode(",", $line);
+                    $student = [
+                        'firstName' => $lineData[0],
+                        'lastName' => $lineData[1],
+                        'email' => $lineData[2],
+                        'invidual' => $lineData[3]
+                    ];
+                    $students[] = $student;
+                }
+            }
+            return $this->studentService->createStudents($students);
+        } else {
+            return new JsonResponse(['error' => 'No file uploaded'], Response::HTTP_BAD_REQUEST);
+        }
+    }
+
+    #[Route('/edit/{id}', name: 'api_student_edit', methods: ['PUT'])]
     public function editStudent(Request $request, int $id): JsonResponse
     {
         return $this->studentService->editStudent($request, $id);
     }
-    
-    #[Route('/delete/{id}', name: 'api_student_delete', methods: ['POST'])]
-    public function deleteStudent(Request $request, int $id): JsonResponse
+
+    #[Route('/delete/{id}', name: 'api_student_delete', methods: ['DELETE'])]
+    public function deleteStudent(int $id): JsonResponse
     {
-        return $this->studentService->deleteStudent($request, $id);
+        return $this->studentService->deleteStudent($id);
+    }
+
+    #[Route('/get_by_training/{id}', name: 'app_student_get_all_by_training', methods: ['GET'])]
+    public function getAllStudentsByTraining(UserRepository $UserRepository, int $id): JsonResponse
+    {
+        $students = $UserRepository->findByuser($id);
+        return $this->json($students);
     }
 }

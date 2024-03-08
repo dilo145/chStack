@@ -67,6 +67,7 @@ function onLessonSubmit() {
             :items="lessonStore.categories"
             item-title="name"
             label="Category"
+            multiple
             outlined
             required
             return-object

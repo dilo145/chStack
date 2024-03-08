@@ -8,14 +8,17 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class StudentService
 {
     private $entityManager;
+    private $userPasswordHasher;
 
-    public function __construct(EntityManagerInterface $entityManager)
+    public function __construct(EntityManagerInterface $entityManager, UserPasswordHasherInterface $userPasswordHasher)
     {
         $this->entityManager = $entityManager;
+        $this->userPasswordHasher = $userPasswordHasher;
     }
 
     public function getOneStudent(int $id): JsonResponse
@@ -32,7 +35,8 @@ class StudentService
             'lastName' => $student->getLastName(),
             'email' => $student->getEmail(),
             'photo' => $student->getPhoto(),
-            'individual' => $student->isInvidual(),
+            'roles' => $student->getRoles(),
+            'invidual' => $student->isInvidual(),
             'createdAt' => $student->getCreatedAt()->format('Y-m-d H:i:s'),
             'updatedAt' => $student->getUpdatedAt() ? $student->getUpdatedAt()->format('Y-m-d H:i:s') : null,
         ];
@@ -53,7 +57,7 @@ class StudentService
                 'lastName' => $student->getLastName(),
                 'email' => $student->getEmail(),
                 'photo' => $student->getPhoto(),
-                'individual' => $student->isInvidual(),
+                //'invidual' => $student->isInvidual(),
                 'createdAt' => $student->getCreatedAt()->format('Y-m-d H:i:s'),
                 'updatedAt' => $student->getUpdatedAt() ? $student->getUpdatedAt()->format('Y-m-d H:i:s') : null,
                 'deletedAt' => $student->getDeletedAt() ? $student->getDeletedAt()->format('Y-m-d H:i:s') : null,
@@ -71,7 +75,7 @@ class StudentService
 
         $student = new Student();
 
-        if (!isset($data['firstName']) || !isset($data['lastName']) || !isset($data['email']) || !isset($data['photo']) || !isset($data['invidual'])) {
+        if (!isset($data['firstName']) || !isset($data['lastName']) || !isset($data['email']) || !isset($data['invidual'])) {
             return new JsonResponse(['error' => 'Missing required fields'], Response::HTTP_BAD_REQUEST);
         }
 
@@ -89,7 +93,13 @@ class StudentService
         $student->setPhoto($data['photo'] ?? null);
         $student->setCreatedAt();
         $student->setInvidual($data['invidual']);
-        $student->setPassword($data['password']);
+        $student->setRoles(['ROLE_STUDENT']);
+        $student->setPassword(
+            $this->userPasswordHasher->hashPassword(
+                $student,
+                $data['password']
+            )
+        );
 
         try {
             $this->entityManager->persist($student);
@@ -99,6 +109,37 @@ class StudentService
         }
 
         return new JsonResponse(['message' => 'Student created successfully'], Response::HTTP_CREATED);
+    }
+
+    public function createStudents(array $studentsData): JsonResponse
+    {
+        foreach ($studentsData as $studentData) {
+
+            if (!$this->entityManager->getRepository(Student::class)->findOneBy(['email' => $studentData['email']])) {
+                $student = new Student();
+                $student->setFirstName($studentData['firstName']);
+                $student->setLastName($studentData['lastName']);
+                $student->setEmail($studentData['email']);
+                if ($studentData['invidual'] == 'FALSE' || $studentData['invidual'] == 'false' || $studentData['invidual'] == 0) {
+                    $student->setInvidual(false);
+                } else if ($studentData['invidual'] == 'TRUE' || $studentData['invidual'] == 'true' || $studentData['invidual'] == 1) {
+                    $student->setInvidual(true);
+                }
+                $student->setCreatedAt();
+                $student->setRoles(['ROLE_STUDENT']);
+                $student->setPassword(bin2hex(random_bytes(16)));
+
+                $this->entityManager->persist($student);
+            }
+        }
+
+        try {
+            $this->entityManager->flush();
+        } catch (\Exception $e) {
+            return new JsonResponse(['error' => 'Failed to create students'], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+
+        return new JsonResponse(['message' => 'Students created successfully'], Response::HTTP_CREATED);
     }
 
     public function editStudent(Request $request, int $id): JsonResponse
@@ -129,13 +170,18 @@ class StudentService
         if (isset($data['photo'])) {
             $student->setPhoto($data['photo']);
         }
-        if (isset($data['individual'])) {
-            $student->setIndividual($data['individual']);
+        if (isset($data['invidual'])) {
+            $student->setInvidual($data['invidual']);
         }
         if (isset($data['password'])) {
-            $student->setPassword($data['password']);
+            $student->setPassword(
+                $this->userPasswordHasher->hashPassword(
+                    $student,
+                    $data['password']
+                )
+            );
         }
-        
+
         $student->setUpdatedAt();
 
         try {
@@ -166,5 +212,4 @@ class StudentService
 
         return new JsonResponse(['message' => 'Student deleted successfully'], Response::HTTP_OK);
     }
-
 }

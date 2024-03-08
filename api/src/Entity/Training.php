@@ -6,6 +6,7 @@ use App\Repository\TrainingRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Ignore;
 
 #[ORM\Entity(repositoryClass: TrainingRepository::class)]
 class Training
@@ -24,6 +25,7 @@ class Training
     #[ORM\ManyToOne(inversedBy: 'training', fetch: "EAGER")]
     private ?Organism $organism = null;
 
+    #[Ignore]
     #[ORM\OneToMany(targetEntity: Registration::class, mappedBy: 'training')]
     private Collection $registrations;
 
@@ -69,7 +71,7 @@ class Training
         return $this;
     }
 
-    
+
     public function getOrganism(): ?Organism
     {
         return $this->organism;

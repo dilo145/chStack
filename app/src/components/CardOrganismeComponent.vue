@@ -1,31 +1,40 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import router from '@/router';
+import { useOrganismStore } from '@/store/useOrganismStore';
+import { onMounted, toRefs } from 'vue';
+
+const organismStore = useOrganismStore();
+
+onMounted(() => {
+  organismStore.getOrganisms();
+});
+
+const { Organisms: organisms } = toRefs(organismStore);
+</script>
 <template>
-  <v-col cols="auto">
-    <v-list>
-      <v-list-item v-for="i in 2" :key="i">
-        <v-card
-          max-width="100%"
-          max-height="25%"
-          class="d-flex gy-3 border cursor-pointer"
-        >
-          <v-img height="200px" src="../assets/esgi_logo.png" cover></v-img>
+  <v-row class="my-5 mx-5 align-center"  justify="end">
+    <v-btn class="w-auto" center color="primary" @click="router.push('/organisms/create')"> Create new organism </v-btn>
+  </v-row>
 
-          <div class="w-75">
-            <v-card-title>Ecole supérieur de genie informatique</v-card-title>
-
-            <v-card-subtitle> ESGI </v-card-subtitle>
-
-            <v-card-text>
-              ESGI, Grande école d'informatique en alternance à Paris propose 9
-              filières avec diplômes reconnus par l'État en Cycle Bachelor et en
-              Cycle Mastère.
-            </v-card-text>
-          </div>
-        </v-card>
-      </v-list-item>
-    </v-list>
-    <v-btn class="w-100">
-      <v-icon>mdi-plus</v-icon>
-    </v-btn>
-  </v-col>
+  <v-list-item v-for="i in organisms" :key="i.id" v-if="organisms.length > 0">
+    <v-hover
+        v-slot="{ isHovering, props }"
+    >
+      <v-card
+        :class="{ 'on-hover': isHovering }"
+        :color="isHovering ? 'primary' : 'none'"
+        @click="router.push('/organisms/' + i.id)"
+        class="d-flex flex-column flex-sm-row gy-3 align-left border cursor-pointer pa-4"
+        v-bind="props" enabled
+      >
+        <v-img :src="i.logo" class="" max-width="200" max-height="150" cover> </v-img>
+        <div class="w-75">
+          
+          <v-card-subtitle class="d-flex flex-wrap justify-center h-25"> Organism</v-card-subtitle>
+          <v-card-title class="d-flex flex-wrap justify-center text-center h-75" >{{ i.name }}</v-card-title>
+        </div>
+      </v-card>
+    </v-hover>
+  </v-list-item>
+  <v-alert v-else>No organism found</v-alert>
 </template>

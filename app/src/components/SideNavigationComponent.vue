@@ -1,11 +1,30 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import {ref, toRefs} from "vue";
+import {useRouter} from "vue-router";
+import {useUserStore} from "@/store/useUserStore";
+import {useLoginStore} from "@/store/useLoginStore";
 
 const drawer = ref(true);
-const rail = ref(true);
+const rail = ref(false);
+const { user } = toRefs(useUserStore());
+const userUserStore = useUserStore();
+const role = userUserStore.getRole();
+
+function disconnectUser() {
+  localStorage.removeItem("user");
+  // remove the user in pinia
+  useUserStore().removeUser();
+  location.reload();
+}
+
+function messageUser(){
+  router.push('/message');
+}
+
 </script>
 
 <template>
+  <!-- Conditional rendering of JSON data -->
   <v-card>
     <v-layout>
       <v-navigation-drawer
@@ -29,10 +48,19 @@ const rail = ref(true);
         <v-list density="compact" nav>
           <v-list-item
             link
-            to="/organisms"
+            to="/calendar"
+            prepend-icon="mdi-school"
+            title="Calendrier"
+            value="calendrier"
+            v-if="role && role === 'ROLE_STUDENT'"
+          ></v-list-item>
+          <v-list-item
+            link
+            to="/"
             prepend-icon="mdi-account-group"
             title="Organisms"
             value="organisms"
+            v-if="role && role === 'ROLE_FORMER'"
           ></v-list-item>
           <v-list-item
             link
@@ -47,12 +75,13 @@ const rail = ref(true);
             prepend-icon="mdi-school"
             title="Classes"
             value="classes"
+            v-if="role && role === 'ROLE_FORMER'"
           ></v-list-item>
           <v-list-item
             link
-            to="/grades"
+            to="/examen"
             prepend-icon="mdi-book-open-variant"
-            title="Notes / Examen"
+            title="Examen"
             value="grades"
           ></v-list-item>
           <v-list-item
@@ -61,6 +90,7 @@ const rail = ref(true);
             prepend-icon="mdi-account-group-outline"
             title="Etudiants"
             value="students"
+            v-if="role && role === 'ROLE_FORMER'"
           ></v-list-item>
           <v-list-item
             link
@@ -71,13 +101,29 @@ const rail = ref(true);
           ></v-list-item>
         </v-list>
 
-        <template v-slot:append>
-          <div class="pa-2">
+        <template v-slot:append v-if="user">
+          <v-col v-if="!rail" cols="12">
+            <v-btn color="error" variant="outlined" @click="disconnectUser" block>
+              <v-icon icon="mdi-logout"></v-icon>
+              Logout
+            </v-btn>
+          </v-col>
+
+          <div class="pa-2" v-if="!rail && user.photo !== null">
+            <v-list-item :prepend-avatar="user.photo" :title="`${user.firstName} ${user.lastName}`" nav>
+              <div style="font-size: 12px">{{ role }}</div>
+              <template v-slot:append>
+                <v-btn icon="mdi-chevron-left" variant="text" @click.stop="rail = !rail"></v-btn>
+              </template>
+            </v-list-item>
+          </div>
+          <div class="pa-2" v-else>
             <v-list-item
-              prepend-avatar="https://randomuser.me/api/portraits/men/85.jpg"
-              title="Lacos TN ou quoi le boss"
+              :prepend-avatar="user.photo"
+              :title="`${user.firstName} ${user.lastName}`"
               nav
             >
+              <div style="font-size: 12px">{{ role }}</div>
               <template v-slot:append>
                 <v-btn
                   icon="mdi-chevron-left"
@@ -91,5 +137,14 @@ const rail = ref(true);
       </v-navigation-drawer>
       <v-main style="height: 100vh"></v-main>
     </v-layout>
+
   </v-card>
 </template>
+
+<style>
+.column{
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+</style>

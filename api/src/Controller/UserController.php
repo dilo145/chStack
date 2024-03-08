@@ -10,7 +10,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 #[Route('/api/users')]
 class UserController extends AbstractController
@@ -36,7 +35,7 @@ class UserController extends AbstractController
         return new JsonResponse(['User' => $user]);
     }
 
-    #[Route('/{id}/delete', name: 'app_user_delete', methods: ['POST'])]
+    #[Route('/delete/{id}', name: 'app_user_delete', methods: ['DELETE'])]
     public function delete(Request $request, User $user): JsonResponse
     {
         if (!$user) {
@@ -57,5 +56,12 @@ class UserController extends AbstractController
         }
 
         return new JsonResponse(['message' => 'User deleted successfully'], Response::HTTP_OK);
+    }
+
+    #[Route('/get_by_training/{id}', name: 'app_student_get_all_by_training', methods: ['GET'])]
+    public function getAllStudentsByTraining(UserRepository $UserRepository, int $id): JsonResponse
+    {
+        $students = $UserRepository->findByuser($id);
+        return $this->json($students);
     }
 }
