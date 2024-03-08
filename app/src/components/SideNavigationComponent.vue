@@ -1,29 +1,50 @@
 <script setup lang="ts">
-import { useUserStore } from '@/store/useUserStore';
-import { ref, toRefs } from 'vue';
+import {ref, toRefs} from "vue";
+import {useRouter} from "vue-router";
+import {useUserStore} from "@/store/useUserStore";
+import {useLoginStore} from "@/store/useLoginStore";
 
 const drawer = ref(true);
-const rail = ref(true);
+const rail = ref(false);
 const { user } = toRefs(useUserStore());
 const userUserStore = useUserStore();
 const role = userUserStore.getRole();
 
 function disconnectUser() {
-  localStorage.removeItem('user');
+  localStorage.removeItem("user");
   // remove the user in pinia
   useUserStore().removeUser();
   location.reload();
 }
+
+function messageUser(){
+  router.push('/message');
+}
+
 </script>
 
 <template>
   <!-- Conditional rendering of JSON data -->
   <v-card>
-      <v-navigation-drawer v-model="drawer" fixed :rail="rail" permanent @click="rail = false">
+    <v-layout>
+      <v-navigation-drawer
+        v-model="drawer"
+        :rail="rail"
+        permanent
+        @click="rail = false"
+      >
         <v-divider></v-divider>
 
-        <v-img v-if="!rail" src="../assets/logo.png" class="ma-2 w-50 mb-4"></v-img>
-        <v-img v-if="rail" src="../assets/small-logo.png" class="w-50 mx-auto ma-2"></v-img>
+        <v-img
+          v-if="!rail"
+          src="../assets/logo.png"
+          class="ma-2 w-50 mb-4"
+        ></v-img>
+        <v-img
+          v-if="rail"
+          src="../assets/small-logo.png"
+          class="w-50 mx-auto ma-2"
+        ></v-img>
         <v-list density="compact" nav>
           <v-list-item
             link
@@ -41,7 +62,13 @@ function disconnectUser() {
             value="organisms"
             v-if="role && role === 'ROLE_FORMER'"
           ></v-list-item>
-          <v-list-item link to="/lessons" prepend-icon="mdi-school" title="Cours" value="lessons"></v-list-item>
+          <v-list-item
+            link
+            to="/lessons"
+            prepend-icon="mdi-school"
+            title="Cours"
+            value="lessons"
+          ></v-list-item>
           <v-list-item
             link
             to="/classes"
@@ -52,9 +79,9 @@ function disconnectUser() {
           ></v-list-item>
           <v-list-item
             link
-            to="/graduation"
+            to="/examen"
             prepend-icon="mdi-book-open-variant"
-            title="Notes / Examen"
+            title="Examen"
             value="grades"
           ></v-list-item>
           <v-list-item
@@ -65,7 +92,13 @@ function disconnectUser() {
             value="students"
             v-if="role && role === 'ROLE_FORMER'"
           ></v-list-item>
-          <v-list-item link to="/profile" prepend-icon="mdi-account" title="Mon Compte" value="account"></v-list-item>
+          <v-list-item
+            link
+            to="/profile"
+            prepend-icon="mdi-account"
+            title="Mon Compte"
+            value="account"
+          ></v-list-item>
         </v-list>
 
         <template v-slot:append v-if="user">
@@ -86,17 +119,32 @@ function disconnectUser() {
           </div>
           <div class="pa-2" v-else>
             <v-list-item
-              prepend-avatar="https://i1.sndcdn.com/avatars-000103501656-iji6a5-t500x500.jpg"
+              :prepend-avatar="user.photo"
               :title="`${user.firstName} ${user.lastName}`"
               nav
             >
+              <div style="font-size: 12px">{{ role }}</div>
               <template v-slot:append>
-                <v-btn icon="mdi-chevron-left" variant="text" @click.stop="rail = !rail"></v-btn>
+                <v-btn
+                  icon="mdi-chevron-left"
+                  variant="text"
+                  @click.stop="rail = !rail"
+                ></v-btn>
               </template>
             </v-list-item>
           </div>
         </template>
       </v-navigation-drawer>
       <v-main style="height: 100vh"></v-main>
+    </v-layout>
+
   </v-card>
 </template>
+
+<style>
+.column{
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+</style>

@@ -55,12 +55,11 @@ class TrainingController extends AbstractController
     }
 
     #[Route('/update/{id}', name: 'training_update', methods: ['PUT'])]
-    public function update(Request $request, TrainingRepository $TrainingRepository, int $id): Response
+    public function update(Request $request, TrainingRepository $TrainingRepository,OrganismRepository $OrganismRepository, int $id): Response
     {
         $data = json_decode($request->getContent(), true);
-        
-        $response = $TrainingRepository->update($data, $id);
-
+        $organism = $OrganismRepository->find($data["organism"]["id"]);
+        $response = $TrainingRepository->update($data,$organism ,$id);
         if (!$response) {
             throw $this->createNotFoundException('Error while updating training');
         }

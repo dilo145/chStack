@@ -1,9 +1,12 @@
 <script setup lang="ts">
 import { useLessonStore } from "@/store/useLessonStore";
-import { computed, onMounted, toRefs } from "vue";
+import { useRessourceStore } from "@/store/useRessourceStore";
+import { computed, onMounted, ref, toRefs } from "vue";
 import { useRouter } from "vue-router";
 
 const lessonStore = useLessonStore();
+const ressourceStore = useRessourceStore();
+const isDeleteModalOpen = ref(false);
 
 const id = computed(() => {
   return router.currentRoute.value.params.id;
@@ -20,6 +23,7 @@ onMounted(() => {
   const id = router.currentRoute.value.params.id;
 
   lessonStore.getLesson(id.toString());
+  ressourceStore.getRessourcesForLesson(id.toString());
 });
 
 const { editLesson, isEditing } = toRefs(lessonStore);
@@ -124,5 +128,76 @@ const { editLesson, isEditing } = toRefs(lessonStore);
         >
       </v-row>
     </v-card>
+
+    <!-- RESSOURCES -->
+    <v-row>
+      <v-col cols="12">
+        <v-row>
+          <v-col cols="6">
+            <h2 class="mt-5">External Ressources Link</h2>
+          </v-col>
+
+          <v-col cols="6" align-self="end" class="text-end">
+            <v-btn
+              color="primary"
+              variant="outlined"
+              @click="
+                router.push('/ressources/create');
+                lessonStore.isEditing = false;
+              "
+            >
+              <v-icon icon="mdi-plus"></v-icon>
+              Add Ressources
+            </v-btn>
+          </v-col>
+        </v-row>
+
+        <v-data-table
+          :items="ressourceStore.ressources"
+          :headers="ressourceStore.headers"
+          class="elevation-1 mt-6"
+        >
+          <template v-slot:item.actions="{ item }">
+            <v-icon
+              class="me-2"
+              size="small"
+              @click="
+                router.push(`/ressources/${item.id}`);
+                lessonStore.isEditing = false;
+              "
+            >
+              mdi-eye
+            </v-icon>
+            <v-icon
+              class="me-2"
+              size="small"
+              color="secondary"
+              @click="
+                router.push(`/ressources/${item.id}`);
+                lessonStore.isEditing = true;
+              "
+            >
+              mdi-pencil
+            </v-icon>
+            <v-icon
+              size="small"
+              color="red"
+              @click="
+                isDeleteModalOpen = true;
+                id = item.id.toString();
+              "
+            >
+              mdi-delete
+            </v-icon>
+          </template>
+
+          <template v-slot:no-data>
+            <div class="text-subtitle">
+              No ressource found. Please add a new one.
+            </div>
+          </template>
+        </v-data-table>
+      </v-col>
+    </v-row>
   </v-col>
 </template>

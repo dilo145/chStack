@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import DataTableActions from "@/components/lessons/DataTableActions.vue";
 import { useLessonStore } from "@/store/useLessonStore";
-import {onMounted, ref, toRefs} from "vue";
+import { useUserStore } from "@/store/useUserStore";
+import { onMounted, ref, toRefs } from "vue";
 import { useRouter } from "vue-router";
-import {useUserStore} from "@/store/useUserStore";
 const { user } = toRefs(useUserStore());
 const userUserStore = useUserStore();
 const role = userUserStore.getRole();
@@ -37,6 +37,7 @@ onMounted(() => {
   <v-data-table
     :items="lessonStore.lessons"
     :headers="lessonStore.headers"
+    :loading="lessonStore.loading"
     class="elevation-1 mt-6"
   >
     <template v-slot:item.actions="{ item }">

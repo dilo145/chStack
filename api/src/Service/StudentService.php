@@ -24,7 +24,7 @@ class StudentService
     public function getOneStudent(int $id): JsonResponse
     {
         $student = $this->entityManager->getRepository(Student::class)->find($id);
-        
+
         if (!$student) {
             return new JsonResponse(['error' => 'Student not found'], Response::HTTP_NOT_FOUND);
         }
@@ -57,7 +57,7 @@ class StudentService
                 'lastName' => $student->getLastName(),
                 'email' => $student->getEmail(),
                 'photo' => $student->getPhoto(),
-                'invidual' => $student->isInvidual(),
+                //'invidual' => $student->isInvidual(),
                 'createdAt' => $student->getCreatedAt()->format('Y-m-d H:i:s'),
                 'updatedAt' => $student->getUpdatedAt() ? $student->getUpdatedAt()->format('Y-m-d H:i:s') : null,
                 'deletedAt' => $student->getDeletedAt() ? $student->getDeletedAt()->format('Y-m-d H:i:s') : null,

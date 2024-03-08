@@ -3,6 +3,7 @@ import { useTrainingStore } from "@/store/useTrainingStore";
 import { useStudentStore } from "@/store/useStudentStore";
 import { computed, onMounted, toRefs } from "vue";
 import { useRouter } from "vue-router";
+import DetailTableActions from "@/components/classes/DetailTableActions.vue";
 
 const trainingStore = useTrainingStore();
 const studentStore = useStudentStore();
@@ -13,23 +14,32 @@ const id = computed(() => {
 });
 
 const router = useRouter();
-
 function onEditTraining() {
   trainingStore.updateTraining(id.value.toString());
   isEditing.value = false;
 }
+
+function onImportCSV() {
+  console.log('import csv click');
+}
+
+
 
 onMounted(() => {
   const id = router.currentRoute.value.params.id;
 
   trainingStore.getTraining(id.toString());
   studentStore.getTrainingStudent(id.toString());
+  trainingStore.getOrganisms();
+  trainingStore.getStudents();
+
 });
 
 const { editTraining, isEditing } = toRefs(trainingStore);
 </script>
 
 <template>
+  
   <v-col cols="12">
     <h1>Classe</h1>
     <v-row>
@@ -43,52 +53,9 @@ const { editTraining, isEditing } = toRefs(trainingStore);
        Edit</v-btn
     >
 
-    <!-- POPUP-->
-    <v-dialog max-width="1200">
-      <!-- Bouton du POPUP-->
-  <template v-slot:activator="{ props: activatorProps }">
-    <v-btn
-      v-bind="activatorProps"
-      prepend-icon="mdi-pencil"
-      color="secondary"
-      class="ma-3 mb-6"
-      text="Add/Remove student"
-      variant="flat"
-    ></v-btn>
-  </template>
+    <DetailTableActions />
+  
 
-    <!-- FIN Bouton du POPUP-->
-
-  <template v-slot:default="{ isActive }">
-    <v-card title="Tous les étudiants" class="pa-6">
-    <v-select
-      label="Select les étudiants"
-      :items="['test1','test2']"
-      variant="outlined"
-      return-object
-      multiple
-      
-></v-select>
-    <!--FIN TABLE étudiants-->
-
-      <!--popup btns-->
-      <v-card-actions>
-        <v-spacer></v-spacer>
-        <v-btn
-          text="Cancel"
-          @click="isActive.value = false"
-        ></v-btn>
-        <v-btn
-          text="Submit"
-          @click="isActive.value = false"
-        ></v-btn>
-      </v-card-actions>
-      <!--FIN popup btns-->
-
-    </v-card>
-  </template>
-</v-dialog>
-    <!--FIN POPUP-->
     </v-row>
     
 
@@ -100,13 +67,14 @@ const { editTraining, isEditing } = toRefs(trainingStore);
         outlined
         required
       ></v-text-field>
-    
+      
       <v-row>
         <v-col cols="12" md="6">
           <v-select
             v-model="editTraining.organism"
             :items="trainingStore.organisms"
             item-title="name"
+            :item-value="id"
             label="Organism"
             outlined
             required
