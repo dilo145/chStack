@@ -36,7 +36,7 @@ export const useExamenStore = defineStore('examen', () => {
     api
       .post<Exam>('exams/new', newExamen)
       .then((response) => {
-        router.push('/exams');
+        router.push('/examen');
       })
       .catch((err) => {
         console.log(err);
